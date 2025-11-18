@@ -328,7 +328,7 @@ function LayoutContent({ children, currentPageName }) {
           `}
         </style>
         
-        <Sidebar className={`border-r ${isDarkMode ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-white/50'} backdrop-blur-xl`}>
+        <Sidebar className={`border-r ${isDarkMode ? 'border-gray-800 bg-gray-950' : 'border-gray-200 bg-gray-100'} backdrop-blur-xl`}>
           <SidebarHeader className={`border-b ${isDarkMode ? 'border-gray-800' : 'border-gray-200'} p-6`}>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-[#C5B358] to-[#A4913C] rounded-xl flex items-center justify-center shadow-lg">
