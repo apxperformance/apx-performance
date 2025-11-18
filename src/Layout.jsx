@@ -1,10 +1,9 @@
-
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import {
-  Dumbbell, Users, Utensils, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, UtensilsCrossed, Pill, MessageCircle, CalendarDays, Sun, Moon } from
+  Dumbbell, Users, Calendar, Utensils, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, UtensilsCrossed, Pill, MessageCircle, CalendarDays, Sun, Moon } from
 "lucide-react";
 import {
   Sidebar,
@@ -336,7 +335,7 @@ function LayoutContent({ children, currentPageName }) {
                 {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-black" /> : <Zap className="w-6 h-6 text-black" />}
               </div>
               <div>
-                <h2 className="text-slate-900 text-lg font-bold">Level Up</h2>
+                <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Level Up</h2>
                 <p className="text-xs text-[#C5B358] uppercase tracking-wide">
                   {user?.user_type === "coach" ? "Coach Portal" : "Client Portal"}
                 </p>
@@ -346,7 +345,7 @@ function LayoutContent({ children, currentPageName }) {
           
           <SidebarContent className="p-4">
             <SidebarGroup>
-              <SidebarGroupLabel className="text-xs font-medium uppercase tracking-wider px-2 py-3 text-muted-foreground">
+              <SidebarGroupLabel className={`text-xs font-medium uppercase tracking-wider px-2 py-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 {user?.user_type === "coach" ? "Coach Tools" : "My Fitness"}
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -355,9 +354,11 @@ function LayoutContent({ children, currentPageName }) {
                   <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
                       asChild
-                      className={`hover:bg-[#C5B358]/10 hover:text-[#C5B358] transition-all duration-300 rounded-xl mb-2 group text-foreground/80 ${
-                      location.pathname === item.url ? 'bg-[#C5B358]/20 text-[#C5B358]' : 'hover:text-[#C5B358]'}`
-                      }>
+                      className={`hover:bg-[#C5B358]/10 hover:text-[#C5B358] transition-all duration-300 rounded-xl mb-2 group ${
+                      location.pathname === item.url 
+                        ? 'bg-[#C5B358]/20 text-[#C5B358]' 
+                        : isDarkMode ? 'text-gray-300 hover:text-[#C5B358]' : 'text-gray-700 hover:text-[#C5B358]'
+                      }`}>
 
                         <Link to={item.url} className="flex items-center gap-3 px-4 py-3">
                           <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
@@ -373,7 +374,7 @@ function LayoutContent({ children, currentPageName }) {
 
           <SidebarFooter className={`border-t ${isDarkMode ? 'border-gray-800' : 'border-gray-200'} p-4 space-y-4`}>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground/90">Theme</span>
+              <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Theme</span>
               <button
                 onClick={toggleTheme}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#C5B358] focus:ring-offset-2 ${
@@ -393,8 +394,8 @@ function LayoutContent({ children, currentPageName }) {
                 {user?.user_type === "coach" ? <Crown className="w-5 h-5 text-[#C5B358]" /> : <UserIcon className="w-5 h-5 text-gray-600" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm truncate text-foreground/80">{user?.full_name}</p>
-                <p className="text-xs truncate text-muted-foreground">
+                <p className={`font-medium text-sm truncate ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>{user?.full_name}</p>
+                <p className={`text-xs truncate ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   {user?.user_type === "coach" && coachTierInfo ? coachTierInfo.name : user?.user_type === "client" ? "Elite Member" : "User"}
                 </p>
               </div>
@@ -402,7 +403,11 @@ function LayoutContent({ children, currentPageName }) {
 
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-2 px-3 py-2 text-foreground/80 hover:text-[hsl(var(--destructive))] hover:bg-[hsl(var(--destructive))]/10 rounded-lg transition-all duration-200">
+              className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 ${
+                isDarkMode 
+                  ? 'text-gray-300 hover:text-red-400 hover:bg-red-500/10' 
+                  : 'text-gray-700 hover:text-red-600 hover:bg-red-500/10'
+              }`}>
 
               <LogOut className="w-4 h-4" />
               Sign Out
