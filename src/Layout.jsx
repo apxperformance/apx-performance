@@ -328,24 +328,24 @@ function LayoutContent({ children, currentPageName }) {
           `}
         </style>
         
-        <Sidebar className={`border-r ${isDarkMode ? 'border-gray-800 bg-gray-950' : 'border-gray-200 bg-gray-100'} backdrop-blur-xl`}>
-          <SidebarHeader className={`border-b ${isDarkMode ? 'border-gray-800' : 'border-gray-200'} p-6`}>
+        <Sidebar className="border-r border-gray-200 bg-gray-100 backdrop-blur-xl">
+          <SidebarHeader className="border-b border-gray-200 p-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-[#C5B358] to-[#A4913C] rounded-xl flex items-center justify-center shadow-lg">
                 {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-black" /> : <Zap className="w-6 h-6 text-black" />}
               </div>
               <div>
-                <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Level Up</h2>
+                <h2 className="text-lg font-bold text-slate-900">Level Up</h2>
                 <p className="text-xs text-[#C5B358] uppercase tracking-wide">
                   {user?.user_type === "coach" ? "Coach Portal" : "Client Portal"}
                 </p>
               </div>
             </div>
           </SidebarHeader>
-          
+
           <SidebarContent className="p-4">
             <SidebarGroup>
-              <SidebarGroupLabel className={`text-xs font-medium uppercase tracking-wider px-2 py-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <SidebarGroupLabel className="text-xs font-medium uppercase tracking-wider px-2 py-3 text-gray-600">
                 {user?.user_type === "coach" ? "Coach Tools" : "My Fitness"}
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -357,7 +357,7 @@ function LayoutContent({ children, currentPageName }) {
                       className={`hover:bg-[#C5B358]/10 hover:text-[#C5B358] transition-all duration-300 rounded-xl mb-2 group ${
                       location.pathname === item.url 
                         ? 'bg-[#C5B358]/20 text-[#C5B358]' 
-                        : isDarkMode ? 'text-gray-300 hover:text-[#C5B358]' : 'text-gray-700 hover:text-[#C5B358]'
+                        : 'text-gray-700 hover:text-[#C5B358]'
                       }`}>
 
                         <Link to={item.url} className="flex items-center gap-3 px-4 py-3">
@@ -372,9 +372,9 @@ function LayoutContent({ children, currentPageName }) {
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className={`border-t ${isDarkMode ? 'border-gray-800' : 'border-gray-200'} p-4 space-y-4`}>
+          <SidebarFooter className="border-t border-gray-200 p-4 space-y-4">
             <div className="flex items-center justify-between">
-              <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Theme</span>
+              <span className="text-sm font-medium text-gray-700">Theme</span>
               <button
                 onClick={toggleTheme}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#C5B358] focus:ring-offset-2 ${
@@ -390,12 +390,12 @@ function LayoutContent({ children, currentPageName }) {
             </div>
 
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 bg-gradient-to-r ${isDarkMode ? 'from-gray-600 to-gray-700' : 'from-gray-200 to-gray-300'} rounded-full flex items-center justify-center`}>
+              <div className="w-10 h-10 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
                 {user?.user_type === "coach" ? <Crown className="w-5 h-5 text-[#C5B358]" /> : <UserIcon className="w-5 h-5 text-gray-600" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className={`font-medium text-sm truncate ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>{user?.full_name}</p>
-                <p className={`text-xs truncate ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className="font-medium text-sm truncate text-gray-800">{user?.full_name}</p>
+                <p className="text-xs truncate text-gray-600">
                   {user?.user_type === "coach" && coachTierInfo ? coachTierInfo.name : user?.user_type === "client" ? "Elite Member" : "User"}
                 </p>
               </div>
@@ -403,11 +403,7 @@ function LayoutContent({ children, currentPageName }) {
 
             <button
               onClick={handleLogout}
-              className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 ${
-                isDarkMode 
-                  ? 'text-gray-300 hover:text-red-400 hover:bg-red-500/10' 
-                  : 'text-gray-700 hover:text-red-600 hover:bg-red-500/10'
-              }`}>
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-gray-700 hover:text-red-600 hover:bg-red-500/10">
 
               <LogOut className="w-4 h-4" />
               Sign Out
