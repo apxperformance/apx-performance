@@ -1,8 +1,6 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { User } from "@/entities/User";
-import { Client } from "@/entities/Client"; // Added import for Client entity
+import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -43,7 +41,7 @@ export default function Welcome() {
   const processInvitationToken = useCallback(async (invitationToken, user) => {
     try {
       console.log("Processing invitation token:", invitationToken);
-      const clientInvitations = await Client.filter({ invitation_token: invitationToken, status: 'pending_invitation' });
+      const clientInvitations = await base44.entities.Client.filter({ invitation_token: invitationToken, status: 'pending_invitation' });
       
       if (clientInvitations.length > 0) {
         const invitation = clientInvitations[0];
@@ -51,20 +49,20 @@ export default function Welcome() {
         
         // 1. Set user_type to 'client' if not already set
         if (!user.user_type) {
-          await User.updateMyUserData({ user_type: 'client' });
-          user = await User.me();
+          await base44.auth.updateMe({ user_type: 'client' });
+          user = await base44.auth.me();
         }
         
         // 2. Link client to coach
         if (user.user_type === 'client') {
           if (!user.coach_id || user.coach_id !== invitation.coach_id) {
-             await User.updateMyUserData({ coach_id: invitation.coach_id });
-             user = await User.me();
+             await base44.auth.updateMe({ coach_id: invitation.coach_id });
+             user = await base44.auth.me();
           }
         }
 
         // 3. Update Client record: set user_id, status to 'active', clear token
-        await Client.update(invitation.id, {
+        await base44.entities.Client.update(invitation.id, {
           user_id: user.id,
           status: 'active',
           join_date: new Date().toISOString(),
@@ -75,7 +73,7 @@ export default function Welcome() {
         localStorage.removeItem('intended_user_type');
         localStorage.removeItem('invitation_token');
         
-        user = await User.me();
+        user = await base44.auth.me();
         console.log("Successfully linked client to coach, redirecting...", user);
         toast.success("Welcome! You've been successfully linked to your coach.");
         routeUser(user);
@@ -110,7 +108,7 @@ export default function Welcome() {
     // Handle invitation token if present in URL
     if (invitationToken) {
       try {
-        const user = await User.me();
+        const user = await base44.auth.me();
         const processed = await processInvitationToken(invitationToken, user);
         if (processed) {
           setIsLoading(false);
@@ -127,7 +125,7 @@ export default function Welcome() {
     }
 
     try {
-      let user = await User.me();
+      let user = await base44.auth.me();
       
       // Check for stored invitation token from before login
       const storedInvitationToken = localStorage.getItem('invitation_token');
@@ -145,15 +143,15 @@ export default function Welcome() {
       
       if (intendedUserType && !user.user_type) {
         try {
-          await User.updateMyUserData({ user_type: intendedUserType });
+          await base44.auth.updateMe({ user_type: intendedUserType });
           localStorage.removeItem('intended_user_type');
           
           if (intendedUserType === 'client') {
-            const invitations = await Client.filter({ email: user.email, status: 'pending_invitation' });
+            const invitations = await base44.entities.Client.filter({ email: user.email, status: 'pending_invitation' });
             if (invitations.length > 0) {
               const invitation = invitations[0];
-              await User.updateMyUserData({ coach_id: invitation.coach_id });
-              await Client.update(invitation.id, { 
+              await base44.auth.updateMe({ coach_id: invitation.coach_id });
+              await base44.entities.Client.update(invitation.id, { 
                 status: 'active', 
                 user_id: user.id, 
                 join_date: new Date().toISOString(),
@@ -162,7 +160,7 @@ export default function Welcome() {
             }
           }
 
-          user = await User.me();
+          user = await base44.auth.me();
           routeUser(user);
           return;
         } catch (updateError) {
@@ -191,7 +189,7 @@ export default function Welcome() {
         localStorage.setItem('intended_user_type', userType);
       }
       const callbackUrl = `${window.location.origin}${createPageUrl("Welcome")}`;
-      await User.loginWithRedirect(callbackUrl);
+      await base44.auth.redirectToLogin(callbackUrl);
     } catch (error) {
       console.error("Error initiating sign-in:", error);
       alert("There was an error starting the sign-in process. Please try again.");
