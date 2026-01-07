@@ -177,12 +177,14 @@ function LayoutContent({ children, currentPageName }) {
 
   const handleLogout = async () => {
     try {
-      localStorage.removeItem('intended_user_type');
-      setHasValidated(false);
       await base44.auth.logout();
+      setHasValidated(false);
+      localStorage.removeItem('intended_user_type');
       navigate(`${createPageUrl("Welcome")}?show_portal_choice=true`, { replace: true });
     } catch (error) {
       console.error("Error during logout:", error);
+      setHasValidated(false);
+      localStorage.removeItem('intended_user_type');
       navigate(`${createPageUrl("Welcome")}?show_portal_choice=true`, { replace: true });
     }
   };
