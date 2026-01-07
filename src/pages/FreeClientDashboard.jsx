@@ -1,9 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { User } from "@/entities/User";
-import { Workout } from "@/entities/Workout";
-import { NutritionPlan } from "@/entities/NutritionPlan";
-import { CheckIn } from "@/entities/CheckIn";
+import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dumbbell, Utensils, Calendar, TrendingUp, Zap, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,13 +24,13 @@ export default function FreeClientDashboard() {
 
   const loadDashboardData = async () => {
     try {
-      const userData = await User.me();
+      const userData = await base44.auth.me();
       setUser(userData);
       
       const [workouts, nutritionPlans, checkIns] = await Promise.all([
-        Workout.filter({ client_id: userData.id }),
-        NutritionPlan.filter({ client_id: userData.id }),
-        CheckIn.filter({ client_id: userData.id }, "-created_date", 1)
+        base44.entities.Workout.filter({ client_id: userData.id }),
+        base44.entities.NutritionPlan.filter({ client_id: userData.id }),
+        base44.entities.CheckIn.filter({ client_id: userData.id }, "-created_date", 1)
       ]);
       
       const currentPlan = nutritionPlans.length > 0 ? nutritionPlans[0] : null;
