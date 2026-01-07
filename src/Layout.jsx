@@ -178,15 +178,15 @@ function LayoutContent({ children, currentPageName }) {
   const handleLogout = async () => {
     try {
       setHasValidated(false);
-      localStorage.removeItem('intended_user_type');
-      const redirectUrl = `${window.location.origin}${createPageUrl("Welcome")}?show_portal_choice=true`;
-      await base44.auth.logout(redirectUrl);
+      localStorage.clear();
+      sessionStorage.clear();
+      await base44.auth.logout();
+      window.location.href = `${window.location.origin}${createPageUrl("Welcome")}?show_portal_choice=true`;
     } catch (error) {
       console.error("Error during logout:", error);
-      setHasValidated(false);
-      localStorage.removeItem('intended_user_type');
-      const redirectUrl = `${window.location.origin}${createPageUrl("Welcome")}?show_portal_choice=true`;
-      window.location.href = redirectUrl;
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = `${window.location.origin}${createPageUrl("Welcome")}?show_portal_choice=true`;
     }
   };
 
