@@ -100,6 +100,7 @@ export default function Welcome() {
     const invitationToken = urlParams.get('invitationToken');
 
     if (justLoggedOut) {
+      console.log("User just logged out, showing portal choice");
       setShowPortalChoice(true);
       setIsLoading(false);
       return;
@@ -122,6 +123,15 @@ export default function Welcome() {
         setIsLoading(false);
         return;
       }
+    }
+
+    // Check if user is actually authenticated before proceeding
+    const isAuthenticated = await base44.auth.isAuthenticated();
+    if (!isAuthenticated) {
+      console.log("User not authenticated, showing portal choice");
+      setShowPortalChoice(true);
+      setIsLoading(false);
+      return;
     }
 
     try {
