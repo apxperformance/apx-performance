@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -221,15 +220,15 @@ export default function CoachingCalendar() {
 
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <CalendarDays className="w-8 h-8 text-[#C5B358]" />
+            <CalendarDays className="w-8 h-8 text-gray-600" />
             <h1 className="text-foreground text-3xl font-bold md:text-4xl">Coaching Calendar</h1>
           </div>
           <div className="flex items-center gap-2">
             <p className="text-muted-foreground">Manage your sessions, check-ins, and personal events.</p>
             <div className="group relative">
-              <Info className="w-4 h-4 text-muted-foreground hover:text-[#C5B358] cursor-help transition-colors" />
+              <Info className="w-4 h-4 text-muted-foreground hover:text-gray-600 cursor-help transition-colors" />
               <div className="absolute left-0 top-full mt-2 hidden group-hover:block w-72 p-3 bg-popover border border-border rounded-lg shadow-xl z-50">
-                <p className="text-xs font-semibold text-[#C5B358] mb-2">Time Zone Info</p>
+                <p className="text-xs font-semibold text-gray-600 mb-2">Time Zone Info</p>
                 <p className="text-xs text-popover-foreground leading-relaxed mb-2">
                   Your calendar automatically adjusts to your local time zone. When you create an event, 
                   it's stored in UTC and displayed in your current time zone.
@@ -259,7 +258,7 @@ export default function CoachingCalendar() {
 
           <Button
             onClick={() => openAddEventDialog(new Date())}
-            className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+            className="bg-gray-800 hover:bg-gray-700 text-white font-semibold">
 
             <Plus className="w-4 h-4 mr-2" />
             Create Event
