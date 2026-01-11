@@ -56,28 +56,28 @@ export default function FreeClientDashboard() {
       title: "Total Workouts",
       value: stats.totalWorkouts,
       icon: Dumbbell,
-      gradient: "from-[#C5B358] to-[#A4913C]",
+      gradient: "from-gray-600 to-gray-800",
       subtitle: "Programs assigned"
     },
     {
       title: "Completed",
       value: stats.completedWorkouts,
       icon: TrendingUp,
-      gradient: "from-green-500 to-green-600",
+      gradient: "from-gray-600 to-gray-800",
       subtitle: "Workouts finished"
     },
     {
       title: "Nutrition Plan",
       value: stats.currentNutritionPlan ? "Active" : "None",
       icon: Utensils,
-      gradient: "from-purple-500 to-purple-600",
+      gradient: "from-gray-700 to-gray-800",
       subtitle: stats.currentNutritionPlan?.name || "Not assigned"
     },
     {
       title: "Last Check-in",
       value: stats.lastCheckIn ? new Date(stats.lastCheckIn.created_date).toLocaleDateString() : "Never",
       icon: Calendar,
-      gradient: "from-blue-500 to-blue-600",
+      gradient: "from-gray-700 to-gray-800",
       subtitle: "Progress update"
     }
   ];

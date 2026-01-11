@@ -258,7 +258,7 @@ export default function ClientChat() {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -304,11 +304,11 @@ export default function ClientChat() {
           {clients.map((client) => (
             <Card
               key={client.id}
-              className="p-6 cursor-pointer hover:border-[#C5B358]/50 transition-all bg-card/50 backdrop-blur-xl border-border"
+              className="p-6 cursor-pointer hover:border-gray-400/50 transition-all bg-card/50 backdrop-blur-xl border-border"
               onClick={() => setSelectedClient(client)}
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-[#C5B358] to-[#A4913C] rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-gray-600 to-gray-800 rounded-full flex items-center justify-center">
                   <span className="text-black font-bold">{client.full_name?.charAt(0).toUpperCase()}</span>
                 </div>
                 <div>
@@ -327,7 +327,7 @@ export default function ClientChat() {
   if (!canShowChat) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -350,7 +350,7 @@ export default function ClientChat() {
                 ← Back
               </Button>
             )}
-            <div className="w-12 h-12 bg-gradient-to-r from-[#C5B358] to-[#A4913C] rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-gray-600 to-gray-800 rounded-full flex items-center justify-center">
               {user.user_type === 'coach' ? (
                 <UserIcon className="w-6 h-6 text-black" />
               ) : (
@@ -404,7 +404,7 @@ export default function ClientChat() {
                             <div
                               className={`p-4 rounded-2xl ${
                                 isOwn
-                                  ? 'bg-[#C5B358] text-black'
+                                  ? 'bg-gray-800 text-white'
                                   : 'bg-secondary text-foreground'
                               }`}
                             >
@@ -485,13 +485,13 @@ export default function ClientChat() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 bg-input border-border focus:border-[#C5B358]"
+              className="flex-1 bg-input border-border focus:border-gray-600"
               disabled={sendMessageMutation.isPending}
             />
             <Button
               type="submit"
               disabled={!message.trim() || sendMessageMutation.isPending}
-              className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold"
+              className="bg-gray-800 hover:bg-gray-700 text-white font-semibold"
             >
               <Send className="w-4 h-4" />
             </Button>

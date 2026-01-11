@@ -219,9 +219,9 @@ export default function Welcome() {
   if (showPortalChoice) {
     return (
       <div className="min-h-screen bg-black relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-700/20 via-transparent to-transparent"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gray-600/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gray-600/5 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800/20 via-transparent to-transparent"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gray-700/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gray-700/5 rounded-full blur-3xl"></div>
 
         <div className="relative z-10 min-h-screen flex flex-col">
           <motion.header 
@@ -272,7 +272,7 @@ export default function Welcome() {
                 transition={{ duration: 0.8, delay: 0.6 }}
                 className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
               >
-                <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800 hover:border-[#C5B358]/50 transition-all duration-500 group">
+                <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800 hover:border-gray-600/50 transition-all duration-500 group">
                   <CardContent className="p-8">
                     <div className="text-center">
                       <div className="w-20 h-20 bg-gradient-to-r from-gray-700 to-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -307,7 +307,7 @@ export default function Welcome() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800 hover:border-[#C5B358]/50 transition-all duration-500 group">
+                <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800 hover:border-gray-600/50 transition-all duration-500 group">
                   <CardContent className="p-8">
                     <div className="text-center">
                       <div className="w-20 h-20 bg-gradient-to-r from-gray-600 to-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">

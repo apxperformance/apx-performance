@@ -183,7 +183,7 @@ export default function ClientDashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.gradient} bg-opacity-20`}>
-                    <stat.icon className={`w-6 h-6 text-foreground`} />
+                    <stat.icon className={`w-6 h-6 text-gray-200`} />
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-foreground">{stat.value}</div>

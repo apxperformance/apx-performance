@@ -330,12 +330,12 @@ export default function CoachDashboard() {
           ))
         ) : (
           <>
-            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 cursor-pointer"
+            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-gray-400/30 transition-all duration-300 cursor-pointer"
               onClick={() => window.location.href = createPageUrl("ClientManagement")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
-                    <Users className="w-6 h-6 text-gray-600" />
+                    <Users className="w-6 h-6 text-gray-200" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.activeClients}</div>
@@ -346,12 +346,12 @@ export default function CoachDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 cursor-pointer"
+            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-gray-400/30 transition-all duration-300 cursor-pointer"
               onClick={() => window.location.href = createPageUrl("ClientManagement")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
-                    <UserPlus className="w-6 h-6 text-gray-600" />
+                    <UserPlus className="w-6 h-6 text-gray-200" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.pendingInvites}</div>
@@ -362,12 +362,12 @@ export default function CoachDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 cursor-pointer"
+            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-gray-400/30 transition-all duration-300 cursor-pointer"
               onClick={() => window.location.href = createPageUrl("WorkoutBuilder")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
-                    <Dumbbell className="w-6 h-6 text-gray-600" />
+                    <Dumbbell className="w-6 h-6 text-gray-200" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.workoutTemplates}</div>
@@ -378,12 +378,12 @@ export default function CoachDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 cursor-pointer"
+            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-gray-400/30 transition-all duration-300 cursor-pointer"
               onClick={() => window.location.href = createPageUrl("NutritionPlanner")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
-                    <Utensils className="w-6 h-6 text-gray-600" />
+                    <Utensils className="w-6 h-6 text-gray-200" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.nutritionPlans}</div>
@@ -394,12 +394,12 @@ export default function CoachDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 cursor-pointer"
+            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-gray-400/30 transition-all duration-300 cursor-pointer"
               onClick={() => window.location.href = createPageUrl("SupplementPlanner")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
-                    <Pill className="w-6 h-6 text-gray-600" />
+                    <Pill className="w-6 h-6 text-gray-200" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.supplementPlans}</div>
@@ -410,12 +410,12 @@ export default function CoachDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 cursor-pointer"
+            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-gray-400/30 transition-all duration-300 cursor-pointer"
               onClick={() => window.location.href = createPageUrl("ProgressReviews")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
-                    <Calendar className="w-6 h-6 text-gray-600" />
+                    <Calendar className="w-6 h-6 text-gray-200" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.pendingReviews}</div>
@@ -426,12 +426,12 @@ export default function CoachDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 cursor-pointer"
+            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-gray-400/30 transition-all duration-300 cursor-pointer"
               onClick={() => window.location.href = createPageUrl("CoachingCalendar")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
-                    <CalendarClock className="w-6 h-6 text-gray-600" />
+                    <CalendarClock className="w-6 h-6 text-gray-200" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.todaysEventsCount}</div>
@@ -442,12 +442,12 @@ export default function CoachDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 cursor-pointer"
+            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-gray-400/30 transition-all duration-300 cursor-pointer"
               onClick={() => window.location.href = createPageUrl("ClientChat")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
-                    <MessageSquare className="w-6 h-6 text-gray-600" />
+                    <MessageSquare className="w-6 h-6 text-gray-200" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.unreadClientMessages}</div>
