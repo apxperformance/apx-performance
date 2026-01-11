@@ -81,28 +81,28 @@ export default function FreeClientDashboard() {
       title: "Total Workouts",
       value: isLoading ? "..." : stats.totalWorkouts,
       icon: Dumbbell,
-      gradient: "from-gray-600 to-gray-800",
+      gradient: "from-secondary to-secondary/70",
       subtitle: "Programs assigned"
     },
     {
       title: "Completed",
       value: isLoading ? "..." : stats.completedWorkouts,
       icon: CheckCircle,
-      gradient: "from-green-600 to-green-800",
+      gradient: "from-primary to-primary/80",
       subtitle: "Workouts finished"
     },
     {
       title: "Nutrition Plan",
       value: isLoading ? "..." : (stats.currentNutritionPlan ? "Active" : "None"),
       icon: Utensils,
-      gradient: "from-gray-700 to-gray-800",
+      gradient: "from-secondary to-secondary/70",
       subtitle: stats.currentNutritionPlan?.name || "Not assigned"
     },
     {
       title: "Last Check-in",
       value: isLoading ? "..." : (stats.lastCheckIn ? new Date(stats.lastCheckIn.created_date).toLocaleDateString() : "Never"),
       icon: Calendar,
-      gradient: "from-gray-700 to-gray-800",
+      gradient: "from-secondary to-secondary/70",
       subtitle: "Progress update"
     }
   ];
@@ -110,7 +110,7 @@ export default function FreeClientDashboard() {
   if (isLoading && !user) {
     return (
       <div className="flex justify-center items-center h-full">
-        <div className="w-12 h-12 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -122,10 +122,10 @@ export default function FreeClientDashboard() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Card className="bg-gray-100/50 border border-gray-300">
+        <Card className="bg-card/50 border border-border">
           <CardContent className="p-6 flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
-            <div className="p-3 bg-gray-200 rounded-full flex-shrink-0">
-              <Crown className="w-8 h-8 text-gray-700" />
+            <div className="p-3 bg-muted rounded-full flex-shrink-0">
+              <Crown className="w-8 h-8 text-primary" />
             </div>
             <div className="flex-1">
               <h2 className="text-xl font-bold text-foreground">Unlock Your Full Potential!</h2>
@@ -134,7 +134,7 @@ export default function FreeClientDashboard() {
               </p>
             </div>
             <Link to={createPageUrl("BrowseCoaches")}>
-              <Button className="bg-gray-800 hover:bg-gray-700 text-white font-semibold mt-2 md:mt-0">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold mt-2 md:mt-0">
                 Find a Coach
               </Button>
             </Link>
@@ -151,7 +151,7 @@ export default function FreeClientDashboard() {
       >
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Zap className="w-8 h-8 text-gray-600" />
+            <Zap className="w-8 h-8 text-primary" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               Welcome, {user?.full_name?.split(' ')[0]}
             </h1>
@@ -160,7 +160,7 @@ export default function FreeClientDashboard() {
         </div>
         <div className="flex gap-3">
           <Link to={createPageUrl("CheckInJournal")}>
-            <Button className="bg-gray-800 hover:bg-gray-700 text-white font-semibold">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
               <Calendar className="w-4 h-4 mr-2" />
               Check In
             </Button>
@@ -177,8 +177,8 @@ export default function FreeClientDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 + index * 0.05 }}
           >
-            <Card className="overflow-hidden shadow-lg border-none">
-              <div className={`p-6 bg-gradient-to-br ${card.gradient} text-white`}>
+            <Card className="overflow-hidden shadow-lg border-border">
+              <div className={`p-6 bg-gradient-to-br ${card.gradient} text-foreground`}>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-sm font-medium opacity-90">{card.title}</h3>
                   <card.icon className="w-5 h-5 opacity-80" />
@@ -201,7 +201,7 @@ export default function FreeClientDashboard() {
           <Card className="bg-gradient-to-br from-card/50 to-secondary/50 backdrop-blur-xl border-border">
             <CardHeader className="pb-4">
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Dumbbell className="w-5 h-5 text-gray-600" />
+                <Dumbbell className="w-5 h-5 text-primary" />
                 Today's Workout
               </CardTitle>
             </CardHeader>
@@ -223,7 +223,7 @@ export default function FreeClientDashboard() {
           <Card className="bg-gradient-to-br from-card/50 to-secondary/50 backdrop-blur-xl border-border">
             <CardHeader className="pb-4">
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Utensils className="w-5 h-5 text-gray-600" />
+                <Utensils className="w-5 h-5 text-primary" />
                 Nutrition Plan
               </CardTitle>
             </CardHeader>
