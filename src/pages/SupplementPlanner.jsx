@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { User } from "@/entities/User";
 import { SupplementPlan } from "@/entities/SupplementPlan";
@@ -237,14 +236,14 @@ export default function SupplementPlanner() {
 
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Pill className="w-8 h-8 text-[#C5B358]" />
+            <Pill className="w-8 h-8 text-primary" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Supplement Planner</h1>
           </div>
           <p className="text-muted-foreground">Design and assign supplement protocols for your clients.</p>
         </div>
         <Button
           onClick={() => setIsCreateDialogOpen(true)}
-          className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
 
           <Plus className="w-4 h-4 mr-2" />
           Create New Plan
@@ -258,16 +257,16 @@ export default function SupplementPlanner() {
             placeholder="Search plans..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-input text-slate-900 pr-10 px-3 py-2 text-base rounded-md flex h-10 w-full border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-border focus:border-[#C5B358]" />
+            className="bg-input text-foreground pr-10 px-3 py-2 text-base rounded-md flex h-10 w-full border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-border" />
           <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
         </div>
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className={`border-border text-foreground hover:bg-secondary ${hasActiveFilters ? "border-[#C5B358] bg-[#C5B358]/10" : ""}`}>
+            <Button variant="outline" className={`border-border text-foreground hover:bg-secondary ${hasActiveFilters ? "border-primary bg-primary/10" : ""}`}>
               <Filter className="w-4 h-4 mr-2" />
               Filters
-              {hasActiveFilters && <span className="ml-2 bg-[#C5B358] text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold">•</span>}
+              {hasActiveFilters && <span className="ml-2 bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold">•</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80 bg-popover border-border backdrop-blur-xl">
@@ -337,8 +336,8 @@ export default function SupplementPlanner() {
                 <p className="text-sm text-muted-foreground">Total Templates</p>
                 <p className="text-3xl font-bold text-foreground">{plans.filter((p) => p.is_template === true && !p.client_id).length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center">
-                <Pill className="w-6 h-6 text-[#C5B358]" />
+              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Pill className="w-6 h-6 text-primary" />
               </div>
             </div>
           </CardContent>
@@ -351,8 +350,8 @@ export default function SupplementPlanner() {
                 <p className="text-sm text-muted-foreground">Assigned Plans</p>
                 <p className="text-3xl font-bold text-foreground">{plans.filter((p) => p.client_id).length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center">
-                <UserCheck className="w-6 h-6 text-[#C5B358]" />
+              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+                <UserCheck className="w-6 h-6 text-primary" />
               </div>
             </div>
           </CardContent>
@@ -365,8 +364,8 @@ export default function SupplementPlanner() {
                 <p className="text-sm text-muted-foreground">Active Clients</p>
                 <p className="text-3xl font-bold text-foreground">{clients.filter((c) => c.status === 'active').length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center">
-                <Users className="w-6 h-6 text-[#C5B358]" />
+              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Users className="w-6 h-6 text-primary" />
               </div>
             </div>
           </CardContent>

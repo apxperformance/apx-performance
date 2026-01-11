@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -299,7 +298,7 @@ export default function ProgressReviews() {
             placeholder="Search by client name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pr-10 bg-input border-border focus:border-[#C5B358]"
+            className="pr-10 bg-input border-border text-foreground"
           />
           <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           {searchTerm && (
@@ -317,7 +316,7 @@ export default function ProgressReviews() {
           <Button
             variant={isBulkMode ? "default" : "outline"}
             onClick={toggleBulkMode}
-            className={isBulkMode ? "bg-[#C5B358] hover:bg-[#A4913C] text-black" : "border-border"}
+            className={isBulkMode ? "bg-primary hover:bg-primary/90 text-primary-foreground" : "border-border"}
           >
             <CheckSquare className="w-4 h-4 mr-2" />
             {isBulkMode ? "Cancel Bulk" : "Bulk Review"}
