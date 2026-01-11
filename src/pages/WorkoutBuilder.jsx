@@ -33,11 +33,12 @@ export default function WorkoutBuilder() {
         base44.entities.Workout.filter({ coach_id: user.id }, "-created_date"),
         base44.entities.Client.filter({ coach_id: user.id })
       ]);
-      
+
       setWorkouts(workoutData);
       setClients(clientData);
     } catch (error) {
       console.error("Error loading data:", error);
+      toast.error("Failed to load workout data.");
     }
     setIsLoading(false);
   };
@@ -65,10 +66,7 @@ export default function WorkoutBuilder() {
   const handleAssignPlan = async (planId, clientIds) => {
     try {
       const templateWorkout = workouts.find(w => w.id === planId);
-      if (!templateWorkout) {
-        toast.error("Workout template not found.");
-        return;
-      }
+      if (!templateWorkout) return;
 
       const assignPromises = clientIds.map(clientId => {
         const assignedClient = clients.find(c => c.id === clientId);
@@ -85,31 +83,18 @@ export default function WorkoutBuilder() {
         });
       });
       
-      const results = await Promise.allSettled(assignPromises);
-      
-      const successCount = results.filter(r => r.status === 'fulfilled').length;
-      const failureCount = results.filter(r => r.status === 'rejected').length;
-      
+      await Promise.allSettled(assignPromises);
       await loadData();
       setIsAssignDialogOpen(false);
       setWorkoutToAssign(null);
-      
-      if (failureCount === 0) {
-        toast.success(`Workout assigned to ${successCount} client${successCount > 1 ? 's' : ''}!`);
-      } else if (successCount > 0) {
-        toast.warning(`Partially assigned: ${successCount} succeeded, ${failureCount} failed. Please try again for failed assignments.`);
-      } else {
-        toast.error("Failed to assign workout to any clients. Please try again.");
-      }
+      toast.success("Workouts assigned successfully!");
     } catch (error) {
-      console.error("Error assigning workout:", error);
-      toast.error("Failed to assign workout. Please try again.");
+      toast.error("Failed to assign workouts.");
     }
   };
 
   const filteredWorkouts = workouts.filter(workout =>
-    workout.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (workout.description && workout.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    workout.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const templateWorkouts = filteredWorkouts.filter(w => w.is_template !== false);
@@ -117,8 +102,7 @@ export default function WorkoutBuilder() {
 
   return (
     <div className="p-6 md:p-8 space-y-8">
-      {/* Header */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
@@ -128,14 +112,14 @@ export default function WorkoutBuilder() {
             <Dumbbell className="w-8 h-8 text-primary" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Workout Builder</h1>
           </div>
-          <p className="text-muted-foreground">Create, customize, and assign workout programs to your clients.</p>
+          <p className="text-muted-foreground">Create and manage workout programs for your clients.</p>
         </div>
         <Button
           onClick={() => setIsCreateDialogOpen(true)}
           className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
         >
           <Plus className="w-4 h-4 mr-2" />
-          Create New Workout
+          Create Workout
         </Button>
       </motion.div>
 
@@ -145,56 +129,35 @@ export default function WorkoutBuilder() {
           placeholder="Search workouts..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-input text-foreground pr-10 px-3 py-2 text-base rounded-md flex h-10 w-full border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-border"
+          className="bg-input border-border text-foreground focus:border-primary"
         />
         <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-card/50 backdrop-blur-xl border-border">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Workouts</p>
-                <p className="text-3xl font-bold text-foreground">{templateWorkouts.length}</p>
+        {[
+          { label: "Total Workouts", val: templateWorkouts.length, icon: Dumbbell },
+          { label: "Templates", val: templateWorkouts.length, icon: Plus },
+          { label: "Assigned", val: clientWorkouts.length, icon: Users }
+        ].map((stat, i) => (
+          <Card key={i} className="bg-card border-border">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  <p className="text-3xl font-bold text-foreground">{stat.val}</p>
+                </div>
+                <div className="p-3 rounded-xl bg-secondary text-primary flex items-center justify-center">
+                  <stat.icon className="w-6 h-6" />
+                </div>
               </div>
-              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
-                <Dumbbell className="w-6 h-6 text-primary" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-card/50 backdrop-blur-xl border-border">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Templates</p>
-                <p className="text-3xl font-bold text-foreground">{templateWorkouts.length}</p>
-              </div>
-              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
-                <Plus className="w-6 h-6 text-primary" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-card/50 backdrop-blur-xl border-border">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Assigned</p>
-                <p className="text-3xl font-bold text-foreground">{clientWorkouts.length}</p>
-              </div>
-              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
-                <Users className="w-6 h-6 text-primary" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
+      {/* Workout Lists */}
       {selectedWorkout ? (
         <WorkoutDetailView
           workout={selectedWorkout}
@@ -206,63 +169,20 @@ export default function WorkoutBuilder() {
         />
       ) : (
         <div className="space-y-8">
-          {/* Template Workouts */}
           <div>
-            <h2 className="text-2xl font-bold text-foreground mb-4">Workout Templates</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-4">Templates</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {isLoading ? (
-                Array(6).fill(0).map((_, i) => (
-                  <div key={i} className="h-48 bg-secondary rounded-lg animate-pulse"></div>
-                ))
-              ) : templateWorkouts.length > 0 ? (
-                templateWorkouts.map((workout, index) => (
-                  <motion.div
-                    key={workout.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    <WorkoutCard
-                      workout={workout}
-                      onClick={() => setSelectedWorkout(workout)}
-                      onAssign={() => handleAssignWorkout(workout)}
-                      isTemplate={true}
-                    />
-                  </motion.div>
-                ))
-              ) : (
-                <div className="col-span-full text-center py-12 text-muted-foreground">
-                  <Dumbbell className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                  <h3 className="text-xl font-semibold text-foreground">No Templates Yet</h3>
-                  <p>Create your first workout template to get started.</p>
-                </div>
-              )}
+              {templateWorkouts.map((workout) => (
+                <WorkoutCard
+                  key={workout.id}
+                  workout={workout}
+                  onClick={() => setSelectedWorkout(workout)}
+                  onAssign={() => handleAssignWorkout(workout)}
+                  isTemplate={true}
+                />
+              ))}
             </div>
           </div>
-
-          {/* Client Workouts */}
-          {clientWorkouts.length > 0 && (
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">Assigned Workouts</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {clientWorkouts.map((workout, index) => (
-                  <motion.div
-                    key={workout.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    <WorkoutCard
-                      workout={workout}
-                      onClick={() => setSelectedWorkout(workout)}
-                      client={clients.find(c => c.id === workout.client_id)}
-                      isTemplate={false}
-                    />
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       )}
 
@@ -272,7 +192,6 @@ export default function WorkoutBuilder() {
         onClose={() => setIsCreateDialogOpen(false)}
         onWorkoutCreated={handleWorkoutCreated}
       />
-
       <AssignWorkoutDialog
         isOpen={isAssignDialogOpen}
         workout={workoutToAssign}
