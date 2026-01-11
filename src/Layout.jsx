@@ -187,6 +187,63 @@ function LayoutContent({ children, currentPageName }) {
   if (currentPageName === "Welcome" || isLoading) {
     return (
       <div className="min-h-screen bg-background">
+        <style>
+          {`
+            :root {
+              --background: ${isDarkMode ? '0 0% 3.9%' : '0 0% 95%'};
+              --foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
+              --card: ${isDarkMode ? '0 0% 3.9%' : '0 0% 100%'};
+              --card-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
+              --popover: ${isDarkMode ? '0 0% 3.9%' : '0 0% 100%'};
+              --popover-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
+              --primary: 49 39% 56%;
+              --primary-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
+              --secondary: ${isDarkMode ? '0 0% 14.9%' : '0 0% 92%'};
+              --secondary-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 9%'};
+              --muted: ${isDarkMode ? '0 0% 14.9%' : '0 0% 92%'};
+              --muted-foreground: ${isDarkMode ? '0 0% 63.9%' : '0 0% 45.1%'};
+              --accent: 49 39% 56%;
+              --accent-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
+
+              --destructive: ${isDarkMode ? '0 62.8% 30.6%' : '0 84.2% 60.2%'};
+              --destructive-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
+
+              --success: ${isDarkMode ? '142 70.6% 21%' : '142.1 76.2% 36.3%'};
+              --success-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
+
+              --warning: ${isDarkMode ? '48 95.8% 29.2%' : '47.9 95.8% 53.1%'};
+              --warning-foreground: ${isDarkMode ? '48 95.8% 98%' : '48 95.8% 10%'};
+
+              --border: ${isDarkMode ? '0 0% 25%' : '0 0% 70%'};
+              --input: ${isDarkMode ? '0 0% 25%' : '0 0% 70%'};
+              --ring: 49 39% 56%;
+            }
+
+            /* Mobile Responsiveness: Prevent iOS auto-zoom */
+            input, textarea, select {
+              color: #000000 !important;
+              font-size: 16px !important;
+            }
+
+            input::placeholder,
+            textarea::placeholder {
+              color: hsl(var(--muted-foreground));
+            }
+
+            /* Mobile Responsiveness: Minimum touch target sizes */
+            button,
+            [role="button"],
+            a[role="button"] {
+              min-height: 44px;
+            }
+
+            /* Prevent horizontal scrolling */
+            html, body {
+              overflow-x: hidden;
+              max-width: 100vw;
+            }
+          `}
+        </style>
         {isLoading ?
         <div className="min-h-screen flex items-center justify-center">
             <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
@@ -240,6 +297,48 @@ function LayoutContent({ children, currentPageName }) {
     <SidebarProvider>
       <Toaster />
       <div className="min-h-screen flex w-full bg-background text-foreground">
+        <style>
+          {`
+            :root {
+              --background: ${isDarkMode ? '0 0% 3.9%' : '0 0% 95%'};
+              --foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
+              --card: ${isDarkMode ? '0 0% 3.9%' : '0 0% 100%'};
+              --card-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
+              --popover: ${isDarkMode ? '0 0% 3.9%' : '0 0% 100%'};
+              --popover-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
+              --primary: 49 39% 56%;
+              --primary-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
+              --secondary: ${isDarkMode ? '0 0% 14.9%' : '0 0% 92%'};
+              --secondary-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 9%'};
+              --muted: ${isDarkMode ? '0 0% 14.9%' : '0 0% 92%'};
+              --muted-foreground: ${isDarkMode ? '0 0% 63.9%' : '0 0% 45.1%'};
+              --accent: 49 39% 56%;
+              --accent-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
+              
+              --destructive: ${isDarkMode ? '0 62.8% 30.6%' : '0 84.2% 60.2%'};
+              --destructive-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
+              
+              --success: ${isDarkMode ? '142 70.6% 21%' : '142.1 76.2% 36.3%'};
+              --success-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
+              
+              --warning: ${isDarkMode ? '48 95.8% 29.2%' : '47.9 95.8% 53.1%'};
+              --warning-foreground: ${isDarkMode ? '48 95.8% 98%' : '48 95.8% 10%'};
+
+              --border: ${isDarkMode ? '0 0% 25%' : '0 0% 70%'};
+              --input: ${isDarkMode ? '0 0% 25%' : '0 0% 70%'};
+              --ring: 49 39% 56%;
+            }
+            
+            input, textarea, select {
+              color: #000000 !important;
+            }
+            
+            input::placeholder,
+            textarea::placeholder {
+              color: hsl(var(--muted-foreground));
+            }
+          `}
+        </style>
         
         <Sidebar className="border-r border-gray-200 bg-gray-100 backdrop-blur-xl">
           <SidebarHeader className="border-b border-gray-200 p-6">
