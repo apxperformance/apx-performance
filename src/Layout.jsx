@@ -366,10 +366,10 @@ function LayoutContent({ children, currentPageName }) {
                   <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
                       asChild
-                      className={`hover:bg-gray-300/50 hover:text-gray-900 transition-all duration-300 rounded-xl mb-2 group ${
+                      className={`hover:bg-accent hover:text-accent-foreground transition-all duration-300 rounded-xl mb-2 group ${
                       location.pathname === item.url 
-                        ? 'bg-gray-300 text-gray-900' 
-                        : 'text-gray-700 hover:text-gray-900'
+                        ? 'bg-accent text-accent-foreground' 
+                        : 'text-foreground'
                       }`}>
 
                         <Link to={item.url} className="flex items-center gap-3 px-4 py-3">
