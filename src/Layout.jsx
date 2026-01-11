@@ -178,17 +178,21 @@ function LayoutContent({ children, currentPageName }) {
   const handleLogout = async () => {
     console.log("🚪 Logging out...");
     setHasValidated(false);
+    
+    // Clear all local state and storage IMMEDIATELY
     localStorage.clear();
     sessionStorage.clear();
     
     try {
+      // Call logout API
       await base44.auth.logout();
     } catch (e) {
-      console.log("Logout error:", e);
+      console.error("Logout error:", e);
+      // Even if logout fails, still redirect to ensure security
+    } finally {
+      // Force immediate redirect to login - no matter what
+      window.location.href = '/';
     }
-    
-    // Redirect to login page
-    base44.auth.redirectToLogin();
   };
 
   if (currentPageName === "Welcome" || isLoading) {
