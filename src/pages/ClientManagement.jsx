@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -182,7 +181,7 @@ export default function ClientManagement() {
       >
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Users className="w-8 h-8 text-[#C5B358]" />
+            <Users className="w-8 h-8 text-gray-600" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Client Management</h1>
           </div>
           <p className="text-muted-foreground">View, manage, and invite your clients.</p>
@@ -190,7 +189,7 @@ export default function ClientManagement() {
         <div className="flex gap-3 ml-auto flex-shrink-0">
           <Button
             onClick={() => setIsAddNewDialogOpen(true)}
-            className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold whitespace-nowrap"
+            className="bg-gray-800 hover:bg-gray-700 text-white font-semibold whitespace-nowrap"
           >
             <Mail className="w-4 h-4 mr-2" />
             Invite New Client
