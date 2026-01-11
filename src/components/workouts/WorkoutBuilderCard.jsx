@@ -6,15 +6,15 @@ import { WORKOUT_TYPE_COLORS, DIFFICULTY_COLORS } from "./workoutConstants";
 
 export default function WorkoutBuilderCard({ workout, onClick, onAssign, client, isTemplate = true }) {
   return (
-    <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 group">
+    <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-gray-400/50 transition-all duration-300 group">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-foreground text-lg group-hover:text-[#C5B358] transition-colors">
+          <CardTitle className="text-foreground text-lg group-hover:text-gray-600 transition-colors">
             {workout.name}
           </CardTitle>
           <div className="flex gap-2">
             {isTemplate && (
-              <Badge variant="outline" className="border-[#C5B358]/30 text-[#C5B358] bg-[#C5B358]/10">
+              <Badge variant="outline" className="border-gray-400/30 text-gray-600 bg-gray-400/10">
                 Template
               </Badge>
             )}
@@ -32,7 +32,7 @@ export default function WorkoutBuilderCard({ workout, onClick, onAssign, client,
         
         <div className="flex items-center gap-4 text-sm text-foreground">
           <div className="flex items-center gap-1">
-            <Clock className="w-4 h-4 text-[#C5B358]" />
+            <Clock className="w-4 h-4 text-gray-600" />
             <span>{workout.estimated_duration || 45} min</span>
           </div>
           <Badge className={DIFFICULTY_COLORS[workout.difficulty_level] || DIFFICULTY_COLORS.intermediate}>
@@ -59,7 +59,7 @@ export default function WorkoutBuilderCard({ workout, onClick, onAssign, client,
             onClick={onClick}
             variant="outline"
             size="sm"
-            className="flex-1 border-border text-foreground hover:bg-secondary hover:border-[#C5B358]"
+            className="flex-1 border-border text-foreground hover:bg-secondary hover:border-gray-600"
           >
             <Eye className="w-4 h-4 mr-2" />
             View
@@ -71,7 +71,7 @@ export default function WorkoutBuilderCard({ workout, onClick, onAssign, client,
                 onAssign();
               }}
               size="sm"
-              className="flex-1 bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold"
+              className="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-semibold"
             >
               <Users className="w-4 h-4 mr-2" />
               Assign

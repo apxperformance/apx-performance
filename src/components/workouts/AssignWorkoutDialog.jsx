@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -30,7 +29,7 @@ export default function AssignWorkoutDialog({ isOpen, workout, clients, onClose,
       <DialogContent className="bg-card border-border text-card-foreground max-w-md backdrop-blur-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl text-foreground">
-            <Users className="w-6 h-6 text-[#C5B358]" />
+            <Users className="w-6 h-6 text-gray-600" />
             Assign "{workout.name}"
           </DialogTitle>
         </DialogHeader>
@@ -50,8 +49,8 @@ export default function AssignWorkoutDialog({ isOpen, workout, clients, onClose,
                   onChange={() => handleClientToggle(client.id)}
                 />
                 <div className="flex items-center gap-3 flex-1">
-                  <div className="w-8 h-8 bg-gradient-to-r from-[#C5B358] to-[#A4913C] rounded-full flex items-center justify-center">
-                    <span className="text-black font-semibold text-sm">
+                  <div className="w-8 h-8 bg-gradient-to-r from-gray-600 to-gray-800 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold text-sm">
                       {client.full_name.charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -79,7 +78,7 @@ export default function AssignWorkoutDialog({ isOpen, workout, clients, onClose,
           <Button 
             onClick={handleAssign}
             disabled={selectedClients.length === 0}
-            className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold"
+            className="bg-gray-800 hover:bg-gray-700 text-white font-semibold"
           >
             <UserCheck className="w-4 h-4 mr-2" />
             Assign to {selectedClients.length} Client{selectedClients.length !== 1 ? 's' : ''}

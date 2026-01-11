@@ -72,7 +72,7 @@ export default function CreateWorkoutDialog({ isOpen, onClose, onWorkoutCreated,
       <DialogContent className="bg-card border-border text-card-foreground max-w-md backdrop-blur-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl text-foreground">
-            <Dumbbell className="w-6 h-6 text-[#C5B358]" />
+            <Dumbbell className="w-6 h-6 text-gray-600" />
             Create New Workout
           </DialogTitle>
         </DialogHeader>
@@ -100,7 +100,7 @@ export default function CreateWorkoutDialog({ isOpen, onClose, onWorkoutCreated,
               onChange={handleInputChange}
               placeholder="Brief description of the workout..."
               rows={3}
-              className="bg-input border-border focus:border-[#C5B358] resize-none text-slate-900"
+              className="bg-input border-border focus:border-gray-600 resize-none text-slate-900"
             />
           </div>
 
@@ -154,7 +154,7 @@ export default function CreateWorkoutDialog({ isOpen, onClose, onWorkoutCreated,
             <Button type="button" variant="outline" onClick={onClose} className="border-border hover:bg-secondary text-foreground">
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting} className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+            <Button type="submit" disabled={isSubmitting} className="bg-gray-800 hover:bg-gray-700 text-white font-semibold">
               {isSubmitting ? "Creating..." : "Create Workout"}
             </Button>
           </div>
