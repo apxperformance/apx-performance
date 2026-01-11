@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { base44 } from "@/api/base44Client";
@@ -107,9 +106,6 @@ export default function CheckInForm({ user, onSubmitSuccess, submitMutation }) {
           await base44.entities.Client.update(clientRecord.id, {
             last_checkin: new Date().toISOString() // Use current time for last check-in
           });
-          console.log("Client's last_checkin updated successfully.");
-        } else {
-          console.log("No client record found for user_id:", user.id, "- skipping last_checkin update.");
         }
       } catch (clientUpdateError) {
         // Don't fail the entire check-in if client update fails
@@ -122,7 +118,6 @@ export default function CheckInForm({ user, onSubmitSuccess, submitMutation }) {
           await base44.auth.updateMe({
             current_weight: parseFloat(data.weight)
           });
-          console.log("User's current_weight updated successfully.");
         } catch (weightUpdateError) {
           console.error("Error updating user's current_weight:", weightUpdateError);
           // Don't fail the entire check-in if user weight update fails
@@ -145,9 +140,6 @@ export default function CheckInForm({ user, onSubmitSuccess, submitMutation }) {
         try {
           // Note: The Core.UploadFile integration uploads to public storage.
           // Public files can't be deleted via API for security reasons.
-          // However, we can at least log this for monitoring.
-          console.warn("Orphaned files (cannot auto-delete public files):", uploadedFileUrls);
-          
           // For future enhancement: If files were uploaded to private storage,
           // we could delete them here using base44.integrations.Core.DeleteFile()
           

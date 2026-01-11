@@ -68,12 +68,7 @@ function LayoutContent({ children, currentPageName }) {
     const validateUserAccess = async () => {
       if (isLoading || !user || hasValidated) return;
 
-      console.log("=== INITIAL VALIDATION ===");
-      console.log("User:", user.email);
-      console.log("User Type:", user.user_type);
-      console.log("Coach ID:", user.coach_id);
-      console.log("Current Page:", currentPageName);
-      console.log("========================");
+
 
       let shouldRedirect = false;
       let redirectUrl = null;
@@ -82,21 +77,21 @@ function LayoutContent({ children, currentPageName }) {
         // Coaches should not access client-specific pages
         const clientOnlyPages = ["ClientDashboard", "MyWorkouts", "MyNutrition", "MySupplements", "FreeClientDashboard", "FoodTracker", "CheckInJournal", "MyProgress", "ClientSettings", "ClientCalendar"];
         if (clientOnlyPages.includes(currentPageName)) {
-          console.warn("❌ Coach user on a client-only page, redirecting to CoachDashboard...");
+  
           shouldRedirect = true;
           redirectUrl = createPageUrl("CoachDashboard");
         }
       } else if (user.user_type === 'client') {
         // Clients with a coach shouldn't see the FreeClientDashboard
         if (user.coach_id && currentPageName === "FreeClientDashboard") {
-          console.log("✅ Assigned client on free page, redirecting to ClientDashboard...");
+  
           shouldRedirect = true;
           redirectUrl = createPageUrl("ClientDashboard");
         }
         
         // Clients without a coach should see FreeClientDashboard as their main dashboard
         if (!user.coach_id && currentPageName === "ClientDashboard") {
-          console.log("✅ Unassigned client on assigned dashboard, redirecting to FreeClientDashboard...");
+  
           shouldRedirect = true;
           redirectUrl = createPageUrl("FreeClientDashboard");
         }
@@ -112,13 +107,13 @@ function LayoutContent({ children, currentPageName }) {
         // Coach-only pages should not be accessible by clients
         const coachOnlyPages = ["CoachDashboard", "ClientManagement", "WorkoutBuilder", "NutritionPlanner", "ProgressReviews", "CoachSettings", "SupplementPlanner", "CoachingCalendar"];
         if (coachOnlyPages.includes(currentPageName)) {
-          console.warn("❌ Client user on a coach-only page, redirecting...");
+  
           shouldRedirect = true;
           redirectUrl = user.coach_id ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard");
         }
       } else if (!user.user_type) {
         if (currentPageName !== "Welcome") {
-          console.log("❌ User without type trying to access app, redirecting to Welcome...");
+  
           shouldRedirect = true;
           redirectUrl = createPageUrl("Welcome");
         }
@@ -127,10 +122,7 @@ function LayoutContent({ children, currentPageName }) {
       setHasValidated(true);
 
       if (shouldRedirect && redirectUrl) {
-        console.log("🔄 Redirecting to:", redirectUrl);
         navigate(redirectUrl, { replace: true });
-      } else {
-        console.log("✅ Validation passed - no redirect needed");
       }
     };
 
@@ -146,10 +138,7 @@ function LayoutContent({ children, currentPageName }) {
     const isDashboardPage = currentPageName === "ClientDashboard" || currentPageName === "FreeClientDashboard";
     if (!isDashboardPage) return;
 
-    console.log("=== DASHBOARD VALIDATION ===");
-    console.log("Page:", currentPageName);
-    console.log("Has Coach:", user.coach_id ? "Yes" : "No");
-    console.log("===========================");
+
 
     let shouldRedirect = false;
     let redirectUrl = null;
@@ -157,14 +146,14 @@ function LayoutContent({ children, currentPageName }) {
     if (user.user_type === 'client') {
       // Client WITH coach trying to access FreeClientDashboard
       if (user.coach_id && currentPageName === "FreeClientDashboard") {
-        console.log("🔄 Dashboard redirect: Assigned client → ClientDashboard");
+
         shouldRedirect = true;
         redirectUrl = createPageUrl("ClientDashboard");
       }
       
       // Client WITHOUT coach trying to access ClientDashboard
       if (!user.coach_id && currentPageName === "ClientDashboard") {
-        console.log("🔄 Dashboard redirect: Unassigned client → FreeClientDashboard");
+
         shouldRedirect = true;
         redirectUrl = createPageUrl("FreeClientDashboard");
       }
@@ -176,7 +165,6 @@ function LayoutContent({ children, currentPageName }) {
   }, [currentPageName, user, hasValidated, isLoading, navigate]);
 
   const handleLogout = async () => {
-    console.log("🚪 Logging out...");
     setHasValidated(false);
     
     // Clear all local state and storage IMMEDIATELY

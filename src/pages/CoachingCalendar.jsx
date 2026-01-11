@@ -126,9 +126,7 @@ export default function CoachingCalendar() {
 
         setEvents(filteredUniqueEvents);
         
-        if (uniqueEvents.length !== freshEvents.length) {
-          console.warn(`Removed ${freshEvents.length - uniqueEvents.length} duplicate events from UI`);
-        }
+
       } catch (error) {
         console.error("Error refreshing events:", error);
         // Fallback to regular load if refresh fails

@@ -60,7 +60,6 @@ export function UserProvider({ children }) {
           setIsLoading(false);
           // If not authenticated, redirect to login
           if (!isAuth && window.location.pathname !== '/' && !window.location.pathname.startsWith('/Welcome')) {
-            console.warn('User not authenticated, redirecting to login');
             window.location.href = '/';
           }
           return;
@@ -80,7 +79,6 @@ export function UserProvider({ children }) {
           setUser(null);
           // On authentication error, redirect to login for security
           if (error?.message?.includes('authentication') || error?.message?.includes('token')) {
-            console.warn('Authentication error detected, redirecting to login');
             window.location.href = '/';
           }
         }

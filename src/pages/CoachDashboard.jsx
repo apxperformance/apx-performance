@@ -107,9 +107,6 @@ export default function CoachDashboard() {
         ac => !existingClientUserIds.has(ac.user_id)
       );
       
-      console.log(`Found ${allAvailable.length} total available clients`);
-      console.log(`Filtered to ${trulyAvailable.length} clients not already with this coach`);
-      
       return trulyAvailable;
     },
     enabled: !!user && !clientsLoading, // Wait for clients to load first
