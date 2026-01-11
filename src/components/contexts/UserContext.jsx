@@ -50,23 +50,42 @@ export function UserProvider({ children }) {
   const [activeClientCount, setActiveClientCount] = useState(0);
 
   useEffect(() => {
+    let isMounted = true;
+    
     const loadUser = async () => {
       try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (!isAuth || !isMounted) {
+          setUser(null);
+          setIsLoading(false);
+          return;
+        }
+
         const userData = await base44.auth.me();
+        if (!isMounted) return;
+        
         setUser(userData);
         
-        // ✅ If user is a coach, calculate their tier
         if (userData?.user_type === 'coach') {
           await loadCoachTier(userData.id);
         }
       } catch (error) {
         console.error('Error loading user:', error);
-        setUser(null);
+        if (isMounted) {
+          setUser(null);
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
+    
     loadUser();
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const loadCoachTier = async (coachId) => {
