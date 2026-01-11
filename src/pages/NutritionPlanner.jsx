@@ -139,7 +139,7 @@ export default function NutritionPlanner() {
         </div>
         <Button
           onClick={() => setIsCreateDialogOpen(true)}
-          className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+          className="bg-gray-800 hover:bg-gray-700 text-white font-semibold">
 
           <Plus className="w-4 h-4 mr-2" />
           Create Nutrition Plan
