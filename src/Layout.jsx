@@ -340,15 +340,15 @@ function LayoutContent({ children, currentPageName }) {
           `}
         </style>
         
-        <Sidebar className="border-r border-border bg-card backdrop-blur-xl">
-          <SidebarHeader className="border-b border-border p-6">
+        <Sidebar className="border-r border-gray-200 bg-gray-100 backdrop-blur-xl">
+          <SidebarHeader className="border-b border-gray-200 p-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl flex items-center justify-center shadow-lg">
                 {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-white" /> : <Zap className="w-6 h-6 text-white" />}
               </div>
               <div>
-                <h2 className="text-lg font-bold text-foreground">Level Up</h2>
-                <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                <h2 className="text-lg font-bold text-slate-900">Level Up</h2>
+                <p className="text-xs text-gray-600 uppercase tracking-wide">
                   {user?.user_type === "coach" ? "Coach Portal" : "Client Portal"}
                 </p>
               </div>
@@ -357,7 +357,7 @@ function LayoutContent({ children, currentPageName }) {
 
           <SidebarContent className="p-4">
             <SidebarGroup>
-              <SidebarGroupLabel className="text-xs font-medium uppercase tracking-wider px-2 py-3 text-muted-foreground">
+              <SidebarGroupLabel className="text-xs font-medium uppercase tracking-wider px-2 py-3 text-gray-600">
                 {user?.user_type === "coach" ? "Coach Tools" : "My Fitness"}
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -366,10 +366,10 @@ function LayoutContent({ children, currentPageName }) {
                   <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
                       asChild
-                      className={`hover:bg-accent hover:text-accent-foreground transition-all duration-300 rounded-xl mb-2 group ${
+                      className={`hover:bg-gray-300/50 hover:text-gray-900 transition-all duration-300 rounded-xl mb-2 group ${
                       location.pathname === item.url 
-                        ? 'bg-accent text-accent-foreground' 
-                        : 'text-foreground'
+                        ? 'bg-gray-300 text-gray-900' 
+                        : 'text-gray-700 hover:text-gray-900'
                       }`}>
 
                         <Link to={item.url} className="flex items-center gap-3 px-4 py-3">
@@ -384,13 +384,13 @@ function LayoutContent({ children, currentPageName }) {
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="border-t border-border p-4 space-y-4">
+          <SidebarFooter className="border-t border-gray-200 p-4 space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground">Theme</span>
+              <span className="text-sm font-medium text-gray-700">Theme</span>
               <button
                 onClick={toggleTheme}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
-                isDarkMode ? 'bg-primary' : 'bg-muted'}`
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 ${
+                isDarkMode ? 'bg-gray-700' : 'bg-gray-400'}`
                 }>
 
                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
@@ -406,8 +406,8 @@ function LayoutContent({ children, currentPageName }) {
                 {user?.user_type === "coach" ? <Crown className="w-5 h-5 text-gray-700" /> : <UserIcon className="w-5 h-5 text-gray-600" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm truncate text-foreground">{user?.full_name}</p>
-                <p className="text-xs truncate text-muted-foreground">
+                <p className="font-medium text-sm truncate text-gray-800">{user?.full_name}</p>
+                <p className="text-xs truncate text-gray-600">
                   {user?.user_type === "coach" && coachTierInfo ? coachTierInfo.name : user?.user_type === "client" ? "Elite Member" : "User"}
                 </p>
               </div>
@@ -415,7 +415,7 @@ function LayoutContent({ children, currentPageName }) {
 
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-foreground hover:text-destructive hover:bg-destructive/10">
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-gray-700 hover:text-red-600 hover:bg-red-500/10">
 
               <LogOut className="w-4 h-4" />
               Sign Out
@@ -424,12 +424,12 @@ function LayoutContent({ children, currentPageName }) {
         </Sidebar>
 
         <main className="flex-1 flex flex-col">
-          <header className="bg-card/50 backdrop-blur-xl border-b border-border px-6 py-4">
+          <header className={`${isDarkMode ? 'bg-gray-900/30' : 'bg-white/30'} backdrop-blur-xl border-b ${isDarkMode ? 'border-gray-800' : 'border-gray-200'} px-6 py-4`}>
             <div className="flex items-center gap-4">
-              <SidebarTrigger className="md:hidden hover:bg-accent p-2 rounded-lg transition-colors duration-200" />
+              <SidebarTrigger className={`md:hidden ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'} p-2 rounded-lg transition-colors duration-200`} />
               <div className="flex items-center gap-2 flex-1">
                   <h1 className="text-xl font-bold text-foreground">Level Up</h1>
-                  <span className="text-xs text-muted-foreground uppercase tracking-wide">
+                  <span className="text-xs text-gray-500 uppercase tracking-wide">
                     {user?.user_type === "coach" ? "Coach" : "Client"}
                   </span>
                 </div>
