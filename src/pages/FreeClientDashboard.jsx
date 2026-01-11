@@ -20,9 +20,14 @@ export default function FreeClientDashboard() {
 
   useEffect(() => {
     loadDashboardData();
-  }, []);
+  }, [user]);
 
   const loadDashboardData = async () => {
+    // Guard Clause: Only proceed if user is not yet loaded
+    if (user) {
+      return;
+    }
+
     try {
       const userData = await base44.auth.me();
       setUser(userData);
@@ -38,17 +43,18 @@ export default function FreeClientDashboard() {
 
       setStats({
         totalWorkouts: workouts.length,
-        completedWorkouts: 0, // This currently defaults to 0 and needs logic to calculate actual completed workouts
+        completedWorkouts: 0,
         currentNutritionPlan: currentPlan,
         lastCheckIn
       });
 
-      setTodaysWorkout(workouts.length > 0 ? workouts[0] : null); // This currently picks the first workout
+      setTodaysWorkout(workouts.length > 0 ? workouts[0] : null);
       
     } catch (error) {
       console.error("Error loading dashboard:", error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const statsCards = [
