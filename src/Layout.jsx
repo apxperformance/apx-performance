@@ -175,19 +175,14 @@ function LayoutContent({ children, currentPageName }) {
     }
   }, [currentPageName, user, hasValidated, isLoading, navigate]);
 
-  const handleLogout = async () => {
-    try {
-      setHasValidated(false);
-      localStorage.clear();
-      sessionStorage.clear();
-      await base44.auth.logout();
-      window.location.href = `${window.location.origin}${createPageUrl("Welcome")}?show_portal_choice=true`;
-    } catch (error) {
-      console.error("Error during logout:", error);
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.href = `${window.location.origin}${createPageUrl("Welcome")}?show_portal_choice=true`;
-    }
+  const handleLogout = () => {
+    console.log("🚪 Logging out...");
+    setHasValidated(false);
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Force immediate redirect without waiting for SDK
+    window.location.replace(`${window.location.origin}${createPageUrl("Welcome")}?logged_out=true`);
   };
 
   if (currentPageName === "Welcome" || isLoading) {

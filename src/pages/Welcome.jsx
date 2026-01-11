@@ -96,11 +96,17 @@ export default function Welcome() {
 
   const checkAuthentication = useCallback(async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const justLoggedOut = urlParams.get('show_portal_choice') === 'true';
+    const justLoggedOut = urlParams.get('logged_out') === 'true' || urlParams.get('show_portal_choice') === 'true';
     const invitationToken = urlParams.get('invitationToken');
 
     if (justLoggedOut) {
-      console.log("User just logged out, showing portal choice");
+      console.log("🚪 User logged out - clearing auth and showing portal");
+      // Force logout through SDK to clear all sessions
+      try {
+        await base44.auth.logout();
+      } catch (e) {
+        console.log("Logout already complete");
+      }
       setShowPortalChoice(true);
       setIsLoading(false);
       return;
