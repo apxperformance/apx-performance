@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dumbbell, Utensils, Calendar, TrendingUp, Zap, Crown } from "lucide-react";
+import { Dumbbell, Utensils, Calendar, TrendingUp, Zap, Crown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 export default function FreeClientDashboard() {
   const [user, setUser] = useState(null);
@@ -18,19 +19,21 @@ export default function FreeClientDashboard() {
   const [todaysWorkout, setTodaysWorkout] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Effect to load user data initially
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const userData = await base44.auth.me();
         setUser(userData);
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching user for FreeClientDashboard:", error);
         setIsLoading(false);
       }
     };
     fetchUser();
   }, []);
 
+  // Effect to load dashboard data when user is available
   useEffect(() => {
     if (user) {
       loadDashboardData();
@@ -46,10 +49,11 @@ export default function FreeClientDashboard() {
 
     setIsLoading(true);
     try {
-      const [workouts, nutritionPlans, checkIns] = await Promise.all([
+      const [workouts, nutritionPlans, checkIns, completedWorkouts] = await Promise.all([
         base44.entities.Workout.filter({ client_id: user.id }),
         base44.entities.NutritionPlan.filter({ client_id: user.id }),
-        base44.entities.CheckIn.filter({ client_id: user.id }, "-created_date", 1)
+        base44.entities.CheckIn.filter({ client_id: user.id }, "-created_date", 1),
+        base44.entities.WorkoutLog.filter({ client_id: user.id })
       ]);
       
       const currentPlan = nutritionPlans.length > 0 ? nutritionPlans[0] : null;
@@ -57,7 +61,7 @@ export default function FreeClientDashboard() {
 
       setStats({
         totalWorkouts: workouts.length,
-        completedWorkouts: 0,
+        completedWorkouts: completedWorkouts.length,
         currentNutritionPlan: currentPlan,
         lastCheckIn
       });
@@ -65,7 +69,8 @@ export default function FreeClientDashboard() {
       setTodaysWorkout(workouts.length > 0 ? workouts[0] : null);
       
     } catch (error) {
-      console.error("Error loading dashboard:", error);
+      console.error("Error loading dashboard data:", error);
+      toast.error("Failed to load dashboard data. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -74,33 +79,41 @@ export default function FreeClientDashboard() {
   const statsCards = [
     {
       title: "Total Workouts",
-      value: stats.totalWorkouts,
+      value: isLoading ? "..." : stats.totalWorkouts,
       icon: Dumbbell,
       gradient: "from-gray-600 to-gray-800",
       subtitle: "Programs assigned"
     },
     {
       title: "Completed",
-      value: stats.completedWorkouts,
-      icon: TrendingUp,
-      gradient: "from-gray-600 to-gray-800",
+      value: isLoading ? "..." : stats.completedWorkouts,
+      icon: CheckCircle,
+      gradient: "from-green-600 to-green-800",
       subtitle: "Workouts finished"
     },
     {
       title: "Nutrition Plan",
-      value: stats.currentNutritionPlan ? "Active" : "None",
+      value: isLoading ? "..." : (stats.currentNutritionPlan ? "Active" : "None"),
       icon: Utensils,
       gradient: "from-gray-700 to-gray-800",
       subtitle: stats.currentNutritionPlan?.name || "Not assigned"
     },
     {
       title: "Last Check-in",
-      value: stats.lastCheckIn ? new Date(stats.lastCheckIn.created_date).toLocaleDateString() : "Never",
+      value: isLoading ? "..." : (stats.lastCheckIn ? new Date(stats.lastCheckIn.created_date).toLocaleDateString() : "Never"),
       icon: Calendar,
       gradient: "from-gray-700 to-gray-800",
       subtitle: "Progress update"
     }
   ];
+
+  if (isLoading && !user) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <div className="w-12 h-12 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 md:p-8 space-y-8">
@@ -154,6 +167,29 @@ export default function FreeClientDashboard() {
           </Link>
         </div>
       </motion.div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {statsCards.map((card, index) => (
+          <motion.div
+            key={card.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + index * 0.05 }}
+          >
+            <Card className="overflow-hidden shadow-lg border-none">
+              <div className={`p-6 bg-gradient-to-br ${card.gradient} text-white`}>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-medium opacity-90">{card.title}</h3>
+                  <card.icon className="w-5 h-5 opacity-80" />
+                </div>
+                <p className="text-3xl font-bold">{card.value}</p>
+                <p className="text-xs opacity-75 mt-1">{card.subtitle}</p>
+              </div>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
 
       {/* Today's Focus - Shown as empty state */}
       <div className="grid lg:grid-cols-2 gap-8">
