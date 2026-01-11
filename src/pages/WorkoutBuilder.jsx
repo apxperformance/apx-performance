@@ -125,14 +125,14 @@ export default function WorkoutBuilder() {
       >
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Dumbbell className="w-8 h-8 text-gray-600" />
+            <Dumbbell className="w-8 h-8 text-primary" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Workout Builder</h1>
           </div>
           <p className="text-muted-foreground">Create, customize, and assign workout programs to your clients.</p>
         </div>
         <Button
           onClick={() => setIsCreateDialogOpen(true)}
-          className="bg-gray-800 hover:bg-gray-700 text-white font-semibold"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
         >
           <Plus className="w-4 h-4 mr-2" />
           Create New Workout
@@ -145,7 +145,7 @@ export default function WorkoutBuilder() {
           placeholder="Search workouts..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-input text-slate-900 pr-10 px-3 py-2 text-base rounded-md flex h-10 w-full border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-border focus:border-gray-600"
+          className="bg-input text-foreground pr-10 px-3 py-2 text-base rounded-md flex h-10 w-full border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-border"
         />
         <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
       </div>
@@ -159,8 +159,8 @@ export default function WorkoutBuilder() {
                 <p className="text-sm text-muted-foreground">Total Workouts</p>
                 <p className="text-3xl font-bold text-foreground">{templateWorkouts.length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20 flex items-center justify-center">
-                <Dumbbell className="w-6 h-6 text-gray-200" />
+              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Dumbbell className="w-6 h-6 text-primary" />
               </div>
             </div>
           </CardContent>
@@ -173,8 +173,8 @@ export default function WorkoutBuilder() {
                 <p className="text-sm text-muted-foreground">Templates</p>
                 <p className="text-3xl font-bold text-foreground">{templateWorkouts.length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20 flex items-center justify-center">
-                <Plus className="w-6 h-6 text-gray-200" />
+              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Plus className="w-6 h-6 text-primary" />
               </div>
             </div>
           </CardContent>
@@ -187,8 +187,8 @@ export default function WorkoutBuilder() {
                 <p className="text-sm text-muted-foreground">Assigned</p>
                 <p className="text-3xl font-bold text-foreground">{clientWorkouts.length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20 flex items-center justify-center">
-                <Users className="w-6 h-6 text-gray-200" />
+              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Users className="w-6 h-6 text-primary" />
               </div>
             </div>
           </CardContent>
