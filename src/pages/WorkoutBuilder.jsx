@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { User } from "@/entities/User";
-import { Workout } from "@/entities/Workout";
-import { Client } from "@/entities/Client";
+import { base44 } from "@/api/base44Client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,10 +28,10 @@ export default function WorkoutBuilder() {
 
   const loadData = async () => {
     try {
-      const user = await User.me();
+      const user = await base44.auth.me();
       const [workoutData, clientData] = await Promise.all([
-        Workout.filter({ coach_id: user.id }, "-created_date"),
-        Client.filter({ coach_id: user.id })
+        base44.entities.Workout.filter({ coach_id: user.id }, "-created_date"),
+        base44.entities.Client.filter({ coach_id: user.id })
       ]);
       
       setWorkouts(workoutData);
@@ -74,7 +72,7 @@ export default function WorkoutBuilder() {
 
       const assignPromises = clientIds.map(clientId => {
         const assignedClient = clients.find(c => c.id === clientId);
-        return Workout.create({
+        return base44.entities.Workout.create({
           name: `${templateWorkout.name} - ${assignedClient?.full_name || 'Client'}`,
           description: templateWorkout.description,
           workout_type: templateWorkout.workout_type,
