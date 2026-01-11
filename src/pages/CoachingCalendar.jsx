@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { CalendarDays, Plus, Info } from "lucide-react";
 import { motion } from "framer-motion";
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, subMonths } from "date-fns";
+import { toast } from "sonner";
 
 import CalendarView from "../components/calendar/CalendarView";
 import AddEventDialog from "../components/calendar/AddEventDialog";
@@ -149,6 +150,7 @@ export default function CoachingCalendar() {
       await handleEventCreated();
     } catch (error) {
       console.error("Error saving event:", error);
+      toast.error("Failed to save event. Please try again.");
     }
   };
 
@@ -156,10 +158,12 @@ export default function CoachingCalendar() {
     if (window.confirm("Are you sure you want to delete this event?")) {
       try {
         await base44.entities.CalendarEvent.delete(eventId);
+        toast.success("Event deleted successfully");
         // After delete, trigger the refresh and deduplication
         await handleEventCreated();
       } catch (error) {
         console.error("Error deleting event:", error);
+        toast.error("Failed to delete event. Please try again.");
       }
     }
   };

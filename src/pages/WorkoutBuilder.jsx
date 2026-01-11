@@ -87,11 +87,22 @@ export default function WorkoutBuilder() {
         });
       });
       
-      await Promise.all(assignPromises);
+      const results = await Promise.allSettled(assignPromises);
+      
+      const successCount = results.filter(r => r.status === 'fulfilled').length;
+      const failureCount = results.filter(r => r.status === 'rejected').length;
+      
       await loadData();
       setIsAssignDialogOpen(false);
       setWorkoutToAssign(null);
-      toast.success(`Workout assigned to ${clientIds.length} client${clientIds.length > 1 ? 's' : ''}!`);
+      
+      if (failureCount === 0) {
+        toast.success(`Workout assigned to ${successCount} client${successCount > 1 ? 's' : ''}!`);
+      } else if (successCount > 0) {
+        toast.warning(`Partially assigned: ${successCount} succeeded, ${failureCount} failed. Please try again for failed assignments.`);
+      } else {
+        toast.error("Failed to assign workout to any clients. Please try again.");
+      }
     } catch (error) {
       console.error("Error assigning workout:", error);
       toast.error("Failed to assign workout. Please try again.");
