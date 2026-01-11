@@ -175,13 +175,22 @@ function LayoutContent({ children, currentPageName }) {
     }
   }, [currentPageName, user, hasValidated, isLoading, navigate]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("🚪 Logging out...");
     setHasValidated(false);
+    
+    try {
+      // FIRST: Logout from SDK to clear session
+      await base44.auth.logout();
+    } catch (e) {
+      console.log("SDK logout error (expected):", e);
+    }
+    
+    // SECOND: Clear all local data
     localStorage.clear();
     sessionStorage.clear();
     
-    // Force immediate redirect without waiting for SDK
+    // THIRD: Hard redirect to force page reload
     window.location.replace(`${window.location.origin}${createPageUrl("Welcome")}?logged_out=true`);
   };
 

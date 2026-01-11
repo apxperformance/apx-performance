@@ -100,13 +100,9 @@ export default function Welcome() {
     const invitationToken = urlParams.get('invitationToken');
 
     if (justLoggedOut) {
-      console.log("🚪 User logged out - clearing auth and showing portal");
-      // Force logout through SDK to clear all sessions
-      try {
-        await base44.auth.logout();
-      } catch (e) {
-        console.log("Logout already complete");
-      }
+      console.log("🚪 User logged out - showing portal choice");
+      // Clear URL parameters
+      window.history.replaceState({}, '', createPageUrl("Welcome"));
       setShowPortalChoice(true);
       setIsLoading(false);
       return;
