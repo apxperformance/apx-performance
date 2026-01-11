@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* APX PREMIUM DARK THEME */
+    --background: 222 47% 11%;        /* Deep Slate (Main BG) */
+    --foreground: 210 40% 98%;        /* Near White (Text) */
+    --card: 222 47% 11%;              /* Matches BG for seamless look */
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 47 95% 50%;            /* APX GOLD (Action Buttons) */
+    --primary-foreground: 222 47% 11%; /* Dark Text on Gold Button */
+    --secondary: 217 33% 17%;         /* Lighter Slate (Secondary Buttons) */
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;             /* Muted Text/BGs */
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 33% 17%;            /* Hover States */
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62% 30%;         /* Red for Delete/Error */
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;            /* Subtle Borders */
+    --input: 217 33% 17%;             /* Input Fields */
+    --ring: 47 95% 50%;               /* Gold Focus Ring */
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  /* GLOBAL MOBILE FIXES */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevents iOS Zoom */
+  }
+}
