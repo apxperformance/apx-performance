@@ -211,13 +211,13 @@ function LayoutContent({ children, currentPageName }) {
               --muted-foreground: ${isDarkMode ? '0 0% 63.9%' : '0 0% 45.1%'};
               --accent: 49 39% 56%;
               --accent-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
-              
+
               --destructive: ${isDarkMode ? '0 62.8% 30.6%' : '0 84.2% 60.2%'};
               --destructive-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
-              
+
               --success: ${isDarkMode ? '142 70.6% 21%' : '142.1 76.2% 36.3%'};
               --success-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
-              
+
               --warning: ${isDarkMode ? '48 95.8% 29.2%' : '47.9 95.8% 53.1%'};
               --warning-foreground: ${isDarkMode ? '48 95.8% 98%' : '48 95.8% 10%'};
 
@@ -225,14 +225,29 @@ function LayoutContent({ children, currentPageName }) {
               --input: ${isDarkMode ? '0 0% 25%' : '0 0% 70%'};
               --ring: 49 39% 56%;
             }
-            
+
+            /* Mobile Responsiveness: Prevent iOS auto-zoom */
             input, textarea, select {
               color: #000000 !important;
+              font-size: 16px !important;
             }
-            
+
             input::placeholder,
             textarea::placeholder {
               color: hsl(var(--muted-foreground));
+            }
+
+            /* Mobile Responsiveness: Minimum touch target sizes */
+            button,
+            [role="button"],
+            a[role="button"] {
+              min-height: 44px;
+            }
+
+            /* Prevent horizontal scrolling */
+            html, body {
+              overflow-x: hidden;
+              max-width: 100vw;
             }
           `}
         </style>
