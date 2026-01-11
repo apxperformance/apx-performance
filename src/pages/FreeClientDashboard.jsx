@@ -19,23 +19,37 @@ export default function FreeClientDashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadDashboardData();
+    const fetchUser = async () => {
+      try {
+        const userData = await base44.auth.me();
+        setUser(userData);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      loadDashboardData();
+    }
   }, [user]);
 
   const loadDashboardData = async () => {
-    // Guard Clause: Only proceed if user is not yet loaded
-    if (user) {
+    // Guard Clause: Only proceed if user is available
+    if (!user) {
+      console.warn("loadData blocked: No user found.");
       return;
     }
 
+    setIsLoading(true);
     try {
-      const userData = await base44.auth.me();
-      setUser(userData);
-      
       const [workouts, nutritionPlans, checkIns] = await Promise.all([
-        base44.entities.Workout.filter({ client_id: userData.id }),
-        base44.entities.NutritionPlan.filter({ client_id: userData.id }),
-        base44.entities.CheckIn.filter({ client_id: userData.id }, "-created_date", 1)
+        base44.entities.Workout.filter({ client_id: user.id }),
+        base44.entities.NutritionPlan.filter({ client_id: user.id }),
+        base44.entities.CheckIn.filter({ client_id: user.id }, "-created_date", 1)
       ]);
       
       const currentPlan = nutritionPlans.length > 0 ? nutritionPlans[0] : null;
