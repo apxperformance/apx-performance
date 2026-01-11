@@ -95,48 +95,47 @@ export default function Welcome() {
   }, [routeUser]);
 
   const checkAuthentication = useCallback(async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const justLoggedOut = urlParams.get('logged_out') === 'true' || urlParams.get('show_portal_choice') === 'true';
-    const invitationToken = urlParams.get('invitationToken');
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const justLoggedOut = urlParams.get('logged_out') === 'true' || urlParams.get('show_portal_choice') === 'true';
+      const invitationToken = urlParams.get('invitationToken');
 
-    if (justLoggedOut) {
-      console.log("🚪 User logged out - showing portal choice");
-      // Clear URL parameters
-      window.history.replaceState({}, '', createPageUrl("Welcome"));
-      setShowPortalChoice(true);
-      setIsLoading(false);
-      return;
-    }
-
-    // Handle invitation token if present in URL
-    if (invitationToken) {
-      try {
-        const user = await base44.auth.me();
-        const processed = await processInvitationToken(invitationToken, user);
-        if (processed) {
-          setIsLoading(false);
-          return;
-        }
-      } catch (error) {
-        console.log("User not authenticated, storing invitation token for after signup:", error);
-        localStorage.setItem('invitation_token', invitationToken);
-        localStorage.setItem('intended_user_type', 'client');
+      if (justLoggedOut) {
+        console.log("🚪 User logged out - showing portal choice");
+        window.history.replaceState({}, '', createPageUrl("Welcome"));
         setShowPortalChoice(true);
         setIsLoading(false);
         return;
       }
-    }
 
-    // Check if user is actually authenticated before proceeding
-    const isAuthenticated = await base44.auth.isAuthenticated();
-    if (!isAuthenticated) {
-      console.log("User not authenticated, showing portal choice");
-      setShowPortalChoice(true);
-      setIsLoading(false);
-      return;
-    }
+      // Handle invitation token if present in URL
+      if (invitationToken) {
+        try {
+          const user = await base44.auth.me();
+          const processed = await processInvitationToken(invitationToken, user);
+          if (processed) {
+            setIsLoading(false);
+            return;
+          }
+        } catch (error) {
+          console.log("User not authenticated, storing invitation token for after signup:", error);
+          localStorage.setItem('invitation_token', invitationToken);
+          localStorage.setItem('intended_user_type', 'client');
+          setShowPortalChoice(true);
+          setIsLoading(false);
+          return;
+        }
+      }
 
-    try {
+      // Check if user is actually authenticated before proceeding
+      const isAuthenticated = await base44.auth.isAuthenticated();
+      if (!isAuthenticated) {
+        console.log("User not authenticated, showing portal choice");
+        setShowPortalChoice(true);
+        setIsLoading(false);
+        return;
+      }
+
       let user = await base44.auth.me();
       
       // Check for stored invitation token from before login
@@ -182,7 +181,7 @@ export default function Welcome() {
       
       routeUser(user);
     } catch (error) {
-      console.log("User not authenticated or session invalid, showing welcome page and portal choices:", error);
+      console.log("Error in checkAuthentication:", error);
       setShowPortalChoice(true);
       setIsLoading(false);
     }
