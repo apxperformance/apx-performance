@@ -27,7 +27,7 @@ export default function NutritionPlanCard({ plan, onClick, onAssign, client, isT
       
       <CardContent className="space-y-4">
         <div className="text-center">
-          <div className="text-2xl font-bold text-[#C5B358]">{plan.daily_calories}</div>
+          <div className="text-2xl font-bold text-gray-600">{plan.daily_calories}</div>
           <div className="text-sm text-muted-foreground">calories/day</div>
         </div>
         
@@ -66,7 +66,7 @@ export default function NutritionPlanCard({ plan, onClick, onAssign, client, isT
             onClick={onClick}
             variant="outline"
             size="sm"
-            className="flex-1 border-border hover:bg-secondary hover:border-[#C5B358] text-foreground"
+            className="flex-1 border-border hover:bg-secondary hover:border-gray-600 text-foreground"
           >
             <Eye className="w-4 h-4 mr-2" />
             View

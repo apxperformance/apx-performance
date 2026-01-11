@@ -202,8 +202,8 @@ export default function NutritionPlanner() {
                 <p className="text-sm text-muted-foreground">Clients with Plans</p>
                 <p className="text-3xl font-bold text-foreground">{uniqueClientsWithPlans}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center">
-                <Plus className="w-6 h-6 text-[#C5B358]" />
+              <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20 flex items-center justify-center">
+                <Plus className="w-6 h-6 text-gray-200" />
               </div>
             </div>
           </CardContent>
@@ -252,7 +252,7 @@ export default function NutritionPlanner() {
                   <p className="text-muted-foreground mb-4">Create your first nutrition plan template to get started.</p>
                   <Button
                 onClick={() => setIsCreateDialogOpen(true)}
-                className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+                className="bg-gray-800 hover:bg-gray-700 text-white font-semibold">
 
                     <Plus className="w-4 h-4 mr-2" />
                     Create Your First Plan

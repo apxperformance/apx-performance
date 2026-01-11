@@ -57,7 +57,7 @@ export default function AssignNutritionPlanDialog({ isOpen, plan, clients, exist
       <DialogContent className="bg-card border-border text-card-foreground max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl text-foreground">
-            <Utensils className="w-6 h-6 text-[#C5B358]" />
+            <Utensils className="w-6 h-6 text-gray-600" />
             Assign "{plan.name}"
           </DialogTitle>
         </DialogHeader>

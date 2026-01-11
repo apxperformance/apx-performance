@@ -156,7 +156,7 @@ export default function CreateNutritionPlanDialog({ isOpen, onClose, onPlanCreat
               id="name"
               {...register("name", { required: "Plan name is required." })}
               placeholder="e.g., Lean Bulk Phase 1"
-              className="bg-input border-border focus:border-[#C5B358] text-slate-900"
+              className="bg-input border-border focus:border-gray-600 text-slate-900"
             />
             {errors.name && (
               <span className="text-sm text-[hsl(var(--destructive))]">
@@ -172,7 +172,7 @@ export default function CreateNutritionPlanDialog({ isOpen, onClose, onPlanCreat
               {...register("description")}
               placeholder="Brief description of the plan's goals..."
               rows={3}
-              className="bg-input border-border focus:border-[#C5B358] resize-none text-slate-900"
+              className="bg-input border-border focus:border-gray-600 resize-none text-slate-900"
             />
           </div>
 
@@ -189,7 +189,7 @@ export default function CreateNutritionPlanDialog({ isOpen, onClose, onPlanCreat
                 max: { value: 10000, message: "Calories cannot exceed 10000." },
                 valueAsNumber: true
               })}
-              className="bg-input border-border focus:border-[#C5B358] text-slate-900"
+              className="bg-input border-border focus:border-gray-600 text-slate-900"
             />
             {errors.daily_calories && (
               <span className="text-sm text-[hsl(var(--destructive))]">
@@ -245,7 +245,7 @@ export default function CreateNutritionPlanDialog({ isOpen, onClose, onPlanCreat
                 )}
                 {/* Real-time calculated grams */}
                 <div className="text-xs text-muted-foreground bg-secondary/50 px-2 py-1 rounded">
-                  = <span className="font-semibold text-[#C5B358]">{calculatedMacros.protein_grams}g</span> protein
+                  = <span className="font-semibold text-gray-600">{calculatedMacros.protein_grams}g</span> protein
                 </div>
               </div>
 
@@ -271,7 +271,7 @@ export default function CreateNutritionPlanDialog({ isOpen, onClose, onPlanCreat
                 )}
                 {/* Real-time calculated grams */}
                 <div className="text-xs text-muted-foreground bg-secondary/50 px-2 py-1 rounded">
-                  = <span className="font-semibold text-[#C5B358]">{calculatedMacros.carbs_grams}g</span> carbs
+                  = <span className="font-semibold text-gray-600">{calculatedMacros.carbs_grams}g</span> carbs
                 </div>
               </div>
 
@@ -297,28 +297,28 @@ export default function CreateNutritionPlanDialog({ isOpen, onClose, onPlanCreat
                 )}
                 {/* Real-time calculated grams */}
                 <div className="text-xs text-muted-foreground bg-secondary/50 px-2 py-1 rounded">
-                  = <span className="font-semibold text-[#C5B358]">{calculatedMacros.fat_grams}g</span> fat
+                  = <span className="font-semibold text-gray-600">{calculatedMacros.fat_grams}g</span> fat
                 </div>
               </div>
             </div>
 
             {/* Summary of calculated macros */}
-            <div className="mt-4 p-3 bg-[#C5B358]/10 border border-[#C5B358]/30 rounded-lg">
+            <div className="mt-4 p-3 bg-gray-600/10 border border-gray-600/30 rounded-lg">
               <p className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
-                <Info className="w-4 h-4 text-[#C5B358]" />
+                <Info className="w-4 h-4 text-gray-600" />
                 Daily Macro Targets (auto-calculated)
               </p>
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-2xl font-bold text-[#C5B358]">{calculatedMacros.protein_grams}g</p>
+                  <p className="text-2xl font-bold text-gray-600">{calculatedMacros.protein_grams}g</p>
                   <p className="text-xs text-muted-foreground">Protein</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[#C5B358]">{calculatedMacros.carbs_grams}g</p>
+                  <p className="text-2xl font-bold text-gray-600">{calculatedMacros.carbs_grams}g</p>
                   <p className="text-xs text-muted-foreground">Carbs</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[#C5B358]">{calculatedMacros.fat_grams}g</p>
+                  <p className="text-2xl font-bold text-gray-600">{calculatedMacros.fat_grams}g</p>
                   <p className="text-xs text-muted-foreground">Fat</p>
                 </div>
               </div>
@@ -332,7 +332,7 @@ export default function CreateNutritionPlanDialog({ isOpen, onClose, onPlanCreat
               {...register("notes")}
               placeholder="Any specific instructions or considerations..."
               rows={3}
-              className="bg-input border-border focus:border-[#C5B358] resize-none text-slate-900"
+              className="bg-input border-border focus:border-gray-600 resize-none text-slate-900"
             />
           </div>
 
@@ -342,7 +342,7 @@ export default function CreateNutritionPlanDialog({ isOpen, onClose, onPlanCreat
             </Button>
             <Button
               type="submit"
-              className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold"
+              className="bg-gray-800 hover:bg-gray-700 text-white font-semibold"
               disabled={isSubmitting || !isPercentageValid || !user || Object.keys(errors).length > 0} // Added form-level validation and user check
             >
               <Save className="w-4 h-4 mr-2" />
