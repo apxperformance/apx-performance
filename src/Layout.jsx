@@ -178,20 +178,17 @@ function LayoutContent({ children, currentPageName }) {
   const handleLogout = async () => {
     console.log("🚪 Logging out...");
     setHasValidated(false);
-    
-    try {
-      // FIRST: Logout from SDK to clear session
-      await base44.auth.logout();
-    } catch (e) {
-      console.log("SDK logout error (expected):", e);
-    }
-    
-    // SECOND: Clear all local data
     localStorage.clear();
     sessionStorage.clear();
     
-    // THIRD: Hard redirect to force page reload
-    window.location.replace(`${window.location.origin}${createPageUrl("Welcome")}?logged_out=true`);
+    try {
+      await base44.auth.logout();
+    } catch (e) {
+      console.log("Logout error:", e);
+    }
+    
+    // Redirect to login page
+    base44.auth.redirectToLogin();
   };
 
   if (currentPageName === "Welcome" || isLoading) {
