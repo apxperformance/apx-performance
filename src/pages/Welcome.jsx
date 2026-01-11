@@ -219,9 +219,9 @@ export default function Welcome() {
   if (showPortalChoice) {
     return (
       <div className="min-h-screen bg-black relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#A4913C]/20 via-transparent to-transparent"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5B358]/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#C5B358]/5 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-700/20 via-transparent to-transparent"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gray-600/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gray-600/5 rounded-full blur-3xl"></div>
 
         <div className="relative z-10 min-h-screen flex flex-col">
           <motion.header 
@@ -231,12 +231,12 @@ export default function Welcome() {
             className="p-6 md:p-8"
           >
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-[#C5B358] to-[#A4913C] rounded-2xl flex items-center justify-center shadow-2xl">
-                <Dumbbell className="w-7 h-7 text-black" />
+              <div className="w-12 h-12 bg-gradient-to-r from-gray-700 to-gray-900 rounded-2xl flex items-center justify-center shadow-2xl">
+                <Dumbbell className="w-7 h-7 text-white" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white">Level Up</h1>
-                <p className="text-sm text-[#C5B358] uppercase tracking-wide">Coaching Platform</p>
+                <p className="text-sm text-gray-400 uppercase tracking-wide">Coaching Platform</p>
               </div>
             </div>
           </motion.header>
@@ -251,7 +251,7 @@ export default function Welcome() {
                   className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
                 >
                   Transform Your
-                  <span className="block bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-clip-text text-transparent">
+                  <span className="block bg-gradient-to-r from-gray-300 to-gray-500 bg-clip-text text-transparent">
                     Fitness Journey
                   </span>
                 </motion.h2>
@@ -275,8 +275,8 @@ export default function Welcome() {
                 <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800 hover:border-[#C5B358]/50 transition-all duration-500 group">
                   <CardContent className="p-8">
                     <div className="text-center">
-                      <div className="w-20 h-20 bg-gradient-to-r from-[#C5B358] to-[#A4913C] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <Crown className="w-10 h-10 text-black" />
+                      <div className="w-20 h-20 bg-gradient-to-r from-gray-700 to-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <Crown className="w-10 h-10 text-white" />
                       </div>
                       <h3 className="text-2xl font-bold text-white mb-4">Coach Portal</h3>
                       <p className="text-gray-400 mb-8 leading-relaxed">
@@ -285,21 +285,21 @@ export default function Welcome() {
                       </p>
                       <div className="space-y-3 mb-8">
                         <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <Users className="w-4 h-4 text-[#C5B358]" />
+                          <Users className="w-4 h-4 text-gray-400" />
                           <span>Client Management</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <Dumbbell className="w-4 h-4 text-[#C5B358]" />
+                          <Dumbbell className="w-4 h-4 text-gray-400" />
                           <span>Workout Builder</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <TrendingUp className="w-4 h-4 text-[#C5B358]" />
+                          <TrendingUp className="w-4 h-4 text-gray-400" />
                           <span>Progress Analytics</span>
                         </div>
                       </div>
                       <Button 
                         onClick={() => handleSignIn("coach")}
-                        className="w-full bg-gradient-to-r from-[#C5B358] to-[#A4913C] text-black font-semibold py-3 hover:from-[#D8C67B] hover:to-[#C5B358] transition-all duration-300 transform hover:scale-105"
+                        className="w-full bg-gradient-to-r from-gray-700 to-gray-900 text-white font-semibold py-3 hover:from-gray-600 hover:to-gray-800 transition-all duration-300 transform hover:scale-105"
                       >
                         Coach Sign In
                       </Button>
@@ -311,7 +311,7 @@ export default function Welcome() {
                   <CardContent className="p-8">
                     <div className="text-center">
                       <div className="w-20 h-20 bg-gradient-to-r from-gray-600 to-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <Zap className="w-10 h-10 text-[#C5B358]" />
+                        <Zap className="w-10 h-10 text-white" />
                       </div>
                       <h3 className="text-2xl font-bold text-white mb-4">Client Portal</h3>
                       <p className="text-gray-400 mb-8 leading-relaxed">
@@ -320,22 +320,22 @@ export default function Welcome() {
                       </p>
                       <div className="space-y-3 mb-8">
                         <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <Dumbbell className="w-4 h-4 text-[#C5B358]" />
+                          <Dumbbell className="w-4 h-4 text-gray-400" />
                           <span>Personal Workouts</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <Users className="w-4 h-4 text-[#C5B358]" />
+                          <Users className="w-4 h-4 text-gray-400" />
                           <span>Coach Communication</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <TrendingUp className="w-4 h-4 text-[#C5B358]" />
+                          <TrendingUp className="w-4 h-4 text-gray-400" />
                           <span>Progress Tracking</span>
                         </div>
                       </div>
                       <Button 
                         onClick={() => handleSignIn("client")}
                         variant="outline"
-                        className="w-full border-gray-600 text-white hover:bg-gray-800 hover:border-[#C5B358] font-semibold py-3 transition-all duration-300 transform hover:scale-105"
+                        className="w-full border-gray-600 text-white hover:bg-gray-800 hover:border-gray-500 font-semibold py-3 transition-all duration-300 transform hover:scale-105"
                       >
                         Client Sign In
                       </Button>
@@ -352,15 +352,15 @@ export default function Welcome() {
               >
                 <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-[#C5B358] mb-2">100%</div>
+                    <div className="text-3xl font-bold text-gray-300 mb-2">100%</div>
                     <div className="text-gray-400">Personalized Programs</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-[#C5B358] mb-2">24/7</div>
+                    <div className="text-3xl font-bold text-gray-300 mb-2">24/7</div>
                     <div className="text-gray-400">Progress Tracking</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-[#C5B358] mb-2">Elite</div>
+                    <div className="text-3xl font-bold text-gray-300 mb-2">Elite</div>
                     <div className="text-gray-400">Professional Tools</div>
                   </div>
                 </div>

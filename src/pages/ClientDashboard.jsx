@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -90,14 +89,14 @@ export default function ClientDashboard() {
       title: "Total Workouts",
       value: stats.totalWorkouts,
       icon: Dumbbell,
-      gradient: "from-[#C5B358] to-[#A4913C]",
+      gradient: "from-gray-600 to-gray-800",
       subtitle: "Programs assigned"
     },
     {
       title: "Completed",
       value: stats.completedWorkouts,
       icon: TrendingUp,
-      gradient: "from-[#A4913C] to-[#8E7C34]",
+      gradient: "from-gray-600 to-gray-800",
       subtitle: "Workouts finished"
     },
     {
@@ -147,7 +146,7 @@ export default function ClientDashboard() {
       >
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Zap className="w-8 h-8 text-[#C5B358]" />
+            <Zap className="w-8 h-8 text-gray-600" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               Welcome back, {user?.full_name?.split(' ')[0]}
             </h1>
@@ -164,7 +163,7 @@ export default function ClientDashboard() {
             </Link>
           )}
           <Link to={createPageUrl("CheckInJournal")}>
-            <Button className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+            <Button className="bg-gray-800 hover:bg-gray-700 text-white font-semibold">
               <Calendar className="w-4 h-4 mr-2" />
               Check In
             </Button>
@@ -180,7 +179,7 @@ export default function ClientDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
           >
-            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300">
+            <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-gray-400 transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.gradient} bg-opacity-20`}>
@@ -207,7 +206,7 @@ export default function ClientDashboard() {
           <Card className="bg-gradient-to-br from-card/50 to-secondary/50 backdrop-blur-xl border-border">
             <CardHeader className="pb-4">
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Dumbbell className="w-5 h-5 text-[#C5B358]" />
+                <Dumbbell className="w-5 h-5 text-gray-600" />
                 Today's Workout
               </CardTitle>
             </CardHeader>
@@ -244,7 +243,7 @@ export default function ClientDashboard() {
                   </div>
 
                   <Link to={createPageUrl("MyWorkouts")}>
-                    <Button className="w-full bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+                    <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold">
                       <Play className="w-4 h-4 mr-2" />
                       Start Workout
                     </Button>
@@ -270,7 +269,7 @@ export default function ClientDashboard() {
           <Card className="bg-gradient-to-br from-card/50 to-secondary/50 backdrop-blur-xl border-border">
             <CardHeader className="pb-4">
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Utensils className="w-5 h-5 text-[#C5B358]" />
+                <Utensils className="w-5 h-5 text-gray-600" />
                 Nutrition Plan
               </CardTitle>
             </CardHeader>
@@ -279,7 +278,7 @@ export default function ClientDashboard() {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-xl font-bold text-foreground mb-2">{stats.currentNutritionPlan.name}</h3>
-                    <div className="text-2xl font-bold text-[#C5B358]">
+                    <div className="text-2xl font-bold text-gray-700">
                       {stats.currentNutritionPlan.daily_calories} cal/day
                     </div>
                   </div>
@@ -320,7 +319,7 @@ export default function ClientDashboard() {
           <Card className="bg-gradient-to-br from-card/50 to-secondary/50 backdrop-blur-xl border-border">
             <CardHeader className="pb-4">
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Pill className="w-5 h-5 text-[#C5B358]" />
+                <Pill className="w-5 h-5 text-gray-600" />
                 Supplement Plan
               </CardTitle>
             </CardHeader>
@@ -329,7 +328,7 @@ export default function ClientDashboard() {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-xl font-bold text-foreground mb-2">{stats.currentSupplementPlan.name}</h3>
-                    <div className="text-lg font-semibold text-[#C5B358]">
+                    <div className="text-lg font-semibold text-gray-700">
                       {stats.currentSupplementPlan.supplements?.length || 0} supplements
                     </div>
                   </div>

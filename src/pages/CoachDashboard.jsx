@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -251,14 +250,14 @@ export default function CoachDashboard() {
       >
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Crown className="w-8 h-8 text-[#C5B358]" />
+            <Crown className="w-8 h-8 text-gray-600" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Coach Dashboard</h1>
           </div>
           <p className="text-muted-foreground">Welcome back, coach. Here's your training empire.</p>
         </div>
         <div className="flex gap-3">
           <Link to={createPageUrl("ClientManagement")}>
-            <Button className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+            <Button className="bg-gray-800 hover:bg-gray-700 text-white font-semibold">
               <Users className="w-4 h-4 mr-2" />
               Manage Clients
             </Button>
@@ -335,8 +334,8 @@ export default function CoachDashboard() {
               onClick={() => window.location.href = createPageUrl("ClientManagement")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20">
-                    <Users className="w-6 h-6 text-[#C5B358]" />
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
+                    <Users className="w-6 h-6 text-gray-600" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.activeClients}</div>
@@ -351,8 +350,8 @@ export default function CoachDashboard() {
               onClick={() => window.location.href = createPageUrl("ClientManagement")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20">
-                    <UserPlus className="w-6 h-6 text-[#C5B358]" />
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
+                    <UserPlus className="w-6 h-6 text-gray-600" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.pendingInvites}</div>
@@ -367,8 +366,8 @@ export default function CoachDashboard() {
               onClick={() => window.location.href = createPageUrl("WorkoutBuilder")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20">
-                    <Dumbbell className="w-6 h-6 text-[#C5B358]" />
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
+                    <Dumbbell className="w-6 h-6 text-gray-600" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.workoutTemplates}</div>
@@ -383,8 +382,8 @@ export default function CoachDashboard() {
               onClick={() => window.location.href = createPageUrl("NutritionPlanner")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20">
-                    <Utensils className="w-6 h-6 text-[#C5B358]" />
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
+                    <Utensils className="w-6 h-6 text-gray-600" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.nutritionPlans}</div>
@@ -399,8 +398,8 @@ export default function CoachDashboard() {
               onClick={() => window.location.href = createPageUrl("SupplementPlanner")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20">
-                    <Pill className="w-6 h-6 text-[#C5B358]" />
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
+                    <Pill className="w-6 h-6 text-gray-600" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.supplementPlans}</div>
@@ -415,8 +414,8 @@ export default function CoachDashboard() {
               onClick={() => window.location.href = createPageUrl("ProgressReviews")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20">
-                    <Calendar className="w-6 h-6 text-[#C5B358]" />
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
+                    <Calendar className="w-6 h-6 text-gray-600" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.pendingReviews}</div>
@@ -431,8 +430,8 @@ export default function CoachDashboard() {
               onClick={() => window.location.href = createPageUrl("CoachingCalendar")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20">
-                    <CalendarClock className="w-6 h-6 text-[#C5B358]" />
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
+                    <CalendarClock className="w-6 h-6 text-gray-600" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.todaysEventsCount}</div>
@@ -447,8 +446,8 @@ export default function CoachDashboard() {
               onClick={() => window.location.href = createPageUrl("ClientChat")}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20">
-                    <MessageSquare className="w-6 h-6 text-[#C5B358]" />
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20">
+                    <MessageSquare className="w-6 h-6 text-gray-600" />
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-foreground">{stats.unreadClientMessages}</div>
@@ -471,7 +470,7 @@ export default function CoachDashboard() {
           <Card className="bg-card/50 backdrop-blur-xl border-border">
             <CardHeader className="pb-4">
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Users className="w-5 h-5 text-[#C5B358]" />
+                <Users className="w-5 h-5 text-gray-600" />
                 Active Clients
               </CardTitle>
             </CardHeader>
@@ -496,13 +495,13 @@ export default function CoachDashboard() {
                     className="block"
                   >
                     <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer">
-                      <div className="w-10 h-10 bg-gradient-to-r from-[#C5B358] to-[#A4913C] rounded-full flex items-center justify-center">
-                        <span className="text-black font-semibold text-sm">
+                      <div className="w-10 h-10 bg-gradient-to-r from-gray-600 to-gray-800 rounded-full flex items-center justify-center">
+                        <span className="text-white font-semibold text-sm">
                           {client.full_name?.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div className="flex-1">
-                        <div className="font-medium text-foreground hover:text-[#D8C67B] transition-colors">{client.full_name}</div>
+                        <div className="font-medium text-foreground hover:text-gray-600 transition-colors">{client.full_name}</div>
                         <div className="text-sm text-muted-foreground">{client.email}</div>
                       </div>
                       <div className="text-xs text-muted-foreground/80">
@@ -532,7 +531,7 @@ export default function CoachDashboard() {
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-foreground flex items-center gap-2">
-                  <UserPlus className="w-5 h-5 text-[#C5B358]" />
+                  <UserPlus className="w-5 h-5 text-gray-600" />
                   Available Clients
                 </CardTitle>
                 {availableClients.length > 0 && (
@@ -540,7 +539,7 @@ export default function CoachDashboard() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsAddExistingClientOpen(true)}
-                    className="text-[#C5B358] hover:text-[#C5B358] hover:bg-[#C5B358]/10"
+                    className="text-gray-600 hover:text-gray-700 hover:bg-gray-100"
                   >
                     View All
                   </Button>
@@ -616,7 +615,7 @@ export default function CoachDashboard() {
           <Card className="bg-card/50 backdrop-blur-xl border-border">
             <CardHeader className="pb-4">
               <CardTitle className="text-foreground flex items-center gap-2">
-                <CalendarClock className="w-5 h-5 text-[#C5B358]" />
+                <CalendarClock className="w-5 h-5 text-gray-600" />
                 Today's Schedule
               </CardTitle>
             </CardHeader>
@@ -640,14 +639,14 @@ export default function CoachDashboard() {
                       )}
                     </div>
                     <div className="relative flex-1">
-                      <div className="absolute top-1.5 left-[-1.35rem] w-3 h-3 bg-[#C5B358] rounded-full border-2 border-card"></div>
+                      <div className="absolute top-1.5 left-[-1.35rem] w-3 h-3 bg-gray-600 rounded-full border-2 border-card"></div>
                       <div className="pl-4 border-l-2 border-border">
                         <p className="font-semibold text-foreground">{event.title}</p>
                         {event.clientId ? (
                           <p className="text-sm text-foreground/80">
                             <Link
                               to={`${createPageUrl("ClientProfile")}?clientId=${event.clientId}`}
-                              className="hover:text-[#C5B358] transition-colors"
+                              className="hover:text-gray-600 transition-colors"
                             >
                               {event.clientName}
                             </Link>

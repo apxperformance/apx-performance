@@ -335,12 +335,12 @@ function LayoutContent({ children, currentPageName }) {
         <Sidebar className="border-r border-gray-200 bg-gray-100 backdrop-blur-xl">
           <SidebarHeader className="border-b border-gray-200 p-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-[#C5B358] to-[#A4913C] rounded-xl flex items-center justify-center shadow-lg">
-                {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-black" /> : <Zap className="w-6 h-6 text-black" />}
+              <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl flex items-center justify-center shadow-lg">
+                {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-white" /> : <Zap className="w-6 h-6 text-white" />}
               </div>
               <div>
                 <h2 className="text-lg font-bold text-slate-900">Level Up</h2>
-                <p className="text-xs text-[#C5B358] uppercase tracking-wide">
+                <p className="text-xs text-gray-600 uppercase tracking-wide">
                   {user?.user_type === "coach" ? "Coach Portal" : "Client Portal"}
                 </p>
               </div>
@@ -358,10 +358,10 @@ function LayoutContent({ children, currentPageName }) {
                   <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
                       asChild
-                      className={`hover:bg-[#C5B358]/10 hover:text-[#C5B358] transition-all duration-300 rounded-xl mb-2 group ${
+                      className={`hover:bg-gray-300/50 hover:text-gray-900 transition-all duration-300 rounded-xl mb-2 group ${
                       location.pathname === item.url 
-                        ? 'bg-[#C5B358]/20 text-[#C5B358]' 
-                        : 'text-gray-700 hover:text-[#C5B358]'
+                        ? 'bg-gray-300 text-gray-900' 
+                        : 'text-gray-700 hover:text-gray-900'
                       }`}>
 
                         <Link to={item.url} className="flex items-center gap-3 px-4 py-3">
@@ -381,8 +381,8 @@ function LayoutContent({ children, currentPageName }) {
               <span className="text-sm font-medium text-gray-700">Theme</span>
               <button
                 onClick={toggleTheme}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#C5B358] focus:ring-offset-2 ${
-                isDarkMode ? 'bg-gray-700' : 'bg-[#C5B358]'}`
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 ${
+                isDarkMode ? 'bg-gray-700' : 'bg-gray-400'}`
                 }>
 
                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
@@ -395,7 +395,7 @@ function LayoutContent({ children, currentPageName }) {
 
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
-                {user?.user_type === "coach" ? <Crown className="w-5 h-5 text-[#C5B358]" /> : <UserIcon className="w-5 h-5 text-gray-600" />}
+                {user?.user_type === "coach" ? <Crown className="w-5 h-5 text-gray-700" /> : <UserIcon className="w-5 h-5 text-gray-600" />}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm truncate text-gray-800">{user?.full_name}</p>
@@ -420,11 +420,11 @@ function LayoutContent({ children, currentPageName }) {
             <div className="flex items-center gap-4">
               <SidebarTrigger className={`md:hidden ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'} p-2 rounded-lg transition-colors duration-200`} />
               <div className="flex items-center gap-2 flex-1">
-                <h1 className="text-xl font-bold text-foreground">Level Up</h1>
-                <span className="text-xs text-[#C5B358] uppercase tracking-wide">
-                  {user?.user_type === "coach" ? "Coach" : "Client"}
-                </span>
-              </div>
+                  <h1 className="text-xl font-bold text-foreground">Level Up</h1>
+                  <span className="text-xs text-gray-500 uppercase tracking-wide">
+                    {user?.user_type === "coach" ? "Coach" : "Client"}
+                  </span>
+                </div>
               <CommandPaletteTrigger />
             </div>
           </header>

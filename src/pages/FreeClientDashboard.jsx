@@ -89,10 +89,10 @@ export default function FreeClientDashboard() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Card className="bg-[#C5B358]/10 border border-[#C5B358]/20">
+        <Card className="bg-gray-100/50 border border-gray-300">
           <CardContent className="p-6 flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
-            <div className="p-3 bg-[#C5B358]/20 rounded-full flex-shrink-0">
-              <Crown className="w-8 h-8 text-[#C5B358]" />
+            <div className="p-3 bg-gray-200 rounded-full flex-shrink-0">
+              <Crown className="w-8 h-8 text-gray-700" />
             </div>
             <div className="flex-1">
               <h2 className="text-xl font-bold text-foreground">Unlock Your Full Potential!</h2>
@@ -101,7 +101,7 @@ export default function FreeClientDashboard() {
               </p>
             </div>
             <Link to={createPageUrl("BrowseCoaches")}>
-              <Button className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold mt-2 md:mt-0">
+              <Button className="bg-gray-800 hover:bg-gray-700 text-white font-semibold mt-2 md:mt-0">
                 Find a Coach
               </Button>
             </Link>
@@ -118,7 +118,7 @@ export default function FreeClientDashboard() {
       >
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Zap className="w-8 h-8 text-[#C5B358]" />
+            <Zap className="w-8 h-8 text-gray-600" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               Welcome, {user?.full_name?.split(' ')[0]}
             </h1>
@@ -127,7 +127,7 @@ export default function FreeClientDashboard() {
         </div>
         <div className="flex gap-3">
           <Link to={createPageUrl("CheckInJournal")}>
-            <Button className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+            <Button className="bg-gray-800 hover:bg-gray-700 text-white font-semibold">
               <Calendar className="w-4 h-4 mr-2" />
               Check In
             </Button>
@@ -145,7 +145,7 @@ export default function FreeClientDashboard() {
           <Card className="bg-gradient-to-br from-card/50 to-secondary/50 backdrop-blur-xl border-border">
             <CardHeader className="pb-4">
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Dumbbell className="w-5 h-5 text-[#C5B358]" />
+                <Dumbbell className="w-5 h-5 text-gray-600" />
                 Today's Workout
               </CardTitle>
             </CardHeader>
@@ -167,7 +167,7 @@ export default function FreeClientDashboard() {
           <Card className="bg-gradient-to-br from-card/50 to-secondary/50 backdrop-blur-xl border-border">
             <CardHeader className="pb-4">
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Utensils className="w-5 h-5 text-[#C5B358]" />
+                <Utensils className="w-5 h-5 text-gray-600" />
                 Nutrition Plan
               </CardTitle>
             </CardHeader>
