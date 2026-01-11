@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -133,7 +132,7 @@ export default function NutritionPlanner() {
 
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Utensils className="w-8 h-8 text-[#C5B358]" />
+            <Utensils className="w-8 h-8 text-gray-600" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Nutrition Planner</h1>
           </div>
           <p className="text-muted-foreground">Create and manage personalized nutrition plans for your clients.</p>
@@ -175,8 +174,8 @@ export default function NutritionPlanner() {
                 <p className="text-sm text-muted-foreground">Total Plan Templates</p>
                 <p className="text-3xl font-bold text-foreground">{templatePlans.length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center">
-                <Utensils className="w-6 h-6 text-[#C5B358]" />
+              <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20 flex items-center justify-center">
+                <Utensils className="w-6 h-6 text-gray-200" />
               </div>
             </div>
           </CardContent>
@@ -189,8 +188,8 @@ export default function NutritionPlanner() {
                 <p className="text-sm text-muted-foreground">Active Clients</p>
                 <p className="text-3xl font-bold text-foreground">{clients.length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center">
-                <Users className="w-6 h-6 text-[#C5B358]" />
+              <div className="p-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 bg-opacity-20 flex items-center justify-center">
+                <Users className="w-6 h-6 text-gray-200" />
               </div>
             </div>
           </CardContent>

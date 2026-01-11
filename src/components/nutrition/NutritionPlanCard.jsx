@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,11 +14,11 @@ export default function NutritionPlanCard({ plan, onClick, onAssign, client, isT
     <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 group hover:scale-[1.02]">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-foreground text-lg group-hover:text-[#C5B358] transition-colors">
+          <CardTitle className="text-foreground text-lg group-hover:text-gray-600 transition-colors">
             {plan.name}
           </CardTitle>
           {isTemplate && (
-            <Badge variant="outline" className="border-[#C5B358]/30 text-[#C5B358] bg-[#C5B358]/10">
+            <Badge variant="outline" className="border-gray-400/30 text-gray-600 bg-gray-400/10">
               Template
             </Badge>
           )}
@@ -79,7 +78,7 @@ export default function NutritionPlanCard({ plan, onClick, onAssign, client, isT
                 onAssign();
               }}
               size="sm"
-              className="flex-1 bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold"
+              className="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-semibold"
             >
               <Users className="w-4 h-4 mr-2" />
               Assign

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -145,7 +144,7 @@ export default function CreateNutritionPlanDialog({ isOpen, onClose, onPlanCreat
       <DialogContent className="bg-card border-border text-card-foreground max-w-4xl max-h-[90vh] overflow-y-auto backdrop-blur-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl text-foreground">
-            <Utensils className="w-6 h-6 text-[#C5B358]" />
+            <Utensils className="w-6 h-6 text-gray-600" />
             Create Nutrition Plan
           </DialogTitle>
         </DialogHeader>
