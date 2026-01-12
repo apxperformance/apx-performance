@@ -26,13 +26,7 @@ export default function BrowseCoaches() {
   const [requestMessage, setRequestMessage] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Redirect if user already has a coach
-  useEffect(() => {
-    if (user?.coach_id) {
-      toast.info("You already have a coach!");
-      navigate(createPageUrl("ClientDashboard"), { replace: true });
-    }
-  }, [user?.coach_id, navigate]);
+
 
   // Fetch all coaches with their active client count
   const { data: coaches = [], isLoading } = useQuery({

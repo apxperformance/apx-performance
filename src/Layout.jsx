@@ -69,8 +69,6 @@ function LayoutContent({ children, currentPageName }) {
     const validateUserAccess = async () => {
       if (isLoading || !user || hasValidated) return;
 
-
-
       let shouldRedirect = false;
       let redirectUrl = null;
 
@@ -78,21 +76,18 @@ function LayoutContent({ children, currentPageName }) {
         // Coaches should not access client-specific pages
         const clientOnlyPages = ["ClientDashboard", "MyWorkouts", "MyNutrition", "MySupplements", "FreeClientDashboard", "FoodTracker", "CheckInJournal", "MyProgress", "ClientSettings", "ClientCalendar"];
         if (clientOnlyPages.includes(currentPageName)) {
-
           shouldRedirect = true;
           redirectUrl = createPageUrl("CoachDashboard");
         }
       } else if (user.user_type === 'client') {
-        // Clients with a coach shouldn't see the FreeClientDashboard
-        if (user.coach_id && currentPageName === "FreeClientDashboard") {
-
+        // Clients with a coach shouldn't see the FreeClientDashboard or BrowseCoaches
+        if (user.coach_id && (currentPageName === "FreeClientDashboard" || currentPageName === "BrowseCoaches")) {
           shouldRedirect = true;
           redirectUrl = createPageUrl("ClientDashboard");
         }
 
         // Clients without a coach should see FreeClientDashboard as their main dashboard
         if (!user.coach_id && currentPageName === "ClientDashboard") {
-
           shouldRedirect = true;
           redirectUrl = createPageUrl("FreeClientDashboard");
         }
@@ -108,13 +103,11 @@ function LayoutContent({ children, currentPageName }) {
         // Coach-only pages should not be accessible by clients
         const coachOnlyPages = ["CoachDashboard", "ClientManagement", "WorkoutBuilder", "NutritionPlanner", "ProgressReviews", "CoachSettings", "SupplementPlanner", "CoachingCalendar"];
         if (coachOnlyPages.includes(currentPageName)) {
-
           shouldRedirect = true;
           redirectUrl = user.coach_id ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard");
         }
       } else if (!user.user_type) {
-        if (currentPageName !== "Welcome") {
-
+        if (currentPageName !== "Welcome" && currentPageName !== "BrowseCoaches") {
           shouldRedirect = true;
           redirectUrl = createPageUrl("Welcome");
         }
