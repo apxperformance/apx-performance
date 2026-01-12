@@ -294,7 +294,7 @@ export default function ClientChat() {
       <div className="p-6 md:p-8 space-y-8">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <MessageCircle className="w-8 h-8 text-[#C5B358]" />
+            <MessageCircle className="text-gray-600 lucide lucide-message-circle w-8 h-8" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Client Chat</h1>
           </div>
           <p className="text-muted-foreground">Select a client to start messaging.</p>
