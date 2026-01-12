@@ -336,7 +336,7 @@ export default function SupplementPlanner() {
                 <p className="text-sm text-muted-foreground">Total Templates</p>
                 <p className="text-3xl font-bold text-foreground">{plans.filter((p) => p.is_template === true && !p.client_id).length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div className="bg-gray-600 text-gray-50 p-3 rounded-xl flex items-center justify-center">
                 <Pill className="w-6 h-6 text-primary" />
               </div>
             </div>
@@ -350,7 +350,7 @@ export default function SupplementPlanner() {
                 <p className="text-sm text-muted-foreground">Assigned Plans</p>
                 <p className="text-3xl font-bold text-foreground">{plans.filter((p) => p.client_id).length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div className="bg-gray-600 text-gray-50 p-3 rounded-xl flex items-center justify-center">
                 <UserCheck className="w-6 h-6 text-primary" />
               </div>
             </div>
@@ -364,7 +364,7 @@ export default function SupplementPlanner() {
                 <p className="text-sm text-muted-foreground">Active Clients</p>
                 <p className="text-3xl font-bold text-foreground">{clients.filter((c) => c.status === 'active').length}</p>
               </div>
-              <div className="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div className="bg-gray-600 text-gray-50 p-3 rounded-xl flex items-center justify-center">
                 <Users className="w-6 h-6 text-primary" />
               </div>
             </div>
