@@ -111,7 +111,18 @@ export default function ClientList({ clients, isLoading, onClientUpdate }) {
                       <div className="bg-gray-600 text-slate-100 rounded-full w-12 h-12 from-[#C5B358] to-[#A4913C] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <User className="bg-gray-600 text-gray-50 lucide lucide-user w-6 h-6" />
                       </div>
-                      <StatusBadge status={client.status} />
+                      <div className="flex items-center gap-2">
+                        <StatusBadge status={client.status} />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => handleDeleteClient(e, client)}
+                          disabled={deletingId === client.id}
+                          className="text-red-500 hover:text-red-600 hover:bg-red-500/10 p-1 h-auto"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
 
                     <h3 className="font-bold text-lg text-foreground group-hover:text-[#C5B358] transition-colors duration-300 mb-2">
