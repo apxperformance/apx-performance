@@ -341,13 +341,13 @@ function LayoutContent({ children, currentPageName }) {
         </style>
         
         <Sidebar className="border-r border-gray-200 bg-gray-100 backdrop-blur-xl">
-          <SidebarHeader className="border-b border-gray-200 p-6">
+          <SidebarHeader className="bg-neutral-900 p-6 flex flex-col gap-2 border-b border-gray-200">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl flex items-center justify-center shadow-lg">
                 {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-white" /> : <Zap className="w-6 h-6 text-white" />}
               </div>
               <div>
-                <h2 className="text-slate-900 text-sm font-bold">APX PERFORMANCE</h2>
+                <h2 className="text-gray-50 text-sm font-bold">APX PERFORMANCE</h2>
                 <p className="text-xs text-gray-600 uppercase tracking-wide">
                   {user?.user_type === "coach" ? "Coach Portal" : "Client Portal"}
                 </p>
@@ -355,9 +355,9 @@ function LayoutContent({ children, currentPageName }) {
             </div>
           </SidebarHeader>
 
-          <SidebarContent className="p-4">
+          <SidebarContent className="bg-neutral-900 p-4 flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden">
             <SidebarGroup>
-              <SidebarGroupLabel className="text-xs font-medium uppercase tracking-wider px-2 py-3 text-gray-600">
+              <SidebarGroupLabel className="text-gray-50 px-2 py-3 text-xs font-medium uppercase tracking-wider rounded-md duration-200 flex h-8 shrink-0 items-center outline-none ring-sidebar-ring transition-[margin,opa] ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0">
                 {user?.user_type === "coach" ? "Coach Tools" : "My Fitness"}
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -372,7 +372,7 @@ function LayoutContent({ children, currentPageName }) {
                       'text-gray-700 hover:text-gray-900'}`
                       }>
 
-                        <Link to={item.url} className="flex items-center gap-3 px-4 py-3">
+                        <Link to={item.url} className="bg-gray-800 text-gray-50 mb-2 px-4 py-3 text-sm text-left rounded-xl peer/menu-button flex w-full items-center gap-2 overflow-hidden outline-none ring-sidebar-ring focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 h-8 hover:bg-gray-300/50 hover:text-gray-900 transition-all duration-300 group gap-3">
                           <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
                           <span className="font-medium">{item.title}</span>
                         </Link>
@@ -384,9 +384,9 @@ function LayoutContent({ children, currentPageName }) {
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="border-t border-gray-200 p-4 space-y-4">
+          <SidebarFooter className="bg-neutral-900 p-4 flex flex-col gap-2 border-t border-gray-200 space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Theme</span>
+              <span className="text-gray-50 text-sm font-medium">Theme</span>
               <button
                 onClick={toggleTheme}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 ${
@@ -406,7 +406,7 @@ function LayoutContent({ children, currentPageName }) {
                 {user?.user_type === "coach" ? <Crown className="w-5 h-5 text-gray-700" /> : <UserIcon className="w-5 h-5 text-gray-600" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm truncate text-gray-800">{user?.full_name}</p>
+                <p className="text-gray-50 text-sm font-medium truncate">{user?.full_name}</p>
                 <p className="text-xs truncate text-gray-600">
                   {user?.user_type === "coach" && coachTierInfo ? coachTierInfo.name : user?.user_type === "client" ? "Elite Member" : "User"}
                 </p>
