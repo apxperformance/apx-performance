@@ -25,11 +25,17 @@ export default function ClientManagement() {
   const { data: connectionRequests = [] } = useQuery({
     queryKey: ['connectionRequests'],
     queryFn: async () => {
-      const user = await base44.auth.me();
-      return base44.entities.CoachConnectionRequest.filter({
-        coach_id: user.id,
-        status: 'pending'
-      });
+      try {
+        const user = await base44.auth.me();
+        if (!user?.id) return [];
+        return base44.entities.CoachConnectionRequest.filter({
+          coach_id: user.id,
+          status: 'pending'
+        });
+      } catch (error) {
+        console.error('Error fetching connection requests:', error);
+        return [];
+      }
     },
     staleTime: 30 * 1000,
     refetchInterval: 30 * 1000,
