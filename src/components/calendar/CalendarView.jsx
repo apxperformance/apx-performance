@@ -51,12 +51,12 @@ export default function CalendarView({
   // Helper to get client info including avatar
   const getClientInfo = (clientId) => {
     if (!clientId) return null;
-    const client = clients.find(c => c.id === clientId);
+    const client = clients.find((c) => c.id === clientId);
     if (!client) return null;
-    
+
     return {
       name: client.full_name,
-      initials: client.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
+      initials: client.full_name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2),
       image: client.profile_image || null
     };
   };
@@ -142,7 +142,7 @@ export default function CalendarView({
     const viewStart = startOfWeek(startOfMonth(currentMonth), { weekStartsOn: 0 });
     const viewEnd = endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 0 });
 
-    return events.filter(event => {
+    return events.filter((event) => {
       const eventStartTime = new Date(event.start_time);
       const eventEndTime = new Date(event.end_time);
 
@@ -151,7 +151,7 @@ export default function CalendarView({
         return false;
       }
 
-      const eventIsVisible = (eventStartTime < viewEnd && eventEndTime > viewStart);
+      const eventIsVisible = eventStartTime < viewEnd && eventEndTime > viewStart;
       return eventIsVisible;
     });
   }, [events, currentMonth]);
@@ -160,12 +160,12 @@ export default function CalendarView({
   const eventsWithConflicts = useMemo(() => {
     const eventsToCheck = [...validatedEvents];
 
-    eventsToCheck.forEach(eventA => {
+    eventsToCheck.forEach((eventA) => {
       eventA.hasConflict = false;
     });
 
     const eventsByDay = new Map();
-    eventsToCheck.forEach(event => {
+    eventsToCheck.forEach((event) => {
       const dayKey = format(new Date(event.start_time), 'yyyy-MM-dd');
       if (!eventsByDay.has(dayKey)) {
         eventsByDay.set(dayKey, []);
@@ -173,7 +173,7 @@ export default function CalendarView({
       eventsByDay.get(dayKey).push(event);
     });
 
-    eventsByDay.forEach(dayEvents => {
+    eventsByDay.forEach((dayEvents) => {
       dayEvents.sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
 
       for (let i = 0; i < dayEvents.length; i++) {
@@ -193,7 +193,7 @@ export default function CalendarView({
         }
       }
     });
-    
+
     return eventsToCheck;
   }, [validatedEvents]);
 
@@ -306,8 +306,8 @@ export default function CalendarView({
             <Button
               variant={view === 'month' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => handleViewChange('month')}
-              className={view === 'month' ? 'bg-[#C5B358] text-black hover:bg-[#A4913C]' : 'text-muted-foreground hover:text-foreground hover:bg-accent'}
+              onClick={() => handleViewChange('month')} className="bg-gray-600 text-gray-50 px-3 text-sm font-medium rounded-md inline-flex items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 hover:bg-[#A4913C]"
+
               title="Month view (M)">
               <Calendar className="w-4 h-4 mr-1" />
               Month
@@ -366,8 +366,8 @@ export default function CalendarView({
             <ChevronRight className="w-5 h-5" />
           </Button>
         </div>
-      </div>
-    );
+      </div>);
+
   };
 
   // Memoized Month View - only recalculates when dependencies change
@@ -383,13 +383,13 @@ export default function CalendarView({
       days = [...days, ...Array.from({ length: 42 - days.length }, (_, i) => addDays(lastDay, i + 1))];
     }
 
-    const daysHeader = (
-      <div className="grid grid-cols-7 text-center text-xs font-medium text-muted-foreground border-b border-border">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-          <div key={day} className="py-2 border-r border-border last:border-r-0">{day}</div>
-        ))}
-      </div>
-    );
+    const daysHeader =
+    <div className="grid grid-cols-7 text-center text-xs font-medium text-muted-foreground border-b border-border">
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) =>
+      <div key={day} className="py-2 border-r border-border last:border-r-0">{day}</div>
+      )}
+      </div>;
+
 
 
     return (
@@ -427,14 +427,14 @@ export default function CalendarView({
 
                         {/* Enhanced event display with avatar */}
                         <div className="flex items-start gap-1.5">
-                          {clientInfo && (
-                            <Avatar className="w-5 h-5 shrink-0 border border-border/50">
+                          {clientInfo &&
+                          <Avatar className="w-5 h-5 shrink-0 border border-border/50">
                               <AvatarImage src={clientInfo.image} alt={clientInfo.name} />
                               <AvatarFallback className="text-[8px] bg-[#C5B358]/20 text-[#C5B358]">
                                 {clientInfo.initials}
                               </AvatarFallback>
                             </Avatar>
-                          )}
+                          }
                           <div className="flex-1 min-w-0">
                             <p className="font-semibold truncate text-xs leading-tight">{event.title}</p>
                             <p className="text-[10px] opacity-75 truncate leading-tight">
@@ -449,14 +449,14 @@ export default function CalendarView({
                         <div className="absolute left-0 top-full mt-1 z-50 bg-popover border border-border rounded-lg p-3 shadow-xl min-w-[200px] max-w-[280px]">
                             <div className="space-y-2">
                               <div className="flex items-start gap-2">
-                                {clientInfo && (
-                                  <Avatar className="w-8 h-8 shrink-0 border border-border">
+                                {clientInfo &&
+                              <Avatar className="w-8 h-8 shrink-0 border border-border">
                                     <AvatarImage src={clientInfo.image} alt={clientInfo.name} />
                                     <AvatarFallback className="text-xs bg-[#C5B358]/20 text-[#C5B358]">
                                       {clientInfo.initials}
                                     </AvatarFallback>
                                   </Avatar>
-                                )}
+                              }
                                 <div className="flex-1">
                                   <p className="font-semibold text-popover-foreground text-sm">{event.title}</p>
                                   <p className="text-xs text-muted-foreground capitalize">{eventTypeLabels[event.event_type]}</p>
@@ -596,14 +596,14 @@ export default function CalendarView({
 
                               {/* Enhanced event display with avatar for time grid */}
                               <div className="flex items-start gap-1.5">
-                                {clientInfo && eventHeight > 35 && (
-                                  <Avatar className="w-5 h-5 shrink-0 border border-border/50">
+                                {clientInfo && eventHeight > 35 &&
+                                <Avatar className="w-5 h-5 shrink-0 border border-border/50">
                                     <AvatarImage src={clientInfo.image} alt={clientInfo.name} />
                                     <AvatarFallback className="text-[8px] bg-[#C5B358]/20 text-[#C5B358]">
                                       {clientInfo.initials}
                                     </AvatarFallback>
                                   </Avatar>
-                                )}
+                                }
                                 <div className="flex-1 min-w-0">
                                   <p className="font-semibold truncate text-xs leading-tight">{event.title}</p>
                                   {clientInfo && <p className="truncate opacity-75 text-[10px] leading-tight">{clientInfo.name}</p>}
