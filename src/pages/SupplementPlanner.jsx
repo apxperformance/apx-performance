@@ -58,9 +58,9 @@ export default function SupplementPlanner() {
     try {
       const user = await User.me();
       const [planData, clientData] = await Promise.all([
-        SupplementPlan.filter({ coach_id: user.id }, "-created_date"),
-        Client.filter({ coach_id: user.id })
-      ]);
+      SupplementPlan.filter({ coach_id: user.id }, "-created_date"),
+      Client.filter({ coach_id: user.id })]
+      );
       setPlans(planData);
       setClients(clientData);
     } catch (error) {
@@ -114,8 +114,8 @@ export default function SupplementPlanner() {
       }
 
       // Check which clients already have plans and handle appropriately
-      const existingPlansPromises = clientIds.map(clientId =>
-        SupplementPlan.filter({ client_id: clientId })
+      const existingPlansPromises = clientIds.map((clientId) =>
+      SupplementPlan.filter({ client_id: clientId })
       );
       const existingPlansPerClient = await Promise.all(existingPlansPromises);
 
@@ -127,8 +127,8 @@ export default function SupplementPlanner() {
         if (clientExistingPlans.length > 0) {
           console.log(`Replacing ${clientExistingPlans.length} existing plan(s) for client ${assignedClient?.full_name || clientId}`);
           await Promise.all(
-            clientExistingPlans.map(oldPlan =>
-              SupplementPlan.delete(oldPlan.id)
+            clientExistingPlans.map((oldPlan) =>
+            SupplementPlan.delete(oldPlan.id)
             )
           );
         }
@@ -182,13 +182,13 @@ export default function SupplementPlanner() {
 
       // Client filter
       const matchesClient = filters.clientId === 'all' ||
-        (filters.clientId === 'unassigned' && !plan.client_id) ||
-        plan.client_id === filters.clientId;
+      filters.clientId === 'unassigned' && !plan.client_id ||
+      plan.client_id === filters.clientId;
 
       // Plan type filter
       const matchesPlanType = filters.planType === 'all' ||
-        (filters.planType === 'template' && plan.is_template === true) ||
-        (filters.planType === 'assigned' && plan.client_id);
+      filters.planType === 'template' && plan.is_template === true ||
+      filters.planType === 'assigned' && plan.client_id;
 
       return matchesSearch && matchesClient && matchesPlanType;
     });
@@ -236,7 +236,7 @@ export default function SupplementPlanner() {
 
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Pill className="w-8 h-8 text-primary" />
+            <Pill className="text-gray-600 lucide lucide-pill w-8 h-8" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Supplement Planner</h1>
           </div>
           <p className="text-muted-foreground">Design and assign supplement protocols for your clients.</p>
@@ -281,7 +281,7 @@ export default function SupplementPlanner() {
                     <SelectItem value="all">All Clients</SelectItem>
                     <SelectItem value="unassigned">Unassigned (Templates)</SelectItem>
                     {clients.map((client) =>
-                      <SelectItem key={client.id} value={client.id}>{client.full_name}</SelectItem>
+                    <SelectItem key={client.id} value={client.id}>{client.full_name}</SelectItem>
                     )}
                   </SelectContent>
                 </Select>
@@ -302,7 +302,7 @@ export default function SupplementPlanner() {
               </div>
 
               {hasActiveFilters &&
-                <Button onClick={clearFilters} variant="outline" className="w-full border-border text-foreground hover:bg-secondary">
+              <Button onClick={clearFilters} variant="outline" className="w-full border-border text-foreground hover:bg-secondary">
                   <X className="w-4 h-4 mr-2" />
                   Clear Filters
                 </Button>
@@ -373,100 +373,100 @@ export default function SupplementPlanner() {
       </div>
 
       {selectedPlan ?
-        <SupplementPlanDetailView
-          plan={selectedPlan}
-          clients={clients}
-          onBack={() => setSelectedPlan(null)}
-          onPlanUpdated={handlePlanUpdated}
-          onPlanDeleted={handlePlanDeleted}
-          onAssignPlan={() => handleAssignPlan(selectedPlan)}
-          onPlanDuplicated={handlePlanDuplicated} /> :
+      <SupplementPlanDetailView
+        plan={selectedPlan}
+        clients={clients}
+        onBack={() => setSelectedPlan(null)}
+        onPlanUpdated={handlePlanUpdated}
+        onPlanDeleted={handlePlanDeleted}
+        onAssignPlan={() => handleAssignPlan(selectedPlan)}
+        onPlanDuplicated={handlePlanDuplicated} /> :
 
 
-        <div className="space-y-8">
+      <div className="space-y-8">
           {/* Template Plans */}
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-4">
               Plan Templates
               {templatePlans.length !== plans.filter((p) => p.is_template === true && !p.client_id).length &&
-                <span className="text-sm text-muted-foreground ml-2">({templatePlans.length} of {plans.filter((p) => p.is_template === true && !p.client_id).length})</span>
-              }
+            <span className="text-sm text-muted-foreground ml-2">({templatePlans.length} of {plans.filter((p) => p.is_template === true && !p.client_id).length})</span>
+            }
             </h2>
             <AnimatePresence mode="popLayout">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {isLoading ?
-                  Array(3).fill(0).map((_, i) => <div key={i} className="h-48 bg-secondary rounded-lg animate-pulse"></div>) :
-                  templatePlans.length > 0 ?
-                    templatePlans.map((plan, index) =>
-                      <motion.div
-                        key={plan.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.3, delay: index * 0.05 }}
-                        layout>
+              Array(3).fill(0).map((_, i) => <div key={i} className="h-48 bg-secondary rounded-lg animate-pulse"></div>) :
+              templatePlans.length > 0 ?
+              templatePlans.map((plan, index) =>
+              <motion.div
+                key={plan.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                layout>
 
                         <SupplementPlanBuilderCard
-                          plan={plan}
-                          onClick={() => setSelectedPlan(plan)}
-                          onAssign={() => handleAssignPlan(plan)}
-                          isTemplate={true} />
+                  plan={plan}
+                  onClick={() => setSelectedPlan(plan)}
+                  onAssign={() => handleAssignPlan(plan)}
+                  isTemplate={true} />
 
                       </motion.div>
-                    ) :
+              ) :
 
-                    <div className="col-span-full text-center py-12 text-muted-foreground">
+              <div className="col-span-full text-center py-12 text-muted-foreground">
                       <Pill className="w-16 h-16 mx-auto mb-4 opacity-30" />
                       <h3 className="text-xl font-semibold text-foreground">
                         {hasActiveFilters ? "No templates match your filters" : "No Templates Yet"}
                       </h3>
                       <p>{hasActiveFilters ? "Try adjusting your search or filters" : "Create your first supplement plan to get started."}</p>
                     </div>
-                }
+              }
               </div>
             </AnimatePresence>
           </div>
 
           {/* Assigned Plans */}
           {(clientPlans.length > 0 || hasActiveFilters && !isLoading) &&
-            <div>
+        <div>
               <h2 className="text-2xl font-bold text-foreground mb-4">
                 Assigned Plans
                 {clientPlans.length !== plans.filter((p) => p.client_id).length &&
-                  <span className="text-sm text-muted-foreground ml-2">({clientPlans.length} of {plans.filter((p) => p.client_id).length})</span>
-                }
+            <span className="text-sm text-muted-foreground ml-2">({clientPlans.length} of {plans.filter((p) => p.client_id).length})</span>
+            }
               </h2>
               <AnimatePresence mode="popLayout">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {clientPlans.length > 0 ?
-                    clientPlans.map((plan, index) =>
-                      <motion.div
-                        key={plan.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.3, delay: index * 0.05 }}
-                        layout>
+              clientPlans.map((plan, index) =>
+              <motion.div
+                key={plan.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                layout>
 
                         <SupplementPlanBuilderCard
-                          plan={plan}
-                          onClick={() => setSelectedPlan(plan)}
-                          client={clients.find((c) => c.id === plan.client_id)}
-                          isTemplate={false} />
+                  plan={plan}
+                  onClick={() => setSelectedPlan(plan)}
+                  client={clients.find((c) => c.id === plan.client_id)}
+                  isTemplate={false} />
 
                       </motion.div>
-                    ) :
+              ) :
 
-                    <div className="col-span-full text-center py-12 text-muted-foreground">
+              <div className="col-span-full text-center py-12 text-muted-foreground">
                       <UserCheck className="w-16 h-16 mx-auto mb-4 opacity-30" />
                       <h3 className="text-xl font-semibold text-foreground">No assigned plans match your filters</h3>
                       <p>Try adjusting your search or filters</p>
                     </div>
-                  }
+              }
                 </div>
               </AnimatePresence>
             </div>
-          }
+        }
         </div>
       }
 
