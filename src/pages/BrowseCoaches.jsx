@@ -32,36 +32,54 @@ export default function BrowseCoaches() {
   const { data: coaches = [], isLoading } = useQuery({
     queryKey: ['allCoaches'],
     queryFn: async () => {
-      const coachUsers = await base44.entities.User.filter({ user_type: 'coach' });
-      
-      // For each coach, get their active client count and calculate tier
-      const coachesWithTiers = await Promise.all(
-        coachUsers.map(async (coach) => {
-          const clients = await base44.entities.Client.filter({ 
-            coach_id: coach.id,
-            status: 'active'
-          });
-          const activeClientCount = clients.length;
-          const tier = calculateCoachTier(activeClientCount);
-          const tierInfo = getCoachTierInfo(tier);
-          
-          return {
-            ...coach,
-            activeClientCount,
-            tier,
-            tierInfo
-          };
-        })
-      );
-      
-      // Sort by tier (Elite > Pro > Associate), then by client count
-      return coachesWithTiers.sort((a, b) => {
-        const tierOrder = { elite: 0, pro: 1, associate: 2 };
-        if (tierOrder[a.tier] !== tierOrder[b.tier]) {
-          return tierOrder[a.tier] - tierOrder[b.tier];
-        }
-        return b.activeClientCount - a.activeClientCount;
-      });
+      try {
+        const coachUsers = await base44.entities.User.filter({ user_type: 'coach' });
+        
+        // For each coach, get their active client count and calculate tier
+        const coachesWithTiers = await Promise.all(
+          coachUsers.map(async (coach) => {
+            try {
+              const clients = await base44.entities.Client.filter({ 
+                coach_id: coach.id,
+                status: 'active'
+              });
+              const activeClientCount = clients.length;
+              const tier = calculateCoachTier(activeClientCount);
+              const tierInfo = getCoachTierInfo(tier);
+              
+              return {
+                ...coach,
+                activeClientCount,
+                tier,
+                tierInfo
+              };
+            } catch (error) {
+              console.error(`Error fetching clients for coach ${coach.id}:`, error);
+              // Return coach with 0 clients if error
+              const tier = calculateCoachTier(0);
+              const tierInfo = getCoachTierInfo(tier);
+              return {
+                ...coach,
+                activeClientCount: 0,
+                tier,
+                tierInfo
+              };
+            }
+          })
+        );
+        
+        // Sort by tier (Elite > Pro > Associate), then by client count
+        return coachesWithTiers.sort((a, b) => {
+          const tierOrder = { elite: 0, pro: 1, associate: 2 };
+          if (tierOrder[a.tier] !== tierOrder[b.tier]) {
+            return tierOrder[a.tier] - tierOrder[b.tier];
+          }
+          return b.activeClientCount - a.activeClientCount;
+        });
+      } catch (error) {
+        console.error('Error fetching coaches:', error);
+        return [];
+      }
     },
     staleTime: 5 * 60 * 1000,
   });
