@@ -345,15 +345,20 @@ export default function AddEventDialog({
       const startDateTime = new Date(data.start_time);
       const endDateTime = new Date(data.end_time);
 
+      // Sanitize IDs: ensure null for missing values, not empty string or undefined
+      const sanitizedClientId = (data.client_id && data.client_id !== "" && data.client_id !== "personal") 
+        ? data.client_id 
+        : null;
+
       const baseEventData = {
         title: data.title,
         description: data.description || "",
         start_time: startDateTime.toISOString(),
         end_time: endDateTime.toISOString(),
         coach_id: user.id,
-        client_id: data.client_id && data.client_id !== "" ? data.client_id : null, // Client profile ID (exists for all clients)
+        client_id: sanitizedClientId, // Strictly null for pending/offline clients
         event_type: data.event_type,
-        check_in_id: data.check_in_id || null,
+        check_in_id: data.check_in_id ? data.check_in_id : null,
       };
       
       // NOTE: Notifications are handled in the backend function (createCalendarEvent)
