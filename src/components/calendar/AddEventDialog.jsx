@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
@@ -552,15 +551,15 @@ export default function AddEventDialog({
               control={control}
               render={({ field }) => (
                 <Select 
-                  value={field.value || ""}
-                  onValueChange={(val) => field.onChange(val === "" ? null : val)}
+                  value={field.value ? field.value.toString() : "personal"}
+                  onValueChange={(val) => field.onChange(val === "personal" ? null : val)}
                   disabled={isSubmitting}
                 >
                   <SelectTrigger className="bg-input border-border">
-                    <SelectValue placeholder="Select a client (or leave blank for personal event)" />
+                    <SelectValue placeholder="Select a client..." />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border text-popover-foreground">
-                    <SelectItem value={null}>No client (Personal event)</SelectItem>
+                    <SelectItem value="personal">No client (Personal event)</SelectItem>
                     {clients.map((client) => (
                       <SelectItem key={client.id} value={client.id}>
                         {client.full_name}
