@@ -70,11 +70,16 @@ export default function CoachDashboard() {
     queryKey: ['unreadMessages', user?.id],
     queryFn: async () => {
       if (!user) return [];
-      return base44.entities.ChatMessage.filter({
-        coach_id: user.id,
-        sender_type: 'client',
-        is_read: false
-      });
+      try {
+        return base44.entities.ChatMessage.filter({
+          coach_id: user.id,
+          sender_type: 'client',
+          is_read: false
+        });
+      } catch (error) {
+        console.error("Unread messages fetch error:", error);
+        return [];
+      }
     },
     enabled: !!user,
     staleTime: 30 * 1000,
