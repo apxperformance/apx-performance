@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -31,9 +30,9 @@ export default function BrowseCoaches() {
   useEffect(() => {
     if (user?.coach_id) {
       toast.info("You already have a coach!");
-      navigate(createPageUrl("ClientDashboard"));
+      navigate(createPageUrl("ClientDashboard"), { replace: true });
     }
-  }, [user, navigate]);
+  }, [user?.coach_id, navigate]);
 
   // Fetch all coaches with their active client count
   const { data: coaches = [], isLoading } = useQuery({
