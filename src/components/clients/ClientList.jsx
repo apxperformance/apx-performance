@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -77,8 +78,8 @@ export default function ClientList({ clients, isLoading, onClientUpdate }) {
                 <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 cursor-pointer group h-full">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-4">
-                      <div className="bg-gray-600 rounded-full w-12 h-12 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <User className="w-6 h-6 text-white" />
+                      <div className="bg-gray-600 text-slate-100 rounded-full w-12 h-12 from-[#C5B358] to-[#A4913C] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <User className="bg-gray-200 text-black lucide lucide-user w-6 h-6" />
                       </div>
                       <StatusBadge status={client.status} />
                     </div>
