@@ -5,13 +5,13 @@ import { Pill, Users, User } from "lucide-react";
 
 export default function SupplementPlanBuilderCard({ plan, onClick, onAssign, client, isTemplate = true }) {
   return (
-    <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-[#C5B358]/30 transition-all duration-300 cursor-pointer group">
+    <Card className="bg-card/50 backdrop-blur-xl border-border hover:border-primary/30 transition-all duration-300 cursor-pointer group">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <Pill className="w-5 h-5 text-[#C5B358]" />
+            <Pill className="w-5 h-5 text-primary" />
             <div>
-              <CardTitle className="text-foreground text-lg group-hover:text-[#C5B358] transition-colors">
+              <CardTitle className="text-foreground text-lg group-hover:text-primary transition-colors">
                 {plan.name}
               </CardTitle>
               {client && (
@@ -35,7 +35,7 @@ export default function SupplementPlanBuilderCard({ plan, onClick, onAssign, cli
         
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
-            <Pill className="w-4 h-4 text-[#C5B358]" />
+            <Pill className="w-4 h-4 text-primary" />
             {plan.supplements?.length || 0} supplements
           </div>
         </div>
@@ -65,7 +65,7 @@ export default function SupplementPlanBuilderCard({ plan, onClick, onAssign, cli
             }}
             variant="outline"
             size="sm"
-            className="w-full border-border text-foreground hover:bg-secondary hover:border-[#C5B358]"
+            className="w-full border-border text-foreground hover:bg-secondary hover:border-primary"
           >
             <Users className="w-4 h-4 mr-2" />
             Assign to Client

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { SupplementPlan } from "@/entities/SupplementPlan";
 import { Client } from "@/entities/Client";
@@ -275,12 +274,12 @@ export default function SupplementPlanDetailView({ plan, clients, onBack, onPlan
     >
       {/* Assigned Client Banner */}
       {assignedClient && (
-        <Card className="bg-gradient-to-r from-[#C5B358]/10 to-[#A4913C]/10 border-[#C5B358]/30 backdrop-blur-xl">
+        <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/30 backdrop-blur-xl">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-[#C5B358] to-[#A4913C] rounded-full flex items-center justify-center">
-                  <span className="text-black font-semibold text-sm">
+                <div className="w-10 h-10 bg-gradient-to-r from-primary to-primary/80 rounded-full flex items-center justify-center">
+                  <span className="text-primary-foreground font-semibold text-sm">
                     {assignedClient.full_name.charAt(0).toUpperCase()}
                   </span>
                 </div>
@@ -316,7 +315,7 @@ export default function SupplementPlanDetailView({ plan, clients, onBack, onPlan
               <Input
                 value={editedPlan.name}
                 onChange={(e) => handlePlanChange("name", e.target.value)}
-                className="text-2xl font-bold bg-input border-border mb-2 focus:border-[#C5B358]"
+                className="text-2xl font-bold bg-input border-border mb-2 focus:border-primary"
                 placeholder="Plan name..."
               />
             ) : (
@@ -345,7 +344,7 @@ export default function SupplementPlanDetailView({ plan, clients, onBack, onPlan
               <Button
                 onClick={handleDuplicatePlan}
                 variant="outline"
-                className="border-border text-foreground hover:bg-secondary hover:border-[#C5B358]"
+                className="border-border text-foreground hover:bg-secondary hover:border-primary"
               >
                 <Copy className="w-4 h-4 mr-2" />
                 Duplicate
@@ -353,7 +352,7 @@ export default function SupplementPlanDetailView({ plan, clients, onBack, onPlan
               <Button
                 onClick={() => setIsEditing(true)}
                 variant="outline"
-                className="border-border text-foreground hover:bg-secondary hover:border-[#C5B358]"
+                className="border-border text-foreground hover:bg-secondary hover:border-primary"
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Plan
@@ -361,7 +360,7 @@ export default function SupplementPlanDetailView({ plan, clients, onBack, onPlan
               {plan.is_template === true && (
                 <Button
                   onClick={() => onAssignPlan(plan)}
-                  className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
                 >
                   <Users className="w-4 h-4 mr-2" />
                   Assign to Client
@@ -390,7 +389,7 @@ export default function SupplementPlanDetailView({ plan, clients, onBack, onPlan
       <Card className="bg-card/50 backdrop-blur-xl border-border">
         <CardHeader>
           <CardTitle className="text-foreground flex items-center gap-2">
-            <Pill className="w-5 h-5 text-[#C5B358]" />
+            <Pill className="w-5 h-5 text-primary" />
             Plan Details
           </CardTitle>
         </CardHeader>

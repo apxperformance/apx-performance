@@ -132,7 +132,7 @@ export default function AssignSupplementPlanDialog({ isOpen, onClose, plan, onAs
       <DialogContent className="bg-card border-border text-card-foreground max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-foreground">
-            <UserCheck className="w-5 h-5 text-[#C5B358]" />
+            <UserCheck className="w-5 h-5 text-primary" />
             Assign Supplement Plan: {plan?.name}
           </DialogTitle>
         </DialogHeader>
@@ -211,7 +211,7 @@ export default function AssignSupplementPlanDialog({ isOpen, onClose, plan, onAs
         <div className="flex-1 overflow-y-auto pr-2">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="w-8 h-8 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : filteredClients.length === 0 ? (
             <div className="text-center py-12">
@@ -239,14 +239,14 @@ export default function AssignSupplementPlanDialog({ isOpen, onClose, plan, onAs
                   onClick={() => setSelectedClient(client)}
                   className={`p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
                     selectedClient?.id === client.id
-                      ? "bg-[#C5B358]/20 border-[#C5B358]"
-                      : "bg-secondary/50 border-border hover:border-[#C5B358]/50 hover:bg-secondary"
+                      ? "bg-primary/20 border-primary"
+                      : "bg-secondary/50 border-border hover:border-primary/50 hover:bg-secondary"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <Avatar className="w-10 h-10 border-2 border-border">
                       <AvatarImage src={client.profile_image} alt={client.full_name} />
-                      <AvatarFallback className="bg-[#C5B358]/20 text-[#C5B358]">
+                      <AvatarFallback className="bg-primary/20 text-primary">
                         {client.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -292,7 +292,7 @@ export default function AssignSupplementPlanDialog({ isOpen, onClose, plan, onAs
           <Button
             onClick={handleAssign}
             disabled={!selectedClient || isLoading}
-            className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
           >
             {isLoading ? "Assigning..." : "Assign Plan"}
           </Button>

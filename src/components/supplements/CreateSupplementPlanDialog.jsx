@@ -69,7 +69,7 @@ export default function CreateSupplementPlanDialog({ isOpen, onClose, onPlanCrea
       <DialogContent className="max-w-md bg-card border-border text-card-foreground backdrop-blur-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl text-foreground">
-            <Pill className="w-6 h-6 text-[#C5B358]" />
+            <Pill className="w-6 h-6 text-primary" />
             Create New Supplement Plan
           </DialogTitle>
         </DialogHeader>
@@ -84,7 +84,7 @@ export default function CreateSupplementPlanDialog({ isOpen, onClose, onPlanCrea
               onChange={handleInputChange}
               placeholder="e.g., Performance Stack"
               required
-              className="bg-input border-border focus:border-[#C5B358] text-slate-900"
+              className="bg-input border-border focus:border-primary"
             />
           </div>
 
@@ -97,7 +97,7 @@ export default function CreateSupplementPlanDialog({ isOpen, onClose, onPlanCrea
               onChange={handleInputChange}
               placeholder="Brief description of the plan's purpose..."
               rows={3}
-              className="bg-input border-border focus:border-[#C5B358] resize-none text-slate-900"
+              className="bg-input border-border focus:border-primary resize-none"
             />
           </div>
 
@@ -108,7 +108,7 @@ export default function CreateSupplementPlanDialog({ isOpen, onClose, onPlanCrea
             <Button 
               type="submit" 
               disabled={isSubmitting || !formData.name.trim()}
-              className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
             >
               {isSubmitting ? "Creating..." : "Create Plan"}
             </Button>
