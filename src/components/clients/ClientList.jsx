@@ -79,7 +79,7 @@ export default function ClientList({ clients, isLoading, onClientUpdate }) {
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className="bg-gray-600 text-slate-100 rounded-full w-12 h-12 from-[#C5B358] to-[#A4913C] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <User className="bg-gray-200 text-black lucide lucide-user w-6 h-6" />
+                        <User className="bg-gray-600 text-gray-50 lucide lucide-user w-6 h-6" />
                       </div>
                       <StatusBadge status={client.status} />
                     </div>
