@@ -465,8 +465,16 @@ export default function AddEventDialog({
       reset();
       onClose();
     } catch (error) {
-      console.error("Error saving event:", error);
-      toast.error("Failed to save event. Please try again.");
+      console.error("FULL ERROR:", error);
+      console.error("Error message:", error?.message);
+      console.error("Error details:", error?.details);
+      console.error("Error status:", error?.status);
+      console.error("Error response:", error?.response);
+      
+      // Show detailed error in alert for debugging
+      window.alert(`DEBUG - Event Save Error:\n\n${JSON.stringify(error, null, 2)}`);
+      
+      toast.error(`Failed to save event: ${error?.message || "Unknown error"}`);
     }
   };
 
