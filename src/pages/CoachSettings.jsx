@@ -111,7 +111,7 @@ export default function CoachSettings() {
                     id="full_name"
                     name="full_name"
                     value={formData.full_name}
-                    onChange={handleInputChange} className="bg-gray-600 text-slate-50 px-3 py-2 text-base rounded-md flex h-10 w-full border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-border focus:border-[#C5B358]" />
+                    onChange={handleInputChange} className="bg-zinc-500 text-slate-50 px-3 py-2 text-base rounded-md flex h-10 w-full border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-border focus:border-[#C5B358]" />
 
 
                 </div>
@@ -135,8 +135,8 @@ export default function CoachSettings() {
                   id="phone"
                   name="phone"
                   value={formData.phone}
-                  onChange={handleInputChange}
-                  className="bg-input border-border focus:border-[#C5B358]" />
+                  onChange={handleInputChange} className="bg-zinc-500 px-3 py-2 text-base rounded-md flex h-10 w-full border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-border focus:border-[#C5B358]" />
+
 
               </div>
 
@@ -147,8 +147,8 @@ export default function CoachSettings() {
                   name="bio"
                   value={formData.bio}
                   onChange={handleInputChange}
-                  rows={4}
-                  className="bg-input border-border focus:border-[#C5B358] resize-none"
+                  rows={4} className="bg-zinc-500 px-3 py-2 text-base rounded-md flex min-h-[60px] w-full border shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-border focus:border-[#C5B358] resize-none"
+
                   placeholder="Tell your clients about your experience and coaching philosophy..." />
 
               </div>
@@ -176,7 +176,7 @@ export default function CoachSettings() {
         <Card className="bg-card/50 backdrop-blur-xl border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-foreground">
-              <UserIcon className="w-5 h-5 text-[#C5B358]" />
+              <UserIcon className="text-gray-600 lucide lucide-user w-5 h-5" />
               Account Information
             </CardTitle>
           </CardHeader>
