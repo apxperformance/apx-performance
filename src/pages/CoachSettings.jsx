@@ -44,7 +44,7 @@ export default function CoachSettings() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = async (e) => {
@@ -66,24 +66,24 @@ export default function CoachSettings() {
         <Card className="bg-card/50 backdrop-blur-xl border-border">
           <CardHeader><div className="h-6 bg-secondary rounded w-1/4"></div></CardHeader>
           <CardContent className="space-y-4">
-            {Array(5).fill(0).map((_, i) => (
-              <div key={i} className="h-10 bg-secondary rounded"></div>
-            ))}
+            {Array(5).fill(0).map((_, i) =>
+            <div key={i} className="h-10 bg-secondary rounded"></div>
+            )}
           </CardContent>
         </Card>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
     <div className="p-6 md:p-8 space-y-8 max-w-4xl mx-auto">
       {/* Header */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
+        animate={{ opacity: 1, y: 0 }}>
+
         <div className="flex items-center gap-3 mb-2">
-          <Settings className="w-8 h-8 text-[#C5B358]" />
+          <Settings className="text-gray-600 lucide lucide-settings w-8 h-8" />
           <h1 className="text-3xl md:text-4xl font-bold text-foreground">Coach Settings</h1>
         </div>
         <p className="text-muted-foreground">Manage your profile and coaching preferences.</p>
@@ -93,12 +93,12 @@ export default function CoachSettings() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
+        transition={{ delay: 0.1 }}>
+
         <Card className="bg-card/50 backdrop-blur-xl border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-foreground">
-              <Crown className="w-5 h-5 text-[#C5B358]" />
+              <Crown className="text-gray-600 lucide lucide-crown w-5 h-5" />
               Coach Profile
             </CardTitle>
           </CardHeader>
@@ -112,8 +112,8 @@ export default function CoachSettings() {
                     name="full_name"
                     value={formData.full_name}
                     onChange={handleInputChange}
-                    className="bg-input border-border focus:border-[#C5B358]"
-                  />
+                    className="bg-input border-border focus:border-[#C5B358]" />
+
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-muted-foreground">Email</Label>
@@ -124,8 +124,8 @@ export default function CoachSettings() {
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled
-                    className="bg-input border-border opacity-50"
-                  />
+                    className="bg-input border-border opacity-50" />
+
                 </div>
               </div>
 
@@ -136,8 +136,8 @@ export default function CoachSettings() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="bg-input border-border focus:border-[#C5B358]"
-                />
+                  className="bg-input border-border focus:border-[#C5B358]" />
+
               </div>
 
               <div className="space-y-2">
@@ -149,16 +149,16 @@ export default function CoachSettings() {
                   onChange={handleInputChange}
                   rows={4}
                   className="bg-input border-border focus:border-[#C5B358] resize-none"
-                  placeholder="Tell your clients about your experience and coaching philosophy..."
-                />
+                  placeholder="Tell your clients about your experience and coaching philosophy..." />
+
               </div>
 
               <div className="flex justify-end">
-                <Button 
-                  type="submit" 
-                  disabled={isSaving}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
-                >
+                <Button
+                  type="submit"
+                  disabled={isSaving} className="bg-gray-700 text-gray-50 px-4 py-2 text-sm font-semibold rounded-md inline-flex items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 hover:bg-yellow-600">
+
+
                   {isSaving ? "Saving..." : "Save Changes"}
                 </Button>
               </div>
@@ -171,8 +171,8 @@ export default function CoachSettings() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
+        transition={{ delay: 0.2 }}>
+
         <Card className="bg-card/50 backdrop-blur-xl border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-foreground">
@@ -196,6 +196,6 @@ export default function CoachSettings() {
           </CardContent>
         </Card>
       </motion.div>
-    </div>
-  );
+    </div>);
+
 }
