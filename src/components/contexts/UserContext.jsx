@@ -48,6 +48,7 @@ export function UserProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [coachTier, setCoachTier] = useState(null);
   const [activeClientCount, setActiveClientCount] = useState(0);
+  const [hasAttemptedLinking, setHasAttemptedLinking] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
