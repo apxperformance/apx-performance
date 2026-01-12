@@ -1,19 +1,49 @@
-
 import { useState } from "react";
+import { base44 } from "@/api/base44Client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { User, Mail, Phone, Calendar, Search } from "lucide-react";
+import { User, Mail, Phone, Calendar, Search, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { format } from 'date-fns'; // Import format from date-fns
+import { toast } from "sonner";
 
 import StatusBadge from "../ui/status-badge";
 
 export default function ClientList({ clients, isLoading, onClientUpdate }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [deletingId, setDeletingId] = useState(null);
+
+  const handleDeleteClient = async (e, client) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!window.confirm(`Are you sure you want to remove ${client.full_name} as a client?`)) {
+      return;
+    }
+
+    setDeletingId(client.id);
+    try {
+      // Delete the Client record
+      await base44.entities.Client.delete(client.id);
+      
+      // Clear coach_id from User record if user_id exists
+      if (client.user_id) {
+        await base44.entities.User.update(client.user_id, { coach_id: null });
+      }
+      
+      toast.success(`${client.full_name} has been removed from your roster.`);
+      onClientUpdate();
+    } catch (error) {
+      console.error("Error deleting client:", error);
+      toast.error("Failed to remove client");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   // Filter clients based on search and status
   const filteredClients = clients.filter((client) => {
