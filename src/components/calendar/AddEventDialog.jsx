@@ -351,7 +351,7 @@ export default function AddEventDialog({
         start_time: startDateTime.toISOString(),
         end_time: endDateTime.toISOString(),
         coach_id: user.id,
-        client_id: data.client_id || null,
+        client_id: data.client_id && data.client_id !== "" ? data.client_id : null,
         event_type: data.event_type,
         check_in_id: data.check_in_id || null,
       };
