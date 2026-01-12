@@ -30,9 +30,9 @@ export default function WorkoutBuilder() {
     try {
       const user = await base44.auth.me();
       const [workoutData, clientData] = await Promise.all([
-        base44.entities.Workout.filter({ coach_id: user.id }, "-created_date"),
-        base44.entities.Client.filter({ coach_id: user.id })
-      ]);
+      base44.entities.Workout.filter({ coach_id: user.id }, "-created_date"),
+      base44.entities.Client.filter({ coach_id: user.id })]
+      );
 
       setWorkouts(workoutData);
       setClients(clientData);
@@ -49,12 +49,12 @@ export default function WorkoutBuilder() {
   };
 
   const handleWorkoutUpdated = (updatedWorkout) => {
-    setWorkouts(workouts.map(w => w.id === updatedWorkout.id ? updatedWorkout : w));
+    setWorkouts(workouts.map((w) => w.id === updatedWorkout.id ? updatedWorkout : w));
     setSelectedWorkout(updatedWorkout);
   };
 
   const handleWorkoutDeleted = (workoutId) => {
-    setWorkouts(workouts.filter(w => w.id !== workoutId));
+    setWorkouts(workouts.filter((w) => w.id !== workoutId));
     setSelectedWorkout(null);
   };
 
@@ -65,11 +65,11 @@ export default function WorkoutBuilder() {
 
   const handleAssignPlan = async (planId, clientIds) => {
     try {
-      const templateWorkout = workouts.find(w => w.id === planId);
+      const templateWorkout = workouts.find((w) => w.id === planId);
       if (!templateWorkout) return;
 
-      const assignPromises = clientIds.map(clientId => {
-        const assignedClient = clients.find(c => c.id === clientId);
+      const assignPromises = clientIds.map((clientId) => {
+        const assignedClient = clients.find((c) => c.id === clientId);
         return base44.entities.Workout.create({
           name: `${templateWorkout.name} - ${assignedClient?.full_name || 'Client'}`,
           description: templateWorkout.description,
@@ -82,7 +82,7 @@ export default function WorkoutBuilder() {
           is_template: false
         });
       });
-      
+
       await Promise.allSettled(assignPromises);
       await loadData();
       setIsAssignDialogOpen(false);
@@ -93,20 +93,20 @@ export default function WorkoutBuilder() {
     }
   };
 
-  const filteredWorkouts = workouts.filter(workout =>
-    workout.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredWorkouts = workouts.filter((workout) =>
+  workout.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const templateWorkouts = filteredWorkouts.filter(w => w.is_template !== false);
-  const clientWorkouts = filteredWorkouts.filter(w => w.client_id);
+  const templateWorkouts = filteredWorkouts.filter((w) => w.is_template !== false);
+  const clientWorkouts = filteredWorkouts.filter((w) => w.client_id);
 
   return (
     <div className="p-6 md:p-8 space-y-8">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
-      >
+        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+
         <div>
           <div className="flex items-center gap-3 mb-2">
             <Dumbbell className="w-8 h-8 text-primary" />
@@ -116,8 +116,8 @@ export default function WorkoutBuilder() {
         </div>
         <Button
           onClick={() => setIsCreateDialogOpen(true)}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
-        >
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+
           <Plus className="w-4 h-4 mr-2" />
           Create Workout
         </Button>
@@ -129,69 +129,69 @@ export default function WorkoutBuilder() {
           placeholder="Search workouts..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-input border-border text-foreground focus:border-primary"
-        />
+          className="bg-input border-border text-foreground focus:border-primary" />
+
         <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { label: "Total Workouts", val: templateWorkouts.length, icon: Dumbbell },
-          { label: "Templates", val: templateWorkouts.length, icon: Plus },
-          { label: "Assigned", val: clientWorkouts.length, icon: Users }
-        ].map((stat, i) => (
-          <Card key={i} className="bg-card border-border">
+        { label: "Total Workouts", val: templateWorkouts.length, icon: Dumbbell },
+        { label: "Templates", val: templateWorkouts.length, icon: Plus },
+        { label: "Assigned", val: clientWorkouts.length, icon: Users }].
+        map((stat, i) =>
+        <Card key={i} className="bg-card border-border">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
                   <p className="text-3xl font-bold text-foreground">{stat.val}</p>
                 </div>
-                <div className="p-3 rounded-xl bg-secondary text-primary flex items-center justify-center">
+                <div className="bg-gray-600 text-gray-50 p-3 rounded-xl flex items-center justify-center">
                   <stat.icon className="w-6 h-6" />
                 </div>
               </div>
             </CardContent>
           </Card>
-        ))}
+        )}
       </div>
 
       {/* Workout Lists */}
-      {selectedWorkout ? (
-        <WorkoutDetailView
-          workout={selectedWorkout}
-          clients={clients}
-          onBack={() => setSelectedWorkout(null)}
-          onWorkoutUpdated={handleWorkoutUpdated}
-          onWorkoutDeleted={handleWorkoutDeleted}
-          onAssignWorkout={() => handleAssignWorkout(selectedWorkout)}
-        />
-      ) : (
-        <div className="space-y-8">
+      {selectedWorkout ?
+      <WorkoutDetailView
+        workout={selectedWorkout}
+        clients={clients}
+        onBack={() => setSelectedWorkout(null)}
+        onWorkoutUpdated={handleWorkoutUpdated}
+        onWorkoutDeleted={handleWorkoutDeleted}
+        onAssignWorkout={() => handleAssignWorkout(selectedWorkout)} /> :
+
+
+      <div className="space-y-8">
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-4">Templates</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {templateWorkouts.map((workout) => (
-                <WorkoutCard
-                  key={workout.id}
-                  workout={workout}
-                  onClick={() => setSelectedWorkout(workout)}
-                  onAssign={() => handleAssignWorkout(workout)}
-                  isTemplate={true}
-                />
-              ))}
+              {templateWorkouts.map((workout) =>
+            <WorkoutCard
+              key={workout.id}
+              workout={workout}
+              onClick={() => setSelectedWorkout(workout)}
+              onAssign={() => handleAssignWorkout(workout)}
+              isTemplate={true} />
+
+            )}
             </div>
           </div>
         </div>
-      )}
+      }
 
       {/* Dialogs */}
       <CreateWorkoutDialog
         isOpen={isCreateDialogOpen}
         onClose={() => setIsCreateDialogOpen(false)}
-        onWorkoutCreated={handleWorkoutCreated}
-      />
+        onWorkoutCreated={handleWorkoutCreated} />
+
       <AssignWorkoutDialog
         isOpen={isAssignDialogOpen}
         workout={workoutToAssign}
@@ -200,8 +200,8 @@ export default function WorkoutBuilder() {
           setIsAssignDialogOpen(false);
           setWorkoutToAssign(null);
         }}
-        onAssign={handleAssignPlan}
-      />
-    </div>
-  );
+        onAssign={handleAssignPlan} />
+
+    </div>);
+
 }
