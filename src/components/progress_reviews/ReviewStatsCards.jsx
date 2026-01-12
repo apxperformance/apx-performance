@@ -21,14 +21,14 @@ export default function ReviewStatsCards({
 
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <BarChart3 className="text-gray-50 lucide lucide-chart-column w-8 h-8" />
+            <BarChart3 className="text-gray-600 lucide lucide-chart-column w-8 h-8" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Progress Reviews</h1>
           </div>
           <p className="text-muted-foreground">Review client check-ins and track their progress.</p>
         </div>
         <Button
-          onClick={onScheduleClick}
-          className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+          onClick={onScheduleClick} className="bg-gray-800 text-gray-50 px-4 py-2 text-sm font-semibold rounded-md inline-flex items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 hover:bg-[#A4913C]">
+
 
           <Calendar className="w-4 h-4 mr-2" />
           Schedule Check-In
