@@ -296,12 +296,11 @@ export default function CoachingCalendar() {
           setSelectedDate(null);
           setLinkedCheckIn(null);
         }}
-        onSave={handleEventSave}
-        onDelete={handleEventDelete}
-        event={selectedEvent}
+        onEventCreated={handleEventCreated}
         selectedDate={selectedDate}
+        user={user}
         clients={clients}
-        linkedCheckIn={linkedCheckIn}
+        editingEvent={selectedEvent}
         existingEvents={events} />
 
     </div>
