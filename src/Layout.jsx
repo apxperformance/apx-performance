@@ -78,25 +78,25 @@ function LayoutContent({ children, currentPageName }) {
         // Coaches should not access client-specific pages
         const clientOnlyPages = ["ClientDashboard", "MyWorkouts", "MyNutrition", "MySupplements", "FreeClientDashboard", "FoodTracker", "CheckInJournal", "MyProgress", "ClientSettings", "ClientCalendar"];
         if (clientOnlyPages.includes(currentPageName)) {
-  
+
           shouldRedirect = true;
           redirectUrl = createPageUrl("CoachDashboard");
         }
       } else if (user.user_type === 'client') {
         // Clients with a coach shouldn't see the FreeClientDashboard
         if (user.coach_id && currentPageName === "FreeClientDashboard") {
-  
+
           shouldRedirect = true;
           redirectUrl = createPageUrl("ClientDashboard");
         }
-        
+
         // Clients without a coach should see FreeClientDashboard as their main dashboard
         if (!user.coach_id && currentPageName === "ClientDashboard") {
-  
+
           shouldRedirect = true;
           redirectUrl = createPageUrl("FreeClientDashboard");
         }
-        
+
         // ✅ Only try to add to available pool if not redirecting and after a small delay
         if (!user.coach_id && !shouldRedirect) {
           // Use setTimeout to ensure this runs after authentication is fully settled
@@ -104,17 +104,17 @@ function LayoutContent({ children, currentPageName }) {
             ensureInAvailablePool(user);
           }, 1000);
         }
-        
+
         // Coach-only pages should not be accessible by clients
         const coachOnlyPages = ["CoachDashboard", "ClientManagement", "WorkoutBuilder", "NutritionPlanner", "ProgressReviews", "CoachSettings", "SupplementPlanner", "CoachingCalendar"];
         if (coachOnlyPages.includes(currentPageName)) {
-  
+
           shouldRedirect = true;
           redirectUrl = user.coach_id ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard");
         }
       } else if (!user.user_type) {
         if (currentPageName !== "Welcome") {
-  
+
           shouldRedirect = true;
           redirectUrl = createPageUrl("Welcome");
         }
@@ -151,7 +151,7 @@ function LayoutContent({ children, currentPageName }) {
         shouldRedirect = true;
         redirectUrl = createPageUrl("ClientDashboard");
       }
-      
+
       // Client WITHOUT coach trying to access ClientDashboard
       if (!user.coach_id && currentPageName === "ClientDashboard") {
 
@@ -167,11 +167,11 @@ function LayoutContent({ children, currentPageName }) {
 
   const handleLogout = async () => {
     setHasValidated(false);
-    
+
     // Clear all local state and storage IMMEDIATELY
     localStorage.clear();
     sessionStorage.clear();
-    
+
     try {
       // Call logout API
       await base44.auth.logout();
@@ -274,16 +274,16 @@ function LayoutContent({ children, currentPageName }) {
 
 
   const clientNavigation = [
-    { title: "My Dashboard", url: hasCoach ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard"), icon: TrendingUp },
-    { title: "Coach Chat", url: createPageUrl("ClientChat"), icon: MessageCircle, requiresCoach: true },
-    { title: "My Schedule", url: createPageUrl("ClientCalendar"), icon: CalendarDays, requiresCoach: true },
-    { title: "My Workouts", url: createPageUrl("MyWorkouts"), icon: Dumbbell },
-    { title: "Nutrition Plan", url: createPageUrl("MyNutrition"), icon: Utensils },
-    { title: "My Supplements", url: createPageUrl("MySupplements"), icon: Pill },
-    { title: "Food Tracker", url: createPageUrl("FoodTracker"), icon: UtensilsCrossed },
-    { title: "Check-In Journal", url: createPageUrl("CheckInJournal"), icon: BookOpen },
-    { title: "My Progress", url: createPageUrl("MyProgress"), icon: BarChart3 }
-  ].filter((item) => {
+  { title: "My Dashboard", url: hasCoach ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard"), icon: TrendingUp },
+  { title: "Coach Chat", url: createPageUrl("ClientChat"), icon: MessageCircle, requiresCoach: true },
+  { title: "My Schedule", url: createPageUrl("ClientCalendar"), icon: CalendarDays, requiresCoach: true },
+  { title: "My Workouts", url: createPageUrl("MyWorkouts"), icon: Dumbbell },
+  { title: "Nutrition Plan", url: createPageUrl("MyNutrition"), icon: Utensils },
+  { title: "My Supplements", url: createPageUrl("MySupplements"), icon: Pill },
+  { title: "Food Tracker", url: createPageUrl("FoodTracker"), icon: UtensilsCrossed },
+  { title: "Check-In Journal", url: createPageUrl("CheckInJournal"), icon: BookOpen },
+  { title: "My Progress", url: createPageUrl("MyProgress"), icon: BarChart3 }].
+  filter((item) => {
     // Only filter out items that explicitly require a coach
     if (item.requiresCoach && !hasCoach) {
       return false;
@@ -347,7 +347,7 @@ function LayoutContent({ children, currentPageName }) {
                 {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-white" /> : <Zap className="w-6 h-6 text-white" />}
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900">Level Up</h2>
+                <h2 className="text-lg font-bold text-slate-900">APX Performance</h2>
                 <p className="text-xs text-gray-600 uppercase tracking-wide">
                   {user?.user_type === "coach" ? "Coach Portal" : "Client Portal"}
                 </p>
@@ -367,10 +367,10 @@ function LayoutContent({ children, currentPageName }) {
                       <SidebarMenuButton
                       asChild
                       className={`hover:bg-gray-300/50 hover:text-gray-900 transition-all duration-300 rounded-xl mb-2 group ${
-                      location.pathname === item.url 
-                        ? 'bg-gray-300 text-gray-900' 
-                        : 'text-gray-700 hover:text-gray-900'
-                      }`}>
+                      location.pathname === item.url ?
+                      'bg-gray-300 text-gray-900' :
+                      'text-gray-700 hover:text-gray-900'}`
+                      }>
 
                         <Link to={item.url} className="flex items-center gap-3 px-4 py-3">
                           <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
