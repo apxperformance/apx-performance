@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UserPlus, User, Mail, Phone, DollarSign, CreditCard, Send } from "lucide-react";
 import { toast } from "sonner";
-import { base44 } from "@/api/base44Client";
 
 export default function AddNewClientDialog({ isOpen, onClose, onAddClient }) {
   const [showPaymentConfirmation, setShowPaymentConfirmation] = React.useState(false);
