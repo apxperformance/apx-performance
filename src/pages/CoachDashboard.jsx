@@ -25,7 +25,12 @@ export default function CoachDashboard() {
     queryKey: ['workouts', user?.id],
     queryFn: async () => {
       if (!user) return [];
-      return base44.entities.Workout.filter({ coach_id: user.id });
+      try {
+        return base44.entities.Workout.filter({ coach_id: user.id });
+      } catch (error) {
+        console.error("Workouts fetch error:", error);
+        return [];
+      }
     },
     enabled: !!user,
     staleTime: 5 * 60 * 1000,
