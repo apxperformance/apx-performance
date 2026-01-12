@@ -351,7 +351,7 @@ export default function SupplementPlanner() {
                 <p className="text-3xl font-bold text-foreground">{plans.filter((p) => p.client_id).length}</p>
               </div>
               <div className="bg-gray-600 text-gray-50 p-3 rounded-xl flex items-center justify-center">
-                <UserCheck className="w-6 h-6 text-primary" />
+                <UserCheck className="text-gray-50 lucide lucide-user-check w-6 h-6" />
               </div>
             </div>
           </CardContent>
@@ -365,7 +365,7 @@ export default function SupplementPlanner() {
                 <p className="text-3xl font-bold text-foreground">{clients.filter((c) => c.status === 'active').length}</p>
               </div>
               <div className="bg-gray-600 text-gray-50 p-3 rounded-xl flex items-center justify-center">
-                <Users className="w-6 h-6 text-primary" />
+                <Users className="text-gray-50 lucide lucide-users w-6 h-6" />
               </div>
             </div>
           </CardContent>
