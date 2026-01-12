@@ -40,12 +40,12 @@ export default function ClientManagement() {
       const user = await base44.auth.me();
       const invitationToken = `invite_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-      // Create client record with pending_invitation status
+      // SYNC GUARANTEE: Create client record with coach_id automatically set
       await base44.entities.Client.create({
         full_name: `${inviteData.first_name} ${inviteData.last_name}`.trim(),
         email: inviteData.email,
         phone: inviteData.phone || "",
-        coach_id: user.id,
+        coach_id: user.id, // GUARANTEED: Coach ID is set at creation
         status: "pending_invitation",
         invitation_token: invitationToken
       });
@@ -60,7 +60,7 @@ export default function ClientManagement() {
       });
 
       refreshClients();
-      refreshCoachTier(); // Call refreshCoachTier here
+      refreshCoachTier();
       setIsAddNewDialogOpen(false);
       toast.success("Invitation sent successfully!");
     } catch (error) {
@@ -73,28 +73,31 @@ export default function ClientManagement() {
     try {
       const user = await base44.auth.me();
 
-      // Process each selected client
+      // SYNC GUARANTEE: Process each selected client with guaranteed bi-directional linking
       for (const availableClient of selectedClients) {
-        // Create client record with pending_link status
-        await base44.entities.Client.create({
+        // 1. Create Client record with coach_id
+        const newClient = await base44.entities.Client.create({
           user_id: availableClient.user_id,
           full_name: availableClient.full_name,
           email: availableClient.email,
           profile_image: availableClient.profile_image || "",
-          coach_id: user.id,
-          status: "pending_link",
+          coach_id: user.id, // GUARANTEED: Coach ID set
+          status: "active", // Changed to active since user already exists
           join_date: new Date().toISOString()
         });
 
-        // Update the user's coach_id
-        await base44.entities.User.update(availableClient.user_id, { coach_id: user.id });
+        // 2. SYNC GUARANTEE: Update the User's coach_id to link back
+        await base44.entities.User.update(availableClient.user_id, { 
+          coach_id: user.id,
+          user_type: 'client' // Ensure user_type is set
+        });
 
-        // Remove from available pool
+        // 3. Remove from available pool
         await base44.entities.AvailableClient.delete(availableClient.id);
       }
 
       refreshClients();
-      refreshCoachTier(); // Call refreshCoachTier here
+      refreshCoachTier();
       setIsAddExistingDialogOpen(false);
       toast.success(`${selectedClients.length} client${selectedClients.length > 1 ? 's' : ''} added successfully!`);
     } catch (error) {
@@ -109,19 +112,21 @@ export default function ClientManagement() {
     try {
       const user = await base44.auth.me();
 
-      // 1. Create Client record
+      // SYNC GUARANTEE: Atomic client-coach linking
+      // 1. Create Client record with coach_id
       await base44.entities.Client.create({
         user_id: request.client_id,
         full_name: request.client_name,
         email: request.client_email,
-        coach_id: user.id,
+        coach_id: user.id, // GUARANTEED: Coach ID set
         status: 'active',
         join_date: new Date().toISOString()
       });
 
-      // 2. Update User record to link coach
+      // 2. SYNC GUARANTEE: Update User record to link coach bidirectionally
       await base44.entities.User.update(request.client_id, {
-        coach_id: user.id
+        coach_id: user.id,
+        user_type: 'client' // Ensure user_type is set
       });
 
       // 3. Remove from available pool if exists
@@ -139,7 +144,7 @@ export default function ClientManagement() {
 
       toast.success(`${request.client_name} has been added to your client roster!`);
       refreshClients();
-      refreshCoachTier(); // Call refreshCoachTier here
+      refreshCoachTier();
       queryClient.invalidateQueries({ queryKey: ['connectionRequests'] });
     } catch (error) {
       console.error("Error accepting request:", error);

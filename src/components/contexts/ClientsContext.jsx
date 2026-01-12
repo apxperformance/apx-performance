@@ -13,7 +13,34 @@ export function ClientsProvider({ children }) {
     queryKey: ['clients', user?.id],
     queryFn: async () => {
       if (!user || !isCoach) return [];
-      return base44.entities.Client.filter({ coach_id: user.id });
+      
+      // Get all clients for this coach
+      const clientRecords = await base44.entities.Client.filter({ coach_id: user.id });
+      
+      // Filter out clients whose linked user no longer exists
+      const validClients = [];
+      for (const client of clientRecords) {
+        if (client.user_id) {
+          try {
+            // Check if the linked user still exists
+            const linkedUser = await base44.entities.User.filter({ id: client.user_id });
+            if (linkedUser && linkedUser.length > 0) {
+              validClients.push(client);
+            } else {
+              // User doesn't exist anymore, delete the client record
+              await base44.entities.Client.delete(client.id);
+            }
+          } catch (error) {
+            // If error fetching user, delete the client record
+            await base44.entities.Client.delete(client.id);
+          }
+        } else {
+          // No user_id yet (pending invitation), keep it
+          validClients.push(client);
+        }
+      }
+      
+      return validClients;
     },
     enabled: !!user && isCoach,
     staleTime: 2 * 60 * 1000, // 2 minutes
