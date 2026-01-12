@@ -122,22 +122,27 @@ export default function CoachDashboard() {
     queryFn: async () => {
       if (!user) return [];
       
-      // Fetch all available clients
-      const allAvailable = await base44.entities.AvailableClient.list("-date_available", 20);
-      
-      // Get user IDs of clients already associated with this coach
-      const existingClientUserIds = new Set(
-        clients
-          .map(c => c.user_id)
-          .filter(Boolean) // Remove null/undefined values
-      );
-      
-      // Filter out clients that are already in this coach's roster
-      const trulyAvailable = allAvailable.filter(
-        ac => !existingClientUserIds.has(ac.user_id)
-      );
-      
-      return trulyAvailable;
+      try {
+        // Fetch all available clients
+        const allAvailable = await base44.entities.AvailableClient.list("-date_available", 20);
+        
+        // Get user IDs of clients already associated with this coach
+        const existingClientUserIds = new Set(
+          clients
+            .map(c => c.user_id)
+            .filter(Boolean) // Remove null/undefined values
+        );
+        
+        // Filter out clients that are already in this coach's roster
+        const trulyAvailable = allAvailable.filter(
+          ac => !existingClientUserIds.has(ac.user_id)
+        );
+        
+        return trulyAvailable;
+      } catch (error) {
+        console.error("Available clients fetch error:", error);
+        return [];
+      }
     },
     enabled: !!user && !clientsLoading, // Wait for clients to load first
     staleTime: 2 * 60 * 1000,
