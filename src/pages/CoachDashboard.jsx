@@ -40,7 +40,12 @@ export default function CoachDashboard() {
     queryKey: ['nutritionPlans', user?.id],
     queryFn: async () => {
       if (!user) return [];
-      return base44.entities.NutritionPlan.filter({ coach_id: user.id });
+      try {
+        return base44.entities.NutritionPlan.filter({ coach_id: user.id });
+      } catch (error) {
+        console.error("Nutrition plans fetch error:", error);
+        return [];
+      }
     },
     enabled: !!user,
     staleTime: 5 * 60 * 1000,
