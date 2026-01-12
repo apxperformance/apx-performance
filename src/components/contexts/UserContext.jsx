@@ -73,7 +73,7 @@ export function UserProvider({ children }) {
         // Link user to client if they have a pending invitation
         if (userData?.email) {
           try {
-            const { linkUserToClient } = await import('@/functions/linkUserToClient');
+            const linkUserToClient = (await import('@/functions/linkUserToClient')).default;
             await linkUserToClient({});
           } catch (linkError) {
             console.log('Client linking check:', linkError);

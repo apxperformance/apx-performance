@@ -448,7 +448,7 @@ export default function AddEventDialog({
         }
 
         // Use backend function for proper client lookup and notification
-        const { createCalendarEvent } = await import('@/functions/createCalendarEvent');
+        const createCalendarEvent = (await import('@/functions/createCalendarEvent')).default;
         await createCalendarEvent(baseEventData);
         toast.success("Event created successfully");
       }
