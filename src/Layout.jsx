@@ -69,44 +69,46 @@ function LayoutContent({ children, currentPageName }) {
     const validateUserAccess = async () => {
       if (isLoading || !user || hasValidated) return;
 
+      // If user has no email, something is corrupted - go to Welcome
+      if (!user.email) {
+        setHasValidated(true);
+        navigate(createPageUrl("Welcome"), { replace: true });
+        return;
+      }
+
       let shouldRedirect = false;
       let redirectUrl = null;
 
       if (user.user_type === 'coach') {
-        // Coaches should not access client-specific pages
         const clientOnlyPages = ["ClientDashboard", "MyWorkouts", "MyNutrition", "MySupplements", "FreeClientDashboard", "FoodTracker", "CheckInJournal", "MyProgress", "ClientSettings", "ClientCalendar"];
         if (clientOnlyPages.includes(currentPageName)) {
           shouldRedirect = true;
           redirectUrl = createPageUrl("CoachDashboard");
         }
       } else if (user.user_type === 'client') {
-        // Clients with a coach shouldn't see the FreeClientDashboard or BrowseCoaches
         if (user.coach_id && (currentPageName === "FreeClientDashboard" || currentPageName === "BrowseCoaches")) {
           shouldRedirect = true;
           redirectUrl = createPageUrl("ClientDashboard");
         }
 
-        // Clients without a coach should see FreeClientDashboard as their main dashboard
         if (!user.coach_id && currentPageName === "ClientDashboard") {
           shouldRedirect = true;
           redirectUrl = createPageUrl("FreeClientDashboard");
         }
 
-        // ✅ Only try to add to available pool if not redirecting and after a small delay
         if (!user.coach_id && !shouldRedirect) {
-          // Use setTimeout to ensure this runs after authentication is fully settled
           setTimeout(() => {
             ensureInAvailablePool(user);
           }, 1000);
         }
 
-        // Coach-only pages should not be accessible by clients
         const coachOnlyPages = ["CoachDashboard", "ClientManagement", "WorkoutBuilder", "NutritionPlanner", "ProgressReviews", "CoachSettings", "SupplementPlanner", "CoachingCalendar"];
         if (coachOnlyPages.includes(currentPageName)) {
           shouldRedirect = true;
           redirectUrl = user.coach_id ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard");
         }
       } else if (!user.user_type) {
+        // No user type means incomplete user record - always go to Welcome
         if (currentPageName !== "Welcome" && currentPageName !== "BrowseCoaches") {
           shouldRedirect = true;
           redirectUrl = createPageUrl("Welcome");
@@ -125,29 +127,21 @@ function LayoutContent({ children, currentPageName }) {
 
   // Targeted dashboard validation: Runs on every page navigation
   useEffect(() => {
-    // Only validate dashboard pages after initial validation is complete
     if (!hasValidated || isLoading || !user) return;
 
-    // Only check dashboard-specific navigation
     const isDashboardPage = currentPageName === "ClientDashboard" || currentPageName === "FreeClientDashboard";
     if (!isDashboardPage) return;
-
-
 
     let shouldRedirect = false;
     let redirectUrl = null;
 
     if (user.user_type === 'client') {
-      // Client WITH coach trying to access FreeClientDashboard
       if (user.coach_id && currentPageName === "FreeClientDashboard") {
-
         shouldRedirect = true;
         redirectUrl = createPageUrl("ClientDashboard");
       }
 
-      // Client WITHOUT coach trying to access ClientDashboard
       if (!user.coach_id && currentPageName === "ClientDashboard") {
-
         shouldRedirect = true;
         redirectUrl = createPageUrl("FreeClientDashboard");
       }
