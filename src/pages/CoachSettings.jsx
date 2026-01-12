@@ -111,8 +111,8 @@ export default function CoachSettings() {
                     id="full_name"
                     name="full_name"
                     value={formData.full_name}
-                    onChange={handleInputChange}
-                    className="bg-input border-border focus:border-[#C5B358]" />
+                    onChange={handleInputChange} className="bg-gray-600 text-slate-50 px-3 py-2 text-base rounded-md flex h-10 w-full border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-border focus:border-[#C5B358]" />
+
 
                 </div>
                 <div className="space-y-2">
