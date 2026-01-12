@@ -9,17 +9,17 @@ export default function SupplementPlanBuilderCard({ plan, onClick, onAssign, cli
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <Pill className="w-5 h-5 text-primary" />
+            <Pill className="text-gray-50 lucide lucide-pill w-5 h-5" />
             <div>
               <CardTitle className="text-foreground text-lg group-hover:text-primary transition-colors">
                 {plan.name}
               </CardTitle>
-              {client && (
-                <div className="flex items-center gap-1 mt-1">
+              {client &&
+              <div className="flex items-center gap-1 mt-1">
                   <User className="w-3 h-3 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">{client.full_name}</span>
                 </div>
-              )}
+              }
             </div>
           </div>
           <Badge variant={isTemplate ? "secondary" : "outline"} className={isTemplate ? "bg-secondary/50 text-foreground border-border" : "border-border text-foreground"}>
@@ -35,43 +35,43 @@ export default function SupplementPlanBuilderCard({ plan, onClick, onAssign, cli
         
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
-            <Pill className="w-4 h-4 text-primary" />
+            <Pill className="text-gray-50 lucide lucide-pill w-4 h-4" />
             {plan.supplements?.length || 0} supplements
           </div>
         </div>
 
-        {plan.supplements && plan.supplements.length > 0 && (
-          <div className="space-y-2">
+        {plan.supplements && plan.supplements.length > 0 &&
+        <div className="space-y-2">
             <h4 className="text-sm font-medium text-foreground">Includes:</h4>
             <div className="space-y-1">
-              {plan.supplements.slice(0, 3).map((supplement, idx) => (
-                <div key={idx} className="text-xs text-muted-foreground flex justify-between">
+              {plan.supplements.slice(0, 3).map((supplement, idx) =>
+            <div key={idx} className="text-xs text-muted-foreground flex justify-between">
                   <span>{supplement.name}</span>
                   <span>{supplement.dosage}</span>
                 </div>
-              ))}
-              {plan.supplements.length > 3 && (
-                <div className="text-xs text-muted-foreground">+{plan.supplements.length - 3} more...</div>
-              )}
+            )}
+              {plan.supplements.length > 3 &&
+            <div className="text-xs text-muted-foreground">+{plan.supplements.length - 3} more...</div>
+            }
             </div>
           </div>
-        )}
+        }
 
-        {isTemplate && onAssign && (
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              onAssign(plan);
-            }}
-            variant="outline"
-            size="sm"
-            className="w-full border-border text-foreground hover:bg-secondary hover:border-primary"
-          >
+        {isTemplate && onAssign &&
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            onAssign(plan);
+          }}
+          variant="outline"
+          size="sm"
+          className="w-full border-border text-foreground hover:bg-secondary hover:border-primary">
+
             <Users className="w-4 h-4 mr-2" />
             Assign to Client
           </Button>
-        )}
+        }
       </CardContent>
-    </Card>
-  );
+    </Card>);
+
 }
