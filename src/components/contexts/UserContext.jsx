@@ -70,6 +70,17 @@ export function UserProvider({ children }) {
         
         setUser(userData);
         
+        // Link user to client if they have a pending invitation
+        if (userData?.email) {
+          try {
+            const { linkUserToClient } = await import('@/functions/linkUserToClient');
+            await linkUserToClient({});
+          } catch (linkError) {
+            console.log('Client linking check:', linkError);
+            // Non-critical, don't block user load
+          }
+        }
+        
         if (userData?.user_type === 'coach') {
           await loadCoachTier(userData.id);
         }
