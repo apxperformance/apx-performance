@@ -44,8 +44,8 @@ export default function ReviewStatsCards({
                 <p className="text-sm text-muted-foreground">Pending Reviews</p>
                 <p className="text-3xl font-bold text-foreground">{pendingCount}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center shrink-0 ml-0.5">
-                <Clock className="w-6 h-6 text-[#C5B358]" />
+              <div className="bg-gray-600 ml-0.5 p-3 rounded-xl from-[#C5B358] to-[#A4913C] flex items-center justify-center shrink-0">
+                <Clock className="text-gray-50 lucide lucide-clock w-6 h-6" />
               </div>
             </div>
           </CardContent>
@@ -58,8 +58,8 @@ export default function ReviewStatsCards({
                 <p className="text-sm text-muted-foreground">Reviews This Week</p>
                 <p className="text-3xl font-bold text-foreground">{reviewsThisWeek}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center shrink-0 ml-0.5">
-                <CheckCircle2 className="w-6 h-6 text-[#C5B358]" />
+              <div className="bg-gray-600 ml-0.5 p-3 rounded-xl from-[#C5B358] to-[#A4913C] flex items-center justify-center shrink-0">
+                <CheckCircle2 className="text-gray-50 lucide lucide-circle-check w-6 h-6" />
               </div>
             </div>
           </CardContent>
@@ -72,8 +72,8 @@ export default function ReviewStatsCards({
                 <p className="text-sm text-muted-foreground">Total Check-ins</p>
                 <p className="text-3xl font-bold text-foreground">{totalCheckIns}</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center shrink-0 ml-0.5">
-                <Users className="w-6 h-6 text-[#C5B358]" />
+              <div className="bg-gray-600 ml-0.5 p-3 rounded-xl from-[#C5B358] to-[#A4913C] flex items-center justify-center shrink-0">
+                <Users className="text-gray-50 lucide lucide-users w-6 h-6" />
               </div>
             </div>
           </CardContent>
@@ -87,8 +87,8 @@ export default function ReviewStatsCards({
                 <p className="text-sm text-muted-foreground">Time</p>
                 <p className="text-3xl font-bold text-foreground mt-1">{averageResponseTime}h</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center shrink-0 ml-0.5">
-                <Zap className="w-6 h-6 text-[#C5B358]" />
+              <div className="bg-gray-600 ml-0.5 p-3 rounded-xl from-[#C5B358] to-[#A4913C] flex items-center justify-center shrink-0">
+                <Zap className="text-gray-50 lucide lucide-zap w-6 h-6" />
               </div>
             </div>
           </CardContent>
@@ -102,8 +102,8 @@ export default function ReviewStatsCards({
                 <p className="text-3xl font-bold text-foreground">{inactiveClients}</p>
                 <p className="text-xs text-muted-foreground mt-1">30+ days</p>
               </div>
-              <div className="p-3 rounded-xl bg-gradient-to-r from-[#C5B358] to-[#A4913C] bg-opacity-20 flex items-center justify-center shrink-0 ml-0.5">
-                <TrendingDown className="w-6 h-6 text-[#C5B358]" />
+              <div className="bg-gray-600 ml-0.5 p-3 rounded-xl from-[#C5B358] to-[#A4913C] flex items-center justify-center shrink-0">
+                <TrendingDown className="text-gray-50 lucide lucide-trending-down w-6 h-6" />
               </div>
             </div>
           </CardContent>
