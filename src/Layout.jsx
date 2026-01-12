@@ -428,7 +428,7 @@ function LayoutContent({ children, currentPageName }) {
             <div className="flex items-center gap-4">
               <SidebarTrigger className={`md:hidden ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'} p-2 rounded-lg transition-colors duration-200`} />
               <div className="flex items-center gap-2 flex-1">
-                  <h1 className="text-xl font-bold text-foreground">Level Up</h1>
+                  <h1 className="text-xl font-bold text-foreground">APX PERFORMANCE</h1>
                   <span className="text-xs text-gray-500 uppercase tracking-wide">
                     {user?.user_type === "coach" ? "Coach" : "Client"}
                   </span>
