@@ -35,9 +35,12 @@ export default function BrowseCoaches() {
       try {
         const coachUsers = await base44.entities.User.filter({ user_type: 'coach' });
         
+        // Filter out coaches with missing essential data
+        const validCoaches = coachUsers.filter(coach => coach?.id && coach?.full_name && coach?.email);
+        
         // For each coach, get their active client count and calculate tier
         const coachesWithTiers = await Promise.all(
-          coachUsers.map(async (coach) => {
+          validCoaches.map(async (coach) => {
             try {
               const clients = await base44.entities.Client.filter({ 
                 coach_id: coach.id,
