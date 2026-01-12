@@ -35,8 +35,33 @@ export default function AddNewClientDialog({ isOpen, onClose, onAddClient }) {
       setIsSubmitting(true);
       try {
         const formData = getValues();
-        await onAddClient(formData);
-        toast.success(`Invitation sent to ${formData.first_name} ${formData.last_name}!`);
+        const user = await base44.auth.me();
+        
+        // Step 1: Create client record immediately
+        const fullName = `${formData.first_name} ${formData.last_name}`.trim();
+        const newClient = await base44.entities.Client.create({
+          full_name: fullName,
+          email: formData.email,
+          coach_id: user.id,
+          status: 'pending_invitation',
+          user_id: null
+        });
+        
+        // Step 2: Send invitation email (non-blocking - email failure won't crash)
+        try {
+          await base44.integrations.Core.SendEmail({
+            to: formData.email,
+            subject: `Invitation to Join ${user.full_name}'s Fitness Program`,
+            body: `Hi ${formData.first_name},\n\n${user.full_name} has invited you to join their fitness coaching program. Click the link below to create your account and get started:\n\nhttps://apxperformance.com/signup?coach=${user.id}\n\nLooking forward to working with you!`
+          });
+        } catch (emailError) {
+          console.error("Email send failed (non-critical):", emailError);
+          // Email failure is non-critical - client record is created
+        }
+        
+        // Step 3: Close modal and refresh
+        toast.success(`${fullName} added as pending client! Invitation email sent.`);
+        onAddClient?.(newClient); // Pass the created client back
         handleClose();
       } catch (error) {
         console.error("Error adding client:", error);
