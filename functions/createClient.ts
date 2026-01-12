@@ -37,14 +37,26 @@ Deno.serve(async (req) => {
       email: clientData.email,
       coach_id: user.id, // ENFORCED SERVER-SIDE
       status: clientData.status || "pending_invitation",
+      user_id: clientData.user_id || null,
       profile_image: clientData.profile_image || "",
       invitation_token: clientData.invitation_token || crypto.randomUUID(),
     };
 
-    // Create the client using service role
+    // STEP 1: Create the client record first (PRIORITY)
     const newClient = await base44.asServiceRole.entities.Client.create(secureClientData);
 
     console.log(`Client ${newClient.email} created by coach ${user.id}`);
+
+    // STEP 2: Send email asynchronously (non-blocking)
+    // Email failures do NOT crash the response
+    base44.integrations.Core.SendEmail({
+      to: newClient.email,
+      subject: `Invitation to Join ${user.full_name}'s Fitness Program`,
+      body: `Hi ${newClient.full_name},\n\n${user.full_name} has invited you to join their fitness coaching program. Click the link below to create your account and get started:\n\nhttps://apxperformance.com/signup?coach=${user.id}\n\nLooking forward to working with you!`
+    }).catch((error) => {
+      console.error(`[Non-critical] Email send failed for ${newClient.email}:`, error.message);
+      // Email failure logged but does not fail the response
+    });
 
     return Response.json({ 
       success: true, 
