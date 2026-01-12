@@ -91,13 +91,18 @@ export default function BrowseCoaches() {
   const { data: myRequests = [] } = useQuery({
     queryKey: ['myCoachRequests', user?.id],
     queryFn: async () => {
-      if (!user) return [];
-      return base44.entities.CoachConnectionRequest.filter({ 
-        client_id: user.id,
-        status: 'pending'
-      });
+      if (!user?.id) return [];
+      try {
+        return await base44.entities.CoachConnectionRequest.filter({ 
+          client_id: user.id,
+          status: 'pending'
+        });
+      } catch (error) {
+        console.error('Error fetching connection requests:', error);
+        return [];
+      }
     },
-    enabled: !!user,
+    enabled: !!user?.id,
     staleTime: 30 * 1000,
   });
 
