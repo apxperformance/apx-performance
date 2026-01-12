@@ -109,7 +109,7 @@ export default function WorkoutBuilder() {
 
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Dumbbell className="w-8 h-8 text-primary" />
+            <Dumbbell className="text-gray-600 lucide lucide-dumbbell w-8 h-8" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Workout Builder</h1>
           </div>
           <p className="text-muted-foreground">Create and manage workout programs for your clients.</p>
