@@ -337,7 +337,7 @@ export default function SupplementPlanner() {
                 <p className="text-3xl font-bold text-foreground">{plans.filter((p) => p.is_template === true && !p.client_id).length}</p>
               </div>
               <div className="bg-gray-600 text-gray-50 p-3 rounded-xl flex items-center justify-center">
-                <Pill className="w-6 h-6 text-primary" />
+                <Pill className="text-gray-50 lucide lucide-pill w-6 h-6" />
               </div>
             </div>
           </CardContent>
