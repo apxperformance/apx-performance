@@ -44,25 +44,24 @@ export default function ClientManagement() {
   const handleInviteClient = async (inviteData) => {
     try {
       const user = await base44.auth.me();
-      const invitationToken = `invite_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-      // SYNC GUARANTEE: Create client record with coach_id automatically set
+      
+      // ✅ SINGLE OPERATION: Create client with full_name constructed correctly
+      const fullName = `${inviteData.first_name} ${inviteData.last_name}`.trim();
       await base44.entities.Client.create({
-        full_name: `${inviteData.first_name} ${inviteData.last_name}`.trim(),
+        full_name: fullName,
         email: inviteData.email,
-        phone: inviteData.phone || "",
-        coach_id: user.id, // GUARANTEED: Coach ID is set at creation
+        coach_id: user.id,
         status: "pending_invitation",
-        invitation_token: invitationToken
+        user_id: null
       });
 
-      // Send invitation email
-      const inviteLink = `${window.location.origin}${base44.createPageUrl("Welcome")}?invitationToken=${invitationToken}`;
-      
-      await base44.integrations.Core.SendEmail({
+      // ✅ Non-blocking email (failure won't crash)
+      base44.integrations.Core.SendEmail({
         to: inviteData.email,
-        subject: `${user.full_name} has invited you to join Level Up`,
-        body: `Hi ${inviteData.first_name},\n\n${user.full_name} has invited you to join their coaching program on Level Up.\n\nClick here to get started: ${inviteLink}\n\nLooking forward to working with you!\n\n- ${user.full_name}`
+        subject: `Invitation to Join ${user.full_name}'s Fitness Program`,
+        body: `Hi ${inviteData.first_name},\n\n${user.full_name} has invited you to join their fitness coaching program.\n\nClick here to create your account: ${window.location.origin}\n\nLooking forward to working with you!`
+      }).catch((err) => {
+        console.error("Email send failed (non-critical):", err);
       });
 
       refreshClients();

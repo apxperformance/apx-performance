@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
 import { cva } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
 
@@ -379,7 +378,7 @@ SidebarGroup.displayName = "SidebarGroup"
 
 const SidebarGroupLabel = React.forwardRef(
   ({ className, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "div"
+    const Comp = asChild ? "span" : "div"
 
     return (
       <Comp
@@ -399,7 +398,7 @@ SidebarGroupLabel.displayName = "SidebarGroupLabel"
 
 const SidebarGroupAction = React.forwardRef(
   ({ className, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+    const Comp = asChild ? "span" : "button"
 
     return (
       <Comp
@@ -484,7 +483,7 @@ const SidebarMenuButton = React.forwardRef(
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : "button"
+    const Comp = asChild ? "span" : "button"
     const { isMobile, state } = useSidebar()
 
     const button = (
@@ -525,7 +524,7 @@ SidebarMenuButton.displayName = "SidebarMenuButton"
 
 const SidebarMenuAction = React.forwardRef(
   ({ className, asChild = false, showOnHover = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+    const Comp = asChild ? "span" : "button"
 
     return (
       <Comp
@@ -624,7 +623,7 @@ SidebarMenuSubItem.displayName = "SidebarMenuSubItem"
 
 const SidebarMenuSubButton = React.forwardRef(
   ({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
-    const Comp = asChild ? Slot : "a"
+    const Comp = asChild ? "span" : "a"
 
     return (
       <Comp
