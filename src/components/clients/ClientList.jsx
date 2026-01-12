@@ -42,12 +42,12 @@ export default function ClientList({ clients, isLoading, onClientUpdate }) {
           <Button
             key={status}
             variant={statusFilter === status ? "default" : "outline"}
-            onClick={() => setStatusFilter(status)}
-            className={
-            statusFilter === status ?
-            "bg-[#C5B358] hover:bg-[#A4913C] text-black" :
-            "border-border text-foreground hover:bg-secondary"
-            }
+            onClick={() => setStatusFilter(status)} className="bg-gray-800 text-gray-50 px-3 text-sm font-medium rounded-md inline-flex items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 hover:bg-[#A4913C]"
+
+
+
+
+
             size="sm">
 
               {status === 'all' ? 'All' : status === 'pending_invitation' ? 'Pending' : status.charAt(0).toUpperCase() + status.slice(1)}
