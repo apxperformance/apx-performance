@@ -3,13 +3,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BarChart3, Calendar, Clock, CheckCircle2, Users, TrendingDown, Zap } from "lucide-react";
 
-export default function ReviewStatsCards({ 
-  pendingCount, 
-  reviewsThisWeek, 
-  totalCheckIns, 
+export default function ReviewStatsCards({
+  pendingCount,
+  reviewsThisWeek,
+  totalCheckIns,
   averageResponseTime,
   inactiveClients,
-  onScheduleClick 
+  onScheduleClick
 }) {
   return (
     <>
@@ -17,19 +17,19 @@ export default function ReviewStatsCards({
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
-      >
+        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <BarChart3 className="w-8 h-8 text-[#C5B358]" />
+            <BarChart3 className="text-gray-50 lucide lucide-chart-column w-8 h-8" />
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Progress Reviews</h1>
           </div>
           <p className="text-muted-foreground">Review client check-ins and track their progress.</p>
         </div>
         <Button
           onClick={onScheduleClick}
-          className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold"
-        >
+          className="bg-[#C5B358] hover:bg-[#A4913C] text-black font-semibold">
+
           <Calendar className="w-4 h-4 mr-2" />
           Schedule Check-In
         </Button>
@@ -109,6 +109,6 @@ export default function ReviewStatsCards({
           </CardContent>
         </Card>
       </div>
-    </>
-  );
+    </>);
+
 }
