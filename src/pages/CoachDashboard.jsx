@@ -105,7 +105,12 @@ export default function CoachDashboard() {
     queryKey: ['recentCheckIns', user?.id],
     queryFn: async () => {
       if (!user) return [];
-      return base44.entities.CheckIn.filter({ coach_id: user.id }, "-created_date", 5);
+      try {
+        return base44.entities.CheckIn.filter({ coach_id: user.id }, "-created_date", 5);
+      } catch (error) {
+        console.error("Recent check-ins fetch error:", error);
+        return [];
+      }
     },
     enabled: !!user,
     staleTime: 2 * 60 * 1000,
