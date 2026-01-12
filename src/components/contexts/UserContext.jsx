@@ -70,6 +70,23 @@ export function UserProvider({ children }) {
         
         setUser(userData);
         
+        // Link user to client if they have a pending invitation (only once)
+        if (userData?.email && !hasAttemptedLinking) {
+          setHasAttemptedLinking(true);
+          try {
+            const linkUserToClient = (await import('@/functions/linkUserToClient')).default;
+            await linkUserToClient({});
+            // Refresh user data after linking
+            const updatedUserData = await base44.auth.me();
+            if (isMounted) {
+              setUser(updatedUserData);
+            }
+          } catch (linkError) {
+            console.log('Client linking check:', linkError);
+            // Non-critical, don't block user load
+          }
+        }
+        
         if (userData?.user_type === 'coach') {
           await loadCoachTier(userData.id);
         }
