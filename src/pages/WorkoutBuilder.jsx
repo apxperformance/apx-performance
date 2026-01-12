@@ -115,8 +115,8 @@ export default function WorkoutBuilder() {
           <p className="text-muted-foreground">Create and manage workout programs for your clients.</p>
         </div>
         <Button
-          onClick={() => setIsCreateDialogOpen(true)}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+          onClick={() => setIsCreateDialogOpen(true)} className="bg-gray-800 text-gray-50 px-4 py-2 text-sm font-semibold rounded-md inline-flex items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 hover:bg-primary/90">
+
 
           <Plus className="w-4 h-4 mr-2" />
           Create Workout
