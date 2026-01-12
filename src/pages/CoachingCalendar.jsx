@@ -48,17 +48,17 @@ export default function CoachingCalendar() {
   }, [dateRange, user]);
 
   const loadInitialData = async () => {
-    setIsLoading(true);
-    try {
-      const coach = await base44.auth.me();
-      setUser(coach);
+   setIsLoading(true);
+   try {
+     const coach = await base44.auth.me();
+     setUser(coach);
 
-      const clientData = await base44.entities.Client.filter({ coach_id: coach.id, status: 'active' });
-      setClients(clientData);
-    } catch (error) {
-      console.error("Error loading initial data:", error);
-    }
-    setIsLoading(false);
+     const clientData = await base44.entities.Client.filter({ coach_id: coach.id });
+     setClients(clientData);
+   } catch (error) {
+     console.error("Error loading initial data:", error);
+   }
+   setIsLoading(false);
   };
 
   const loadEventsAndCheckInsForRange = async (startDate, endDate) => {
