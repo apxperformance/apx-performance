@@ -351,10 +351,13 @@ export default function AddEventDialog({
         start_time: startDateTime.toISOString(),
         end_time: endDateTime.toISOString(),
         coach_id: user.id,
-        client_id: data.client_id && data.client_id !== "" ? data.client_id : null,
+        client_id: data.client_id && data.client_id !== "" ? data.client_id : null, // Client profile ID (exists for all clients)
         event_type: data.event_type,
         check_in_id: data.check_in_id || null,
       };
+      
+      // NOTE: Notifications are handled in the backend function (createCalendarEvent)
+      // It safely checks if client has a user_id before sending notifications
 
       if (editingEvent) {
         // Update existing event
