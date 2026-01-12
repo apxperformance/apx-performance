@@ -183,7 +183,7 @@ export default function CoachSettings() {
           <CardContent className="space-y-4">
             <div className="flex justify-between items-center py-2 border-b border-border">
               <span className="text-muted-foreground">Account Type</span>
-              <span className="text-[#C5B358] font-medium">Elite Coach</span>
+              <span className="text-gray-50 font-medium">Elite Coach</span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-border">
               <span className="text-muted-foreground">Member Since</span>
