@@ -564,7 +564,7 @@ export default function AddEventDialog({
                     <SelectItem value="personal">No client (Personal event)</SelectItem>
                     {clients.map((client) => (
                       <SelectItem key={client.id} value={client.id}>
-                        {client.full_name}
+                        {client.full_name} {client.status === 'pending_invitation' ? '(Pending)' : ''}
                       </SelectItem>
                     ))}
                   </SelectContent>
