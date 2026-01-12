@@ -55,7 +55,12 @@ export default function CoachDashboard() {
     queryKey: ['calendarEvents', user?.id],
     queryFn: async () => {
       if (!user) return [];
-      return base44.entities.CalendarEvent.filter({ coach_id: user.id });
+      try {
+        return base44.entities.CalendarEvent.filter({ coach_id: user.id });
+      } catch (error) {
+        console.error("Calendar events fetch error:", error);
+        return [];
+      }
     },
     enabled: !!user,
     staleTime: 1 * 60 * 1000,
