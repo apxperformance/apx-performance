@@ -33,13 +33,12 @@ function CoachChatView({ currentUser }) {
     loadClients();
   }, [currentUser]);
 
-  // Load Messages (Using USER_ID link)
+  // Load Messages
   useEffect(() => {
     if (!selectedClient) return;
     
     const fetchMessages = async () => {
       try {
-        // FIX: Use user_id if available, fallback to id
         const targetClientId = selectedClient.user_id || selectedClient.id;
 
         const chatHistory = await base44.entities.ChatMessage.filter({ 
@@ -70,7 +69,6 @@ function CoachChatView({ currentUser }) {
     const msgContent = newMessage;
     setNewMessage(""); 
 
-    // FIX: Ensure we use the User ID so the client sees it
     const targetClientId = selectedClient.user_id || selectedClient.id;
 
     // Optimistic UI Update
@@ -86,7 +84,7 @@ function CoachChatView({ currentUser }) {
     try {
       await base44.entities.ChatMessage.create({
         coach_id: currentUser.id,
-        client_id: targetClientId, // <--- CRITICAL FIX
+        client_id: targetClientId,
         sender_id: currentUser.id,
         sender_type: 'coach',
         message: msgContent,
@@ -172,7 +170,13 @@ function CoachChatView({ currentUser }) {
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={msg.id || i} className={cn("flex w-full", isMe ? "justify-end" : "justify-start")}>
                         <div className={cn("max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm", isMe ? "bg-primary text-primary-foreground rounded-br-none" : "bg-secondary text-secondary-foreground rounded-bl-none")}>
                           {msg.message}
-                          <div className={cn("text-[10px] mt-1 opacity-70", isMe ? "text-right" : "text-left")}>{new Date(msg.created_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                          {/* FIX: LOCAL DEVICE TIME */}
+                          <div className={cn("text-[10px] mt-1 opacity-70", isMe ? "text-right" : "text-left")}>
+                            {new Date(msg.created_date).toLocaleTimeString([], { 
+                              hour: '2-digit', 
+                              minute: '2-digit'
+                            })}
+                          </div>
                         </div>
                       </motion.div>
                     );
@@ -206,14 +210,14 @@ function ClientChatView({ currentUser }) {
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef(null);
 
-  // Load Messages (My ID + Coach ID)
+  // Load Messages
   useEffect(() => {
     if (!currentUser?.coach_id) return;
     
     const fetchMessages = async () => {
       try {
         const chatHistory = await base44.entities.ChatMessage.filter({ 
-          client_id: currentUser.id, // This matches currentUser.id
+          client_id: currentUser.id, 
           coach_id: currentUser.coach_id 
         });
         setMessages(chatHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
@@ -297,7 +301,13 @@ function ClientChatView({ currentUser }) {
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={msg.id || i} className={cn("flex w-full", isMe ? "justify-end" : "justify-start")}>
                     <div className={cn("max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm", isMe ? "bg-primary text-primary-foreground rounded-br-none" : "bg-secondary text-secondary-foreground rounded-bl-none")}>
                       <p>{msg.message}</p>
-                      <span className={cn("text-[10px] block mt-1 opacity-70", isMe ? "text-right" : "text-left")}>{new Date(msg.created_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                      {/* FIX: LOCAL DEVICE TIME */}
+                      <span className={cn("text-[10px] block mt-1 opacity-70", isMe ? "text-right" : "text-left")}>
+                        {new Date(msg.created_date).toLocaleTimeString([], { 
+                          hour: '2-digit', 
+                          minute: '2-digit'
+                        })}
+                      </span>
                     </div>
                   </motion.div>
                 )
