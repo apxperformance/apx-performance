@@ -3,9 +3,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 
-// 1. CLEAN GRAYSCALE THEME (No Gold)
+// 1. GLOBAL STYLES - Configured for "Dark Sidebar" + "Light/Dark Main"
 const globalStyles = `
 :root {
+  /* MAIN CONTENT: Light Mode = White Background */
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
@@ -26,8 +27,20 @@ const globalStyles = `
   --input: 240 5.9% 90%;
   --ring: 240 5.9% 10%;
   --radius: 0.5rem;
+
+  /* SIDEBAR: Always Dark (Matches your screenshot) */
+  --sidebar-background: 240 10% 3.9%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-primary: 0 0% 98%;
+  --sidebar-primary-foreground: 240 5.9% 10%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
 }
+
 .dark {
+  /* MAIN CONTENT: Dark Mode = Dark Background */
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
   --card: 240 10% 3.9%;
@@ -47,15 +60,20 @@ const globalStyles = `
   --border: 240 3.7% 15.9%;
   --input: 240 3.7% 15.9%;
   --ring: 240 4.9% 83.9%;
+
+  /* SIDEBAR: Stays Dark in Dark Mode */
+  --sidebar-background: 240 10% 3.9%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-primary: 0 0% 98%;
+  --sidebar-primary-foreground: 240 5.9% 10%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
 }
+
 * { border-color: hsl(var(--border)); }
 body { background-color: hsl(var(--background)); color: hsl(var(--foreground)); }
-
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground)); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: hsl(var(--foreground)); }
 `;
 
 import {
@@ -172,8 +190,7 @@ function LayoutContent({ children, currentPageName }) {
         <style>{globalStyles}</style>
         {isLoading ? (
           <div className="min-h-screen flex items-center justify-center">
-            {/* CLEAN SPINNER (Dark Gray) */}
-            <div className="w-12 h-12 border-4 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : children}
       </div>
@@ -220,37 +237,42 @@ function LayoutContent({ children, currentPageName }) {
   return (
     <SidebarProvider>
       <Toaster />
-      <div className="min-h-screen flex w-full bg-background text-foreground overflow-hidden">
+      <div className="min-h-screen flex w-full bg-background text-foreground">
         <style>{globalStyles}</style>
         
-        {/* 3. FIXED SIDEBAR (Dark/Gray Theme, NO GOLD) */}
-        <Sidebar className="border-r border-border bg-card h-screen sticky top-0 left-0">
-          <SidebarHeader className="bg-card p-6 flex flex-col gap-2 border-b border-border">
+        {/* 3. STANDARD SIDEBAR (Uses Variables defined above for colors) */}
+        <Sidebar className="border-r border-border">
+          <SidebarHeader className="p-6 flex flex-col gap-2 border-b border-sidebar-border">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-md">
-                {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-primary-foreground" /> : <Zap className="w-6 h-6 text-primary-foreground" />}
+              <div className="w-10 h-10 bg-sidebar-primary rounded-xl flex items-center justify-center shadow-md">
+                {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-sidebar-primary-foreground" /> : <Zap className="w-6 h-6 text-sidebar-primary-foreground" />}
               </div>
               <div>
-                <h2 className="text-foreground text-sm font-bold">APX PERFORMANCE</h2>
-                <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                <h2 className="text-sidebar-foreground text-sm font-bold">APX PERFORMANCE</h2>
+                <p className="text-xs text-sidebar-foreground/70 uppercase tracking-wide">
                   {user?.user_type === "coach" ? "Coach Portal" : "Client Portal"}
                 </p>
               </div>
             </div>
           </SidebarHeader>
 
-          <SidebarContent className="bg-card p-4 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
+          <SidebarContent className="p-4 flex min-h-0 flex-1 flex-col gap-2 overflow-auto">
             <SidebarGroup>
-              <SidebarGroupLabel className="text-muted-foreground px-2 py-3 text-xs font-medium uppercase tracking-wider">
+              <SidebarGroupLabel className="text-sidebar-foreground/70 px-2 py-3 text-xs font-medium uppercase tracking-wider">
                 {user?.user_type === "coach" ? "Coach Tools" : "My Fitness"}
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {navigationItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild className={`hover:bg-accent hover:text-accent-foreground transition-all duration-200 rounded-lg mb-1 group ${location.pathname === item.url ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
-                        <Link to={item.url} className="flex w-full items-center gap-3 px-3 py-2 text-sm font-medium">
-                          <item.icon className={`w-5 h-5 transition-transform duration-200 ${location.pathname === item.url ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                      {/* Standard Button Structure - Guaranteed to work */}
+                      <SidebarMenuButton 
+                        asChild 
+                        isActive={location.pathname === item.url}
+                        className="transition-all duration-200"
+                      >
+                        <Link to={item.url}>
+                          <item.icon className="w-5 h-5" />
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -261,27 +283,27 @@ function LayoutContent({ children, currentPageName }) {
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="bg-card p-4 flex flex-col gap-2 border-t border-border">
+          <SidebarFooter className="p-4 flex flex-col gap-2 border-t border-sidebar-border">
              {/* Theme Toggle */}
              <div className="flex items-center justify-between opacity-50 hover:opacity-100 transition-opacity">
-              <span className="text-muted-foreground text-xs font-medium">Theme</span>
-              <button onClick={toggleTheme} className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
-                <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-300 ${isDarkMode ? 'translate-x-1' : 'translate-x-5'}`} />
+              <span className="text-sidebar-foreground/70 text-xs font-medium">Theme</span>
+              <button onClick={toggleTheme} className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-300 ${isDarkMode ? 'bg-sidebar-accent' : 'bg-sidebar-accent'}`}>
+                <span className={`inline-block h-3 w-3 transform rounded-full bg-sidebar-foreground translate-x-1 ${isDarkMode ? 'translate-x-1' : 'translate-x-5'}`} />
               </button>
             </div>
             
             <div className="flex items-center gap-3 mt-2">
-              <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center border border-border">
-                {user?.user_type === "coach" ? <Crown className="w-4 h-4 text-foreground" /> : <UserIcon className="w-4 h-4 text-foreground" />}
+              <div className="w-8 h-8 bg-sidebar-accent rounded-full flex items-center justify-center border border-sidebar-border">
+                {user?.user_type === "coach" ? <Crown className="w-4 h-4 text-sidebar-foreground" /> : <UserIcon className="w-4 h-4 text-sidebar-foreground" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-foreground text-xs font-medium truncate">{user?.full_name}</p>
-                <p className="text-[10px] truncate text-muted-foreground">
+                <p className="text-sidebar-foreground text-xs font-medium truncate">{user?.full_name}</p>
+                <p className="text-[10px] truncate text-sidebar-foreground/70">
                   {user?.user_type === "coach" && coachTierInfo ? coachTierInfo.name : "Member"}
                 </p>
               </div>
             </div>
-            <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-muted-foreground hover:text-destructive hover:bg-destructive/10 text-xs font-medium">
+            <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sidebar-foreground/70 hover:text-red-400 hover:bg-red-900/10 text-xs font-medium">
               <LogOut className="w-4 h-4" />
               Sign Out
             </button>
@@ -291,7 +313,7 @@ function LayoutContent({ children, currentPageName }) {
         <main className="flex-1 flex flex-col h-screen overflow-hidden">
           <header className="bg-background/80 backdrop-blur-xl border-b border-border px-6 py-4 flex-shrink-0">
             <div className="flex items-center gap-4">
-              <SidebarTrigger className="md:hidden hover:bg-accent p-2 rounded-lg text-foreground" />
+              <SidebarTrigger className="md:hidden p-2 rounded-lg" />
               <div className="flex items-center gap-2 flex-1">
                   <h1 className="text-xl font-bold text-foreground">APX PERFORMANCE</h1>
                   <span className="text-xs text-muted-foreground uppercase tracking-wide bg-secondary px-2 py-0.5 rounded border border-border">
@@ -311,7 +333,6 @@ function LayoutContent({ children, currentPageName }) {
   );
 }
 
-// Ensure default export is here
 export default function Layout({ children, currentPageName }) {
   return (
     <ErrorBoundary>
