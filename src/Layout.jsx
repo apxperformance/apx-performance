@@ -310,14 +310,14 @@ function LayoutContent({ children, currentPageName }) {
 
   const clientNavigation = [
   { title: "My Dashboard", url: hasCoach ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard"), icon: TrendingUp },
-  { title: "Coach Chat", url: createPageUrl("ClientChat"), icon: MessageCircle, requiresCoach: true },
   { title: "My Schedule", url: createPageUrl("ClientCalendar"), icon: CalendarDays, requiresCoach: true },
   { title: "My Workouts", url: createPageUrl("MyWorkouts"), icon: Dumbbell },
   { title: "Nutrition Plan", url: createPageUrl("MyNutrition"), icon: Utensils },
   { title: "My Supplements", url: createPageUrl("MySupplements"), icon: Pill },
   { title: "Food Tracker", url: createPageUrl("FoodTracker"), icon: UtensilsCrossed },
   { title: "Check-In Journal", url: createPageUrl("CheckInJournal"), icon: BookOpen },
-  { title: "My Progress", url: createPageUrl("MyProgress"), icon: BarChart3 }].
+  { title: "My Progress", url: createPageUrl("MyProgress"), icon: BarChart3 },
+  { title: "Coach Chat", url: createPageUrl("ClientChat"), icon: MessageCircle, requiresCoach: true }].
   filter((item) => {
     // Only filter out items that explicitly require a coach
     if (item.requiresCoach && !hasCoach) {
