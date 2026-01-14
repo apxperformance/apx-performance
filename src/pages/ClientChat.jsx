@@ -9,10 +9,19 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
-// --- HELPER: Force UTC-to-Local Conversion ---
+// --- 1. SMART ENTITY SELECTOR ---
+// Detects the correct table name (lowercase or capitalized) automatically
+const getChatEntity = () => {
+  if (base44.entities.chatmessage) return base44.entities.chatmessage;
+  if (base44.entities.ChatMessage) return base44.entities.ChatMessage;
+  // Fallback
+  return null;
+};
+
+// --- HELPER: Browser Timezone Formatter ---
 const formatMessageTime = (dateString) => {
   if (!dateString) return "";
-  // If the string lacks the 'Z' (UTC marker), add it to force conversion
+  // Force browser to interpret as UTC so it converts to Local Time
   const safeDate = dateString.endsWith("Z") ? dateString : dateString + "Z";
   return new Date(safeDate).toLocaleTimeString([], { 
     hour: '2-digit', 
@@ -20,7 +29,7 @@ const formatMessageTime = (dateString) => {
   });
 };
 
-// --- 1. COACH VIEW ---
+// --- 2. COACH VIEW ---
 function CoachChatView({ currentUser }) {
   const [clients, setClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -34,33 +43,40 @@ function CoachChatView({ currentUser }) {
   useEffect(() => {
     const loadClients = async () => {
       try {
+        if (!base44.entities.Client) return;
         const myClients = await base44.entities.Client.filter({ coach_id: currentUser.id });
         setClients(myClients);
       } catch (error) {
-        console.error("Error loading clients:", error);
-        toast.error("Failed to load clients list");
+        console.error("Error loading clients", error);
       }
       setIsLoading(false);
     };
     loadClients();
   }, [currentUser]);
 
-  // Load Messages
+  // Load Messages (SAFE MODE: Filter on Frontend)
   useEffect(() => {
     if (!selectedClient) return;
     
     const fetchMessages = async () => {
+      const ChatEntity = getChatEntity();
+      if (!ChatEntity) return;
+
       try {
         const targetClientId = selectedClient.user_id || selectedClient.id;
 
-        // FIX: Using lowercase 'chatmessage' to match your DB
-        const chatHistory = await base44.entities.chatmessage.filter({ 
-          coach_id: currentUser.id, 
+        // SAFE MODE: Only ask for messages for this CLIENT.
+        // We avoid complex "AND" filters that crash the server.
+        const allClientMessages = await ChatEntity.filter({ 
           client_id: targetClientId 
         });
 
-        // Sort by created_date
-        setMessages(chatHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
+        // Filter: Keep only messages involving me (the coach)
+        const myConversation = allClientMessages.filter(msg => 
+            msg.coach_id === currentUser.id
+        );
+
+        setMessages(myConversation.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
@@ -71,7 +87,6 @@ function CoachChatView({ currentUser }) {
     return () => clearInterval(interval);
   }, [selectedClient, currentUser]);
 
-  // Auto-scroll effect
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -80,11 +95,17 @@ function CoachChatView({ currentUser }) {
     e.preventDefault();
     if (!newMessage.trim() || !selectedClient) return;
     
+    const ChatEntity = getChatEntity();
+    if (!ChatEntity) {
+        toast.error("Database Error: Chat table not found");
+        return;
+    }
+
     const msgContent = newMessage;
     setNewMessage(""); 
     const targetClientId = selectedClient.user_id || selectedClient.id;
 
-    // Optimistic UI Update
+    // Optimistic UI
     const tempMsg = {
       id: Date.now(),
       message: msgContent,
@@ -95,19 +116,17 @@ function CoachChatView({ currentUser }) {
     setMessages(prev => [...prev, tempMsg]);
 
     try {
-      // FIX: Using lowercase 'chatmessage'
-      await base44.entities.chatmessage.create({
+      // MINIMAL PAYLOAD to prevent 500 Errors
+      await ChatEntity.create({
         coach_id: currentUser.id,
         client_id: targetClientId,
         sender_id: currentUser.id,
         sender_type: 'coach',
-        message: msgContent,
-        is_read: false,
-        message_type: 'text'
+        message: msgContent
       });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to send message. Check console.");
+      toast.error("Message failed to send (Server Error)");
     }
   };
 
@@ -117,6 +136,7 @@ function CoachChatView({ currentUser }) {
 
   return (
     <div className="flex h-[calc(100vh-8rem)] gap-6 p-6 overflow-hidden">
+      {/* Sidebar */}
       <div className="w-80 flex flex-col gap-4 bg-card border border-border rounded-xl p-4 shrink-0 shadow-sm">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -158,6 +178,7 @@ function CoachChatView({ currentUser }) {
         </ScrollArea>
       </div>
 
+      {/* Main Chat */}
       <div className="flex-1 flex flex-col overflow-hidden bg-card border border-border rounded-xl shadow-sm">
         {selectedClient ? (
           <>
@@ -212,24 +233,31 @@ function CoachChatView({ currentUser }) {
   );
 }
 
-// --- 2. CLIENT VIEW ---
+// --- 3. CLIENT VIEW ---
 function ClientChatView({ currentUser }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef(null);
 
-  // Load Messages
   useEffect(() => {
     if (!currentUser?.coach_id) return;
     
     const fetchMessages = async () => {
+      const ChatEntity = getChatEntity();
+      if (!ChatEntity) return;
+
       try {
-        // FIX: Using lowercase 'chatmessage'
-        const chatHistory = await base44.entities.chatmessage.filter({ 
-          client_id: currentUser.id, 
-          coach_id: currentUser.coach_id 
+        // SAFE MODE: Filter ONLY by client_id (simplest query possible)
+        const allMyMessages = await ChatEntity.filter({ 
+          client_id: currentUser.id 
         });
-        setMessages(chatHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
+
+        // FRONTEND FILTER: Ensure we only show chats with OUR coach
+        const relevantMessages = allMyMessages.filter(msg => 
+          msg.coach_id === currentUser.coach_id
+        );
+
+        setMessages(relevantMessages.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
@@ -248,6 +276,9 @@ function ClientChatView({ currentUser }) {
     e.preventDefault();
     if (!newMessage.trim() || !currentUser?.coach_id) return;
     
+    const ChatEntity = getChatEntity();
+    if (!ChatEntity) return;
+
     const msgContent = newMessage;
     setNewMessage("");
 
@@ -262,15 +293,12 @@ function ClientChatView({ currentUser }) {
     setMessages(prev => [...prev, tempMsg]);
 
     try {
-      // FIX: Using lowercase 'chatmessage'
-      await base44.entities.chatmessage.create({
+      await ChatEntity.create({
         coach_id: currentUser.coach_id,
         client_id: currentUser.id,
         sender_id: currentUser.id,
         sender_type: 'client',
-        message: msgContent,
-        is_read: false,
-        message_type: 'text'
+        message: msgContent
       });
     } catch (error) {
       console.error("Failed to send", error);
