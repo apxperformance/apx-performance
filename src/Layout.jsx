@@ -51,7 +51,7 @@ const globalStyles = `
 body { background-color: hsl(var(--background)); color: hsl(var(--foreground)); }
 `;
 import {
-  Dumbbell, Users, Calendar, Utensils, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, UtensilsCrossed, Pill, MessageCircle, CalendarDays, Sun, Moon } from
+  Dumbbell, Users, Utensils, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, UtensilsCrossed, Pill, MessageCircle, CalendarDays, Sun, Moon } from
 "lucide-react";
 import {
   Sidebar,
@@ -325,7 +325,8 @@ function LayoutContent({ children, currentPageName }) {
   );
 }
 
-export function Layout({ children, currentPageName }) {
+// FIX: Added 'export default' here!
+export default function Layout({ children, currentPageName }) {
   return (
     <ErrorBoundary>
       <ReactQueryProvider>
