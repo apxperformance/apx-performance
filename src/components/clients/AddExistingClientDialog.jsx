@@ -36,7 +36,12 @@ export default function AddExistingClientDialog({ isOpen, onClose, onAddClients,
     setError("");
     try {
       const clientsData = await base44.entities.AvailableClient.list("-date_available");
-      setAvailableClients(clientsData);
+      // Map the data to flatten the structure for easier access
+      const mappedClients = clientsData.map(client => ({
+        id: client.id,
+        ...client.data
+      }));
+      setAvailableClients(mappedClients);
     } catch (error) {
       console.error("Error loading available clients:", error);
       setError("Unable to load available clients. Please try again.");
