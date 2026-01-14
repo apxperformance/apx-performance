@@ -10,18 +10,15 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 // --- 1. SMART ENTITY SELECTOR ---
-// Detects the correct table name (lowercase or capitalized) automatically
 const getChatEntity = () => {
   if (base44.entities.chatmessage) return base44.entities.chatmessage;
   if (base44.entities.ChatMessage) return base44.entities.ChatMessage;
-  // Fallback
   return null;
 };
 
-// --- HELPER: Browser Timezone Formatter ---
+// --- HELPER: Timezone Formatter ---
 const formatMessageTime = (dateString) => {
   if (!dateString) return "";
-  // Force browser to interpret as UTC so it converts to Local Time
   const safeDate = dateString.endsWith("Z") ? dateString : dateString + "Z";
   return new Date(safeDate).toLocaleTimeString([], { 
     hour: '2-digit', 
@@ -54,7 +51,7 @@ function CoachChatView({ currentUser }) {
     loadClients();
   }, [currentUser]);
 
-  // Load Messages (SAFE MODE: Filter on Frontend)
+  // Load Messages (Safe Mode)
   useEffect(() => {
     if (!selectedClient) return;
     
@@ -65,13 +62,12 @@ function CoachChatView({ currentUser }) {
       try {
         const targetClientId = selectedClient.user_id || selectedClient.id;
 
-        // SAFE MODE: Only ask for messages for this CLIENT.
-        // We avoid complex "AND" filters that crash the server.
+        // Fetch ALL messages for this client (safest query)
         const allClientMessages = await ChatEntity.filter({ 
           client_id: targetClientId 
         });
 
-        // Filter: Keep only messages involving me (the coach)
+        // Frontend Filter
         const myConversation = allClientMessages.filter(msg => 
             msg.coach_id === currentUser.id
         );
@@ -97,7 +93,7 @@ function CoachChatView({ currentUser }) {
     
     const ChatEntity = getChatEntity();
     if (!ChatEntity) {
-        toast.error("Database Error: Chat table not found");
+        toast.error("Database Error: Chat Entity not found");
         return;
     }
 
@@ -116,17 +112,19 @@ function CoachChatView({ currentUser }) {
     setMessages(prev => [...prev, tempMsg]);
 
     try {
-      // MINIMAL PAYLOAD to prevent 500 Errors
+      // ROBUST PAYLOAD: Sending explicit types and required fields
       await ChatEntity.create({
-        coach_id: currentUser.id,
-        client_id: targetClientId,
-        sender_id: currentUser.id,
+        coach_id: String(currentUser.id),       // Force String
+        client_id: String(targetClientId),      // Force String
+        sender_id: String(currentUser.id),      // Force String
         sender_type: 'coach',
-        message: msgContent
+        message: msgContent,
+        is_read: false,                         // Explicit Boolean
+        message_type: 'text'                    // Explicit String
       });
     } catch (error) {
-      console.error(error);
-      toast.error("Message failed to send (Server Error)");
+      console.error("SEND ERROR:", error);
+      toast.error("Message failed to send. Check console for details.");
     }
   };
 
@@ -247,12 +245,10 @@ function ClientChatView({ currentUser }) {
       if (!ChatEntity) return;
 
       try {
-        // SAFE MODE: Filter ONLY by client_id (simplest query possible)
         const allMyMessages = await ChatEntity.filter({ 
           client_id: currentUser.id 
         });
 
-        // FRONTEND FILTER: Ensure we only show chats with OUR coach
         const relevantMessages = allMyMessages.filter(msg => 
           msg.coach_id === currentUser.coach_id
         );
@@ -294,11 +290,13 @@ function ClientChatView({ currentUser }) {
 
     try {
       await ChatEntity.create({
-        coach_id: currentUser.coach_id,
-        client_id: currentUser.id,
-        sender_id: currentUser.id,
+        coach_id: String(currentUser.coach_id), // Force String
+        client_id: String(currentUser.id),      // Force String
+        sender_id: String(currentUser.id),      // Force String
         sender_type: 'client',
-        message: msgContent
+        message: msgContent,
+        is_read: false,
+        message_type: 'text'
       });
     } catch (error) {
       console.error("Failed to send", error);
