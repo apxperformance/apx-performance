@@ -236,6 +236,10 @@ export default function ClientManagement() {
         isOpen={isAddExistingDialogOpen}
         onClose={() => setIsAddExistingDialogOpen(false)}
         onAddClients={handleAddExistingClient}
+        coachId={(async () => {
+          const user = await base44.auth.me();
+          return user?.id;
+        })()}
       />
     </div>
   );
