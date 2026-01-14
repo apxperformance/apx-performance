@@ -9,10 +9,21 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
-// --- 1. SMART ENTITY SELECTOR ---
+// --- 1. SMART ENTITY SELECTOR (Updated Priority) ---
 const getChatEntity = () => {
-  if (base44.entities.chatmessage) return base44.entities.chatmessage;
+  // DEBUG: Print all available tables to the console so we stop guessing
+  console.log("AVAILABLE ENTITIES:", Object.keys(base44.entities));
+
+  // Priority 1: Standard Naming (ChatMessage)
   if (base44.entities.ChatMessage) return base44.entities.ChatMessage;
+  
+  // Priority 2: Lowercase (chatmessage)
+  if (base44.entities.chatmessage) return base44.entities.chatmessage;
+  
+  // Priority 3: Alternative Name (Message)
+  if (base44.entities.Message) return base44.entities.Message;
+
+  console.error("CRITICAL ERROR: No Chat Table found. Check your Database Builder names.");
   return null;
 };
 
@@ -51,7 +62,7 @@ function CoachChatView({ currentUser }) {
     loadClients();
   }, [currentUser]);
 
-  // Load Messages (Safe Mode)
+  // Load Messages
   useEffect(() => {
     if (!selectedClient) return;
     
@@ -62,12 +73,11 @@ function CoachChatView({ currentUser }) {
       try {
         const targetClientId = selectedClient.user_id || selectedClient.id;
 
-        // Fetch ALL messages for this client (safest query)
+        // Fetch ALL messages for this client
         const allClientMessages = await ChatEntity.filter({ 
           client_id: targetClientId 
         });
 
-        // Frontend Filter
         const myConversation = allClientMessages.filter(msg => 
             msg.coach_id === currentUser.id
         );
@@ -101,7 +111,6 @@ function CoachChatView({ currentUser }) {
     setNewMessage(""); 
     const targetClientId = selectedClient.user_id || selectedClient.id;
 
-    // Optimistic UI
     const tempMsg = {
       id: Date.now(),
       message: msgContent,
@@ -112,19 +121,18 @@ function CoachChatView({ currentUser }) {
     setMessages(prev => [...prev, tempMsg]);
 
     try {
-      // ROBUST PAYLOAD: Sending explicit types and required fields
       await ChatEntity.create({
-        coach_id: String(currentUser.id),       // Force String
-        client_id: String(targetClientId),      // Force String
-        sender_id: String(currentUser.id),      // Force String
+        coach_id: String(currentUser.id),
+        client_id: String(targetClientId),
+        sender_id: String(currentUser.id),
         sender_type: 'coach',
         message: msgContent,
-        is_read: false,                         // Explicit Boolean
-        message_type: 'text'                    // Explicit String
+        is_read: false,
+        message_type: 'text'
       });
     } catch (error) {
       console.error("SEND ERROR:", error);
-      toast.error("Message failed to send. Check console for details.");
+      toast.error("Message failed to send. Check console.");
     }
   };
 
@@ -134,7 +142,6 @@ function CoachChatView({ currentUser }) {
 
   return (
     <div className="flex h-[calc(100vh-8rem)] gap-6 p-6 overflow-hidden">
-      {/* Sidebar */}
       <div className="w-80 flex flex-col gap-4 bg-card border border-border rounded-xl p-4 shrink-0 shadow-sm">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -176,7 +183,6 @@ function CoachChatView({ currentUser }) {
         </ScrollArea>
       </div>
 
-      {/* Main Chat */}
       <div className="flex-1 flex flex-col overflow-hidden bg-card border border-border rounded-xl shadow-sm">
         {selectedClient ? (
           <>
@@ -278,7 +284,6 @@ function ClientChatView({ currentUser }) {
     const msgContent = newMessage;
     setNewMessage("");
 
-    // Optimistic Update
     const tempMsg = {
       id: Date.now(),
       message: msgContent,
@@ -290,9 +295,9 @@ function ClientChatView({ currentUser }) {
 
     try {
       await ChatEntity.create({
-        coach_id: String(currentUser.coach_id), // Force String
-        client_id: String(currentUser.id),      // Force String
-        sender_id: String(currentUser.id),      // Force String
+        coach_id: String(currentUser.coach_id),
+        client_id: String(currentUser.id),
+        sender_id: String(currentUser.id),
         sender_type: 'client',
         message: msgContent,
         is_read: false,
