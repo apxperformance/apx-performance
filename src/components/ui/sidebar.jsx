@@ -455,18 +455,18 @@ const SidebarMenuItem = React.forwardRef(({ className, ...props }, ref) => (
 SidebarMenuItem.displayName = "SidebarMenuItem"
 
 const sidebarMenuButtonVariants = cva(
-  // FIXED: Removed all traces of background/shadow. Added explicit transparency and white/10 active state.
-  "peer/menu-button flex w-full items-center gap-3 overflow-hidden rounded-lg px-3 py-2 text-left text-sm font-medium outline-none transition-all hover:bg-white/10 hover:text-white focus-visible:ring-2 active:bg-white/10 disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-white/10 data-[active=true]:font-bold data-[active=true]:text-white data-[state=open]:hover:bg-white/10 group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:justify-center [&>span:last-child]:truncate [&>svg]:size-5 [&>svg]:shrink-0",
+  // FORCE FIX: I removed all background colors and shadows, and forced height (h-10) and flex centering.
+  "peer/menu-button flex w-full h-10 items-center justify-start gap-3 rounded-lg px-3 text-sm font-medium outline-none transition-all hover:bg-white/10 hover:text-white focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 data-[active=true]:bg-white/10 data-[active=true]:font-bold data-[active=true]:text-white data-[state=open]:hover:bg-white/10 [&>span:last-child]:truncate [&>svg]:size-5 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-transparent hover:bg-white/10 text-sidebar-foreground",
-        outline: "bg-transparent hover:bg-white/10 text-sidebar-foreground shadow-none",
+        default: "bg-transparent text-sidebar-foreground", // Clean default
+        outline: "bg-transparent text-sidebar-foreground shadow-none", // Force outline to look like default
       },
       size: {
         default: "h-10 text-sm",
         sm: "h-8 text-xs",
-        lg: "h-12 text-sm group-data-[collapsible=icon]:!p-0",
+        lg: "h-12 text-sm",
       },
     },
     defaultVariants: {
@@ -574,7 +574,6 @@ SidebarMenuBadge.displayName = "SidebarMenuBadge"
 
 const SidebarMenuSkeleton = React.forwardRef(
   ({ className, showIcon = false, ...props }, ref) => {
-    // Random width between 50 to 90%.
     const width = React.useMemo(() => {
       return `${Math.floor(Math.random() * 40) + 50}%`
     }, [])
