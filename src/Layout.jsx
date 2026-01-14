@@ -3,56 +3,64 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 
+// 1. CLEAN GRAYSCALE THEME (No Gold)
 const globalStyles = `
 :root {
-  --background: 210 40% 98%; 
-  --foreground: 0 0% 0%; 
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 0%;
+  --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 0%;
-  --primary: 215 28% 17%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 220 14% 96%;
-  --secondary-foreground: 215 28% 17%;
-  --muted: 220 14% 96%;
-  --muted-foreground: 215 19% 35%;
-  --accent: 220 14% 96%;
-  --accent-foreground: 215 28% 17%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
   --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 220 13% 91%;
-  --input: 220 13% 91%;
-  --ring: 215 28% 17%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
   --radius: 0.5rem;
 }
 .dark {
-  --background: 224 71% 4%;
-  --foreground: 210 40% 98%;
-  --card: 222 47% 11%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222 47% 11%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
   --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
 }
 * { border-color: hsl(var(--border)); }
 body { background-color: hsl(var(--background)); color: hsl(var(--foreground)); }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground)); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--foreground)); }
 `;
+
 import {
-  Dumbbell, Users, Utensils, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, UtensilsCrossed, Pill, MessageCircle, CalendarDays, Sun, Moon } from
-"lucide-react";
+  Dumbbell, Users, Utensils, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, UtensilsCrossed, Pill, MessageCircle, CalendarDays, Sun, Moon 
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -65,8 +73,8 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarProvider,
-  SidebarTrigger } from
-"@/components/ui/sidebar";
+  SidebarTrigger 
+} from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/Toaster";
 import { UserProvider, useUser } from "@/components/contexts/UserContext";
 import { ClientsProvider } from "@/components/contexts/ClientsContext";
@@ -82,23 +90,17 @@ function LayoutContent({ children, currentPageName }) {
   const { isDarkMode, toggleTheme } = useTheme();
   const [hasValidated, setHasValidated] = useState(false);
 
+  // 2. LOGIC: Auto-Fix User Type & Add to Pool (Unchanged)
   const ensureInAvailablePool = useCallback(async (userData) => {
     try {
-      // 1. Validation: Ensure we have ID and Email
       if (!userData || !userData.id || !userData.email) return;
-
-      // 2. STOP if they are a Coach or already have a Coach
       if (userData.user_type === 'coach' || userData.coach_id) return;
 
-      // 3. AUTO-FIX: If user_type is missing, set it to 'client'
       if (!userData.user_type) {
-        console.log("Fixing missing user_type...");
         await base44.entities.User.update(userData.id, { user_type: 'client' });
       }
 
-      // 4. Check Pool
       const existing = await base44.entities.AvailableClient.filter({ user_id: userData.id });
-      
       if (existing.length === 0) {
         await base44.entities.AvailableClient.create({
           user_id: userData.id,
@@ -108,17 +110,12 @@ function LayoutContent({ children, currentPageName }) {
           fitness_goals: userData.fitness_goals || [],
           date_available: new Date().toISOString()
         });
-        console.log(`User ${userData.email} successfully added to pool.`);
       }
     } catch (error) {
-       // Silent fail for auth errors, log others
-       if (!error?.message?.includes('auth')) {
-          console.error("Pool check error:", error);
-       }
+       if (!error?.message?.includes('auth')) console.error("Pool error:", error);
     }
   }, []);
 
-  // Main validation
   useEffect(() => {
     const validateUserAccess = async () => {
       if (isLoading || !user || hasValidated) return;
@@ -139,21 +136,15 @@ function LayoutContent({ children, currentPageName }) {
           redirectUrl = createPageUrl("CoachDashboard");
         }
       } else {
-        // Handle Clients (or users with no type yet)
         if (user.coach_id && (currentPageName === "FreeClientDashboard" || currentPageName === "BrowseCoaches")) {
           shouldRedirect = true;
           redirectUrl = createPageUrl("ClientDashboard");
         }
-
         if (!user.coach_id && currentPageName === "ClientDashboard") {
           shouldRedirect = true;
           redirectUrl = createPageUrl("FreeClientDashboard");
         }
-
-        // Try to add to pool if they have no coach
-        if (!user.coach_id && !shouldRedirect) {
-          ensureInAvailablePool(user);
-        }
+        if (!user.coach_id && !shouldRedirect) ensureInAvailablePool(user);
 
         const coachOnlyPages = ["CoachDashboard", "ClientManagement", "WorkoutBuilder", "NutritionPlanner", "ProgressReviews", "CoachSettings", "SupplementPlanner", "CoachingCalendar"];
         if (coachOnlyPages.includes(currentPageName)) {
@@ -161,30 +152,18 @@ function LayoutContent({ children, currentPageName }) {
           redirectUrl = user.coach_id ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard");
         }
       }
-
       setHasValidated(true);
-
-      if (shouldRedirect && redirectUrl) {
-        navigate(redirectUrl, { replace: true });
-      }
+      if (shouldRedirect && redirectUrl) navigate(redirectUrl, { replace: true });
     };
-
     validateUserAccess();
   }, [user, isLoading, hasValidated, currentPageName, ensureInAvailablePool, navigate]);
 
   const handleLogout = async () => {
-    if (typeof window !== "undefined") {
-       window.localStorage.clear();
-    }
+    if (typeof window !== "undefined") window.localStorage.clear();
     setHasValidated(false);
     sessionStorage.clear();
-    try {
-      await base44.auth.logout();
-    } catch (e) {
-      console.error("Logout error:", e);
-    } finally {
-      window.location.href = '/';
-    }
+    try { await base44.auth.logout(); } catch (e) { console.error(e); } 
+    finally { window.location.href = '/'; }
   };
 
   if (currentPageName === "Welcome" || isLoading) {
@@ -193,7 +172,8 @@ function LayoutContent({ children, currentPageName }) {
         <style>{globalStyles}</style>
         {isLoading ? (
           <div className="min-h-screen flex items-center justify-center">
-            <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
+            {/* CLEAN SPINNER (Dark Gray) */}
+            <div className="w-12 h-12 border-4 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : children}
       </div>
@@ -203,7 +183,7 @@ function LayoutContent({ children, currentPageName }) {
   if (!user) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -240,37 +220,38 @@ function LayoutContent({ children, currentPageName }) {
   return (
     <SidebarProvider>
       <Toaster />
-      <div className="min-h-screen flex w-full bg-background text-foreground">
+      <div className="min-h-screen flex w-full bg-background text-foreground overflow-hidden">
         <style>{globalStyles}</style>
         
-        <Sidebar className="border-r border-gray-200 bg-gray-100 backdrop-blur-xl">
-          <SidebarHeader className="bg-neutral-900 p-6 flex flex-col gap-2 border-b border-gray-200">
+        {/* 3. FIXED SIDEBAR (Dark/Gray Theme, NO GOLD) */}
+        <Sidebar className="border-r border-border bg-card h-screen sticky top-0 left-0">
+          <SidebarHeader className="bg-card p-6 flex flex-col gap-2 border-b border-border">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl flex items-center justify-center shadow-lg">
-                {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-white" /> : <Zap className="w-6 h-6 text-white" />}
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-md">
+                {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-primary-foreground" /> : <Zap className="w-6 h-6 text-primary-foreground" />}
               </div>
               <div>
-                <h2 className="text-gray-50 text-sm font-bold">APX PERFORMANCE</h2>
-                <p className="text-xs text-gray-600 uppercase tracking-wide">
+                <h2 className="text-foreground text-sm font-bold">APX PERFORMANCE</h2>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">
                   {user?.user_type === "coach" ? "Coach Portal" : "Client Portal"}
                 </p>
               </div>
             </div>
           </SidebarHeader>
 
-          <SidebarContent className="bg-neutral-900 p-4 flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden">
+          <SidebarContent className="bg-card p-4 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
             <SidebarGroup>
-              <SidebarGroupLabel className="text-gray-50 px-2 py-3 text-xs font-medium uppercase tracking-wider rounded-md">
+              <SidebarGroupLabel className="text-muted-foreground px-2 py-3 text-xs font-medium uppercase tracking-wider">
                 {user?.user_type === "coach" ? "Coach Tools" : "My Fitness"}
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {navigationItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild className={`hover:bg-gray-300/50 hover:text-gray-900 transition-all duration-300 rounded-xl mb-2 group ${location.pathname === item.url ? 'bg-gray-300 text-gray-900' : 'text-gray-700 hover:text-gray-900'}`}>
-                        <Link to={item.url} className="bg-gray-50 text-gray-900 mb-2 px-4 py-3 text-sm text-left rounded-xl flex w-full items-center gap-2 h-8 hover:bg-gray-300/50 hover:text-gray-900 transition-all duration-300 group gap-3">
-                          <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="font-medium">{item.title}</span>
+                      <SidebarMenuButton asChild className={`hover:bg-accent hover:text-accent-foreground transition-all duration-200 rounded-lg mb-1 group ${location.pathname === item.url ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
+                        <Link to={item.url} className="flex w-full items-center gap-3 px-3 py-2 text-sm font-medium">
+                          <item.icon className={`w-5 h-5 transition-transform duration-200 ${location.pathname === item.url ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                          <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -280,52 +261,57 @@ function LayoutContent({ children, currentPageName }) {
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="bg-neutral-900 p-4 flex flex-col gap-2 border-t border-gray-200 space-y-4">
-             <div className="flex items-center justify-between">
-              <span className="text-gray-50 text-sm font-medium">Theme</span>
-              <button onClick={toggleTheme} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-400'}`}>
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${isDarkMode ? 'translate-x-1' : 'translate-x-6'}`} />
-                <Sun className={`absolute left-1 top-1 h-4 w-4 transition-opacity duration-300 ${isDarkMode ? 'opacity-0' : 'opacity-100 text-white'}`} />
-                <Moon className={`absolute right-1 top-1 h-4 w-4 transition-opacity duration-300 ${isDarkMode ? 'opacity-100 text-gray-400' : 'opacity-0'}`} />
+          <SidebarFooter className="bg-card p-4 flex flex-col gap-2 border-t border-border">
+             {/* Theme Toggle */}
+             <div className="flex items-center justify-between opacity-50 hover:opacity-100 transition-opacity">
+              <span className="text-muted-foreground text-xs font-medium">Theme</span>
+              <button onClick={toggleTheme} className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
+                <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-300 ${isDarkMode ? 'translate-x-1' : 'translate-x-5'}`} />
               </button>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
-                {user?.user_type === "coach" ? <Crown className="w-5 h-5 text-gray-700" /> : <UserIcon className="w-5 h-5 text-gray-600" />}
+            
+            <div className="flex items-center gap-3 mt-2">
+              <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center border border-border">
+                {user?.user_type === "coach" ? <Crown className="w-4 h-4 text-foreground" /> : <UserIcon className="w-4 h-4 text-foreground" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-gray-50 text-sm font-medium truncate">{user?.full_name}</p>
-                <p className="text-xs truncate text-gray-600">
+                <p className="text-foreground text-xs font-medium truncate">{user?.full_name}</p>
+                <p className="text-[10px] truncate text-muted-foreground">
                   {user?.user_type === "coach" && coachTierInfo ? coachTierInfo.name : "Member"}
                 </p>
               </div>
             </div>
-            <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-gray-700 hover:text-red-600 hover:bg-red-500/10">
+            <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-muted-foreground hover:text-destructive hover:bg-destructive/10 text-xs font-medium">
               <LogOut className="w-4 h-4" />
               Sign Out
             </button>
           </SidebarFooter>
         </Sidebar>
 
-        <main className="flex-1 flex flex-col">
-          <header className={`${isDarkMode ? 'bg-gray-900/30' : 'bg-white/30'} backdrop-blur-xl border-b ${isDarkMode ? 'border-gray-800' : 'border-gray-200'} px-6 py-4`}>
+        <main className="flex-1 flex flex-col h-screen overflow-hidden">
+          <header className="bg-background/80 backdrop-blur-xl border-b border-border px-6 py-4 flex-shrink-0">
             <div className="flex items-center gap-4">
-              <SidebarTrigger className={`md:hidden ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'} p-2 rounded-lg`} />
+              <SidebarTrigger className="md:hidden hover:bg-accent p-2 rounded-lg text-foreground" />
               <div className="flex items-center gap-2 flex-1">
                   <h1 className="text-xl font-bold text-foreground">APX PERFORMANCE</h1>
-                  <span className="text-xs text-gray-500 uppercase tracking-wide">{user?.user_type === "coach" ? "Coach" : "Client"}</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wide bg-secondary px-2 py-0.5 rounded border border-border">
+                    {user?.user_type === "coach" ? "COACH" : "CLIENT"}
+                  </span>
               </div>
               <CommandPaletteTrigger />
             </div>
           </header>
-          <div className="flex-1 overflow-auto bg-background">{children}</div>
+          {/* Main content scrollable area */}
+          <div className="flex-1 overflow-y-auto bg-background p-6">
+            {children}
+          </div>
         </main>
       </div>
     </SidebarProvider>
   );
 }
 
-// FIX: Added 'export default' here!
+// Ensure default export is here
 export default function Layout({ children, currentPageName }) {
   return (
     <ErrorBoundary>
