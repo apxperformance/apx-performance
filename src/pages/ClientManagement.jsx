@@ -15,7 +15,7 @@ import ConnectionRequestsSection from "../components/clients/ConnectionRequestsS
 
 export default function ClientManagement() {
   const { clients, isLoading, refreshClients } = useClients();
-  const { refreshCoachTier } = useUser(); // Destructure refreshCoachTier from useUser
+  const { refreshCoachTier, user } = useUser(); // Destructure refreshCoachTier and user from useUser
   const [isAddNewDialogOpen, setIsAddNewDialogOpen] = useState(false);
   const [isAddExistingDialogOpen, setIsAddExistingDialogOpen] = useState(false);
   const [isProcessingRequest, setIsProcessingRequest] = useState(false);
@@ -236,10 +236,7 @@ export default function ClientManagement() {
         isOpen={isAddExistingDialogOpen}
         onClose={() => setIsAddExistingDialogOpen(false)}
         onAddClients={handleAddExistingClient}
-        coachId={(async () => {
-          const user = await base44.auth.me();
-          return user?.id;
-        })()}
+        coachId={user?.id}
       />
     </div>
   );
