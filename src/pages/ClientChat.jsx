@@ -30,6 +30,7 @@ function CoachChatView({ currentUser }) {
   const [searchTerm, setSearchTerm] = useState("");
   const scrollRef = useRef(null);
 
+  // Load Clients
   useEffect(() => {
     const loadClients = async () => {
       try {
@@ -37,22 +38,28 @@ function CoachChatView({ currentUser }) {
         setClients(myClients);
       } catch (error) {
         console.error("Error loading clients:", error);
+        toast.error("Failed to load clients list");
       }
       setIsLoading(false);
     };
     loadClients();
   }, [currentUser]);
 
+  // Load Messages
   useEffect(() => {
     if (!selectedClient) return;
     
     const fetchMessages = async () => {
       try {
         const targetClientId = selectedClient.user_id || selectedClient.id;
-        const chatHistory = await base44.entities.ChatMessage.filter({ 
+
+        // FIX: Using lowercase 'chatmessage' to match your DB
+        const chatHistory = await base44.entities.chatmessage.filter({ 
           coach_id: currentUser.id, 
           client_id: targetClientId 
         });
+
+        // Sort by created_date
         setMessages(chatHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -64,6 +71,7 @@ function CoachChatView({ currentUser }) {
     return () => clearInterval(interval);
   }, [selectedClient, currentUser]);
 
+  // Auto-scroll effect
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -76,6 +84,7 @@ function CoachChatView({ currentUser }) {
     setNewMessage(""); 
     const targetClientId = selectedClient.user_id || selectedClient.id;
 
+    // Optimistic UI Update
     const tempMsg = {
       id: Date.now(),
       message: msgContent,
@@ -86,7 +95,8 @@ function CoachChatView({ currentUser }) {
     setMessages(prev => [...prev, tempMsg]);
 
     try {
-      await base44.entities.ChatMessage.create({
+      // FIX: Using lowercase 'chatmessage'
+      await base44.entities.chatmessage.create({
         coach_id: currentUser.id,
         client_id: targetClientId,
         sender_id: currentUser.id,
@@ -96,7 +106,8 @@ function CoachChatView({ currentUser }) {
         message_type: 'text'
       });
     } catch (error) {
-      toast.error("Failed to send message");
+      console.error(error);
+      toast.error("Failed to send message. Check console.");
     }
   };
 
@@ -172,7 +183,6 @@ function CoachChatView({ currentUser }) {
                         <div className={cn("max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm", isMe ? "bg-primary text-primary-foreground rounded-br-none" : "bg-secondary text-secondary-foreground rounded-bl-none")}>
                           {msg.message}
                           <div className={cn("text-[10px] mt-1 opacity-70", isMe ? "text-right" : "text-left")}>
-                            {/* FIX: Use Helper Function */}
                             {formatMessageTime(msg.created_date)}
                           </div>
                         </div>
@@ -208,12 +218,14 @@ function ClientChatView({ currentUser }) {
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef(null);
 
+  // Load Messages
   useEffect(() => {
     if (!currentUser?.coach_id) return;
     
     const fetchMessages = async () => {
       try {
-        const chatHistory = await base44.entities.ChatMessage.filter({ 
+        // FIX: Using lowercase 'chatmessage'
+        const chatHistory = await base44.entities.chatmessage.filter({ 
           client_id: currentUser.id, 
           coach_id: currentUser.coach_id 
         });
@@ -239,6 +251,7 @@ function ClientChatView({ currentUser }) {
     const msgContent = newMessage;
     setNewMessage("");
 
+    // Optimistic Update
     const tempMsg = {
       id: Date.now(),
       message: msgContent,
@@ -249,7 +262,8 @@ function ClientChatView({ currentUser }) {
     setMessages(prev => [...prev, tempMsg]);
 
     try {
-      await base44.entities.ChatMessage.create({
+      // FIX: Using lowercase 'chatmessage'
+      await base44.entities.chatmessage.create({
         coach_id: currentUser.coach_id,
         client_id: currentUser.id,
         sender_id: currentUser.id,
@@ -260,6 +274,7 @@ function ClientChatView({ currentUser }) {
       });
     } catch (error) {
       console.error("Failed to send", error);
+      toast.error("Message failed to send");
     }
   };
 
@@ -298,7 +313,6 @@ function ClientChatView({ currentUser }) {
                     <div className={cn("max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm", isMe ? "bg-primary text-primary-foreground rounded-br-none" : "bg-secondary text-secondary-foreground rounded-bl-none")}>
                       <p>{msg.message}</p>
                       <span className={cn("text-[10px] block mt-1 opacity-70", isMe ? "text-right" : "text-left")}>
-                         {/* FIX: Use Helper Function */}
                          {formatMessageTime(msg.created_date)}
                       </span>
                     </div>
