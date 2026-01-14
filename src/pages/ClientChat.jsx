@@ -9,6 +9,17 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
+// --- HELPER: Force UTC-to-Local Conversion ---
+const formatMessageTime = (dateString) => {
+  if (!dateString) return "";
+  // If the string lacks the 'Z' (UTC marker), add it to force conversion
+  const safeDate = dateString.endsWith("Z") ? dateString : dateString + "Z";
+  return new Date(safeDate).toLocaleTimeString([], { 
+    hour: '2-digit', 
+    minute: '2-digit' 
+  });
+};
+
 // --- 1. COACH VIEW ---
 function CoachChatView({ currentUser }) {
   const [clients, setClients] = useState([]);
@@ -19,7 +30,6 @@ function CoachChatView({ currentUser }) {
   const [searchTerm, setSearchTerm] = useState("");
   const scrollRef = useRef(null);
 
-  // Load Clients
   useEffect(() => {
     const loadClients = async () => {
       try {
@@ -33,19 +43,16 @@ function CoachChatView({ currentUser }) {
     loadClients();
   }, [currentUser]);
 
-  // Load Messages
   useEffect(() => {
     if (!selectedClient) return;
     
     const fetchMessages = async () => {
       try {
         const targetClientId = selectedClient.user_id || selectedClient.id;
-
         const chatHistory = await base44.entities.ChatMessage.filter({ 
           coach_id: currentUser.id, 
           client_id: targetClientId 
         });
-
         setMessages(chatHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -57,7 +64,6 @@ function CoachChatView({ currentUser }) {
     return () => clearInterval(interval);
   }, [selectedClient, currentUser]);
 
-  // Auto-scroll effect
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -68,10 +74,8 @@ function CoachChatView({ currentUser }) {
     
     const msgContent = newMessage;
     setNewMessage(""); 
-
     const targetClientId = selectedClient.user_id || selectedClient.id;
 
-    // Optimistic UI Update
     const tempMsg = {
       id: Date.now(),
       message: msgContent,
@@ -93,7 +97,6 @@ function CoachChatView({ currentUser }) {
       });
     } catch (error) {
       toast.error("Failed to send message");
-      console.error(error);
     }
   };
 
@@ -103,7 +106,6 @@ function CoachChatView({ currentUser }) {
 
   return (
     <div className="flex h-[calc(100vh-8rem)] gap-6 p-6 overflow-hidden">
-      {/* Sidebar */}
       <div className="w-80 flex flex-col gap-4 bg-card border border-border rounded-xl p-4 shrink-0 shadow-sm">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -145,7 +147,6 @@ function CoachChatView({ currentUser }) {
         </ScrollArea>
       </div>
 
-      {/* Main Chat */}
       <div className="flex-1 flex flex-col overflow-hidden bg-card border border-border rounded-xl shadow-sm">
         {selectedClient ? (
           <>
@@ -170,12 +171,9 @@ function CoachChatView({ currentUser }) {
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={msg.id || i} className={cn("flex w-full", isMe ? "justify-end" : "justify-start")}>
                         <div className={cn("max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm", isMe ? "bg-primary text-primary-foreground rounded-br-none" : "bg-secondary text-secondary-foreground rounded-bl-none")}>
                           {msg.message}
-                          {/* FIX: LOCAL DEVICE TIME */}
                           <div className={cn("text-[10px] mt-1 opacity-70", isMe ? "text-right" : "text-left")}>
-                            {new Date(msg.created_date).toLocaleTimeString([], { 
-                              hour: '2-digit', 
-                              minute: '2-digit'
-                            })}
+                            {/* FIX: Use Helper Function */}
+                            {formatMessageTime(msg.created_date)}
                           </div>
                         </div>
                       </motion.div>
@@ -210,7 +208,6 @@ function ClientChatView({ currentUser }) {
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef(null);
 
-  // Load Messages
   useEffect(() => {
     if (!currentUser?.coach_id) return;
     
@@ -242,7 +239,6 @@ function ClientChatView({ currentUser }) {
     const msgContent = newMessage;
     setNewMessage("");
 
-    // Optimistic Update
     const tempMsg = {
       id: Date.now(),
       message: msgContent,
@@ -301,12 +297,9 @@ function ClientChatView({ currentUser }) {
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={msg.id || i} className={cn("flex w-full", isMe ? "justify-end" : "justify-start")}>
                     <div className={cn("max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm", isMe ? "bg-primary text-primary-foreground rounded-br-none" : "bg-secondary text-secondary-foreground rounded-bl-none")}>
                       <p>{msg.message}</p>
-                      {/* FIX: LOCAL DEVICE TIME */}
                       <span className={cn("text-[10px] block mt-1 opacity-70", isMe ? "text-right" : "text-left")}>
-                        {new Date(msg.created_date).toLocaleTimeString([], { 
-                          hour: '2-digit', 
-                          minute: '2-digit'
-                        })}
+                         {/* FIX: Use Helper Function */}
+                         {formatMessageTime(msg.created_date)}
                       </span>
                     </div>
                   </motion.div>
