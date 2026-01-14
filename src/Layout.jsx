@@ -65,7 +65,6 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarProvider,
-  SidebarMenuLink,
   SidebarTrigger } from
 "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/Toaster";
@@ -381,7 +380,7 @@ function LayoutContent({ children, currentPageName }) {
                       'text-gray-700 hover:text-gray-900'}`
                       }>
 
-                        <Link to={item.url} className="bg-gray-50 text-gray-900 mb-2 px-4 py-3 text-sm text-left rounded-xl peer/menu-button flex w-full items-center gap-2 overflow-hidden outline-none ring-sidebar-ring focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 h-8 hover:bg-gray-300/50 hover:text-gray-900 transition-all duration-300 group gap-3">
+                        <Link to={item.url} className="bg-gray-50 text-gray-900 mb-2 px-4 py-3 text-sm text-left rounded-xl peer/menu-button flex w-full items-center gap-2 overflow-hidden outline-none ring-sidebar-ring focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 h-8 hover:bg-gray-300/50 hover:text-gray-900 transition-all duration-300 group gap-3">
                           <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
                           <span className="font-medium">{item.title}</span>
                         </Link>
@@ -452,5 +451,22 @@ function LayoutContent({ children, currentPageName }) {
         </main>
       </div>
     </SidebarProvider>);
+
+}
+
+export default function Layout({ children, currentPageName }) {
+  return (
+    <ErrorBoundary>
+    <style>{globalStyles}</style>
+      <ReactQueryProvider>
+        <ThemeProvider>
+          <UserProvider>
+            <ClientsProvider>
+              <LayoutContent children={children} currentPageName={currentPageName} />
+            </ClientsProvider>
+          </UserProvider>
+        </ThemeProvider>
+      </ReactQueryProvider>
+    </ErrorBoundary>);
 
 }
