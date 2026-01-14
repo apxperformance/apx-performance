@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { AvailableClient } from "@/entities/AvailableClient";
+import { base44 } from "@/api/base44Client";
 import { Users, Search, UserPlus, AlertCircle, DollarSign, CreditCard } from "lucide-react";
 
 export default function AddExistingClientDialog({ isOpen, onClose, onAddClients, coachId }) {
@@ -36,7 +35,7 @@ export default function AddExistingClientDialog({ isOpen, onClose, onAddClients,
     setIsLoading(true);
     setError("");
     try {
-      const clientsData = await AvailableClient.list("-date_available");
+      const clientsData = await base44.entities.AvailableClient.list("-date_available");
       setAvailableClients(clientsData);
     } catch (error) {
       console.error("Error loading available clients:", error);
