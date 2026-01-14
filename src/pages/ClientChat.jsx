@@ -33,34 +33,21 @@ function CoachChatView({ currentUser }) {
     loadClients();
   }, [currentUser]);
 
-  // Load Messages (Coach ID + Client ID)
+  // Load Messages (Using USER_ID link)
   useEffect(() => {
     if (!selectedClient) return;
     
     const fetchMessages = async () => {
       try {
-        // Use your specific schema: coach_id, client_id
+        // FIX: Use user_id if available, fallback to id
+        const targetClientId = selectedClient.user_id || selectedClient.id;
+
         const chatHistory = await base44.entities.ChatMessage.filter({ 
           coach_id: currentUser.id, 
-          client_id: selectedClient.id // Assuming this is the Client ID
+          client_id: targetClientId 
         });
 
-        // Fallback: If no messages found, try matching by user_id just in case
-        if (chatHistory.length === 0 && selectedClient.user_id) {
-             const altHistory = await base44.entities.ChatMessage.filter({ 
-                coach_id: currentUser.id, 
-                client_id: selectedClient.user_id 
-             });
-             if (altHistory.length > 0) {
-                 setMessages(altHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
-                 return;
-             }
-        }
-        
         setMessages(chatHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
-        
-        // Auto-scroll only on first load or new message
-        // setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
@@ -81,7 +68,10 @@ function CoachChatView({ currentUser }) {
     if (!newMessage.trim() || !selectedClient) return;
     
     const msgContent = newMessage;
-    setNewMessage(""); // Clear input immediately
+    setNewMessage(""); 
+
+    // FIX: Ensure we use the User ID so the client sees it
+    const targetClientId = selectedClient.user_id || selectedClient.id;
 
     // Optimistic UI Update
     const tempMsg = {
@@ -96,7 +86,7 @@ function CoachChatView({ currentUser }) {
     try {
       await base44.entities.ChatMessage.create({
         coach_id: currentUser.id,
-        client_id: selectedClient.id, // Or selectedClient.user_id depending on how you linked them
+        client_id: targetClientId, // <--- CRITICAL FIX
         sender_id: currentUser.id,
         sender_type: 'coach',
         message: msgContent,
@@ -223,7 +213,7 @@ function ClientChatView({ currentUser }) {
     const fetchMessages = async () => {
       try {
         const chatHistory = await base44.entities.ChatMessage.filter({ 
-          client_id: currentUser.id, // I am the client
+          client_id: currentUser.id, // This matches currentUser.id
           coach_id: currentUser.coach_id 
         });
         setMessages(chatHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
