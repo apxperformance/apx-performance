@@ -199,10 +199,12 @@ function LayoutContent({ children, currentPageName }) {
   }, [currentPageName, user, hasValidated, isLoading, navigate]);
 
   const handleLogout = async () => {
+    if (typeof window !== "undefined") {
+   window.localStorage.clear();
+}
     setHasValidated(false);
 
     // Clear all local state and storage IMMEDIATELY
-    localStorage.clear();
     sessionStorage.clear();
 
     try {
