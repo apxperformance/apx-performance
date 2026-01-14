@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
-// --- 1. COACH VIEW COMPONENT ---
+// --- 1. COACH VIEW ---
 function CoachChatView({ currentUser }) {
   const [clients, setClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -19,6 +19,7 @@ function CoachChatView({ currentUser }) {
   const [searchTerm, setSearchTerm] = useState("");
   const scrollRef = useRef(null);
 
+  // Load Clients
   useEffect(() => {
     const loadClients = async () => {
       try {
@@ -32,59 +33,79 @@ function CoachChatView({ currentUser }) {
     loadClients();
   }, [currentUser]);
 
+  // Load Messages (Coach ID + Client ID)
   useEffect(() => {
     if (!selectedClient) return;
+    
     const fetchMessages = async () => {
       try {
-        const sent = await base44.entities.Message.filter({ sender_id: currentUser.id, recipient_id: selectedClient.user_id }); // Note: linking to user_id
-        const received = await base44.entities.Message.filter({ sender_id: selectedClient.user_id, recipient_id: currentUser.id });
-        
-        // Fallback: If client messages aren't showing, they might be linked via client.id instead of user.id
-        // This handles both cases for safety
-        const sentAlt = await base44.entities.Message.filter({ sender_id: currentUser.id, recipient_id: selectedClient.id });
-        const receivedAlt = await base44.entities.Message.filter({ sender_id: selectedClient.id, recipient_id: currentUser.id });
+        // Use your specific schema: coach_id, client_id
+        const chatHistory = await base44.entities.ChatMessage.filter({ 
+          coach_id: currentUser.id, 
+          client_id: selectedClient.id // Assuming this is the Client ID
+        });
 
-        const all = [...sent, ...received, ...sentAlt, ...receivedAlt]
-          .filter((msg, index, self) => index === self.findIndex((m) => m.id === msg.id)) // Deduplicate
-          .sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
-          
-        setMessages(all);
-        setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+        // Fallback: If no messages found, try matching by user_id just in case
+        if (chatHistory.length === 0 && selectedClient.user_id) {
+             const altHistory = await base44.entities.ChatMessage.filter({ 
+                coach_id: currentUser.id, 
+                client_id: selectedClient.user_id 
+             });
+             if (altHistory.length > 0) {
+                 setMessages(altHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
+                 return;
+             }
+        }
+        
+        setMessages(chatHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
+        
+        // Auto-scroll only on first load or new message
+        // setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
     };
+
     fetchMessages();
     const interval = setInterval(fetchMessages, 3000); 
     return () => clearInterval(interval);
   }, [selectedClient, currentUser]);
 
+  // Auto-scroll effect
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !selectedClient) return;
     
-    // Prefer user_id for messaging, fallback to client id
-    const targetId = selectedClient.user_id || selectedClient.id;
+    const msgContent = newMessage;
+    setNewMessage(""); // Clear input immediately
+
+    // Optimistic UI Update
+    const tempMsg = {
+      id: Date.now(),
+      message: msgContent,
+      sender_id: currentUser.id,
+      sender_type: 'coach',
+      created_date: new Date().toISOString()
+    };
+    setMessages(prev => [...prev, tempMsg]);
 
     try {
-      await base44.entities.Message.create({
-        content: newMessage,
+      await base44.entities.ChatMessage.create({
+        coach_id: currentUser.id,
+        client_id: selectedClient.id, // Or selectedClient.user_id depending on how you linked them
         sender_id: currentUser.id,
-        recipient_id: targetId,
-        read: false
+        sender_type: 'coach',
+        message: msgContent,
+        is_read: false,
+        message_type: 'text'
       });
-      setNewMessage("");
-      // Optimistic update or wait for poll
-      const tempMsg = {
-        id: Date.now(),
-        content: newMessage,
-        sender_id: currentUser.id,
-        created_date: new Date().toISOString()
-      };
-      setMessages(prev => [...prev, tempMsg]);
-      setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
     } catch (error) {
       toast.error("Failed to send message");
+      console.error(error);
     }
   };
 
@@ -102,7 +123,7 @@ function CoachChatView({ currentUser }) {
             placeholder="Search clients..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 bg-background" 
+            className="pl-9 bg-secondary/50" 
           />
         </div>
         <ScrollArea className="flex-1 -mx-2 px-2">
@@ -160,7 +181,7 @@ function CoachChatView({ currentUser }) {
                     return (
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={msg.id || i} className={cn("flex w-full", isMe ? "justify-end" : "justify-start")}>
                         <div className={cn("max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm", isMe ? "bg-primary text-primary-foreground rounded-br-none" : "bg-secondary text-secondary-foreground rounded-bl-none")}>
-                          {msg.content}
+                          {msg.message}
                           <div className={cn("text-[10px] mt-1 opacity-70", isMe ? "text-right" : "text-left")}>{new Date(msg.created_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                         </div>
                       </motion.div>
@@ -189,24 +210,28 @@ function CoachChatView({ currentUser }) {
   );
 }
 
-// --- 2. CLIENT VIEW COMPONENT ---
+// --- 2. CLIENT VIEW ---
 function ClientChatView({ currentUser }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef(null);
 
+  // Load Messages (My ID + Coach ID)
   useEffect(() => {
     if (!currentUser?.coach_id) return;
+    
     const fetchMessages = async () => {
       try {
-        const sent = await base44.entities.Message.filter({ sender_id: currentUser.id, recipient_id: currentUser.coach_id });
-        const received = await base44.entities.Message.filter({ sender_id: currentUser.coach_id, recipient_id: currentUser.id });
-        const all = [...sent, ...received].sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
-        setMessages(all);
+        const chatHistory = await base44.entities.ChatMessage.filter({ 
+          client_id: currentUser.id, // I am the client
+          coach_id: currentUser.coach_id 
+        });
+        setMessages(chatHistory.sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
     };
+    
     fetchMessages();
     const interval = setInterval(fetchMessages, 3000);
     return () => clearInterval(interval);
@@ -219,22 +244,30 @@ function ClientChatView({ currentUser }) {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !currentUser?.coach_id) return;
+    
+    const msgContent = newMessage;
+    setNewMessage("");
+
+    // Optimistic Update
+    const tempMsg = {
+      id: Date.now(),
+      message: msgContent,
+      sender_id: currentUser.id,
+      sender_type: 'client',
+      created_date: new Date().toISOString()
+    };
+    setMessages(prev => [...prev, tempMsg]);
 
     try {
-      await base44.entities.Message.create({
-        content: newMessage,
+      await base44.entities.ChatMessage.create({
+        coach_id: currentUser.coach_id,
+        client_id: currentUser.id,
         sender_id: currentUser.id,
-        recipient_id: currentUser.coach_id,
-        read: false
+        sender_type: 'client',
+        message: msgContent,
+        is_read: false,
+        message_type: 'text'
       });
-      setNewMessage("");
-      const tempMsg = {
-        id: Date.now(),
-        content: newMessage,
-        sender_id: currentUser.id,
-        created_date: new Date().toISOString()
-      };
-      setMessages(prev => [...prev, tempMsg]);
     } catch (error) {
       console.error("Failed to send", error);
     }
@@ -273,7 +306,7 @@ function ClientChatView({ currentUser }) {
                 return (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={msg.id || i} className={cn("flex w-full", isMe ? "justify-end" : "justify-start")}>
                     <div className={cn("max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm", isMe ? "bg-primary text-primary-foreground rounded-br-none" : "bg-secondary text-secondary-foreground rounded-bl-none")}>
-                      <p>{msg.content}</p>
+                      <p>{msg.message}</p>
                       <span className={cn("text-[10px] block mt-1 opacity-70", isMe ? "text-right" : "text-left")}>{new Date(msg.created_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                   </motion.div>
@@ -315,7 +348,6 @@ export default function ChatPage() {
   if (loading) return <div className="flex h-screen items-center justify-center"><Loader2 className="animate-spin w-8 h-8" /></div>;
   if (!user) return null;
 
-  // Decide which view to show
   return user.user_type === 'coach' 
     ? <CoachChatView currentUser={user} /> 
     : <ClientChatView currentUser={user} />;
