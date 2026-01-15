@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import {
-  Dumbbell, Users, Calendar, Utensils, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, UtensilsCrossed, Pill, MessageCircle, CalendarDays, Sun, Moon 
+  Dumbbell, Users, Calendar, Utensils, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, UtensilsCrossed, Pill, MessageCircle, CalendarDays
 } from "lucide-react";
 import {
   Sidebar,
@@ -22,7 +22,7 @@ import {
 import { Toaster } from "@/components/ui/Toaster";
 import { UserProvider, useUser } from "@/components/contexts/UserContext";
 import { ClientsProvider } from "@/components/contexts/ClientsContext";
-import { ThemeProvider, useTheme } from "@/components/contexts/ThemeContext";
+import { ThemeProvider } from "@/components/contexts/ThemeContext";
 import { ReactQueryProvider } from "@/components/contexts/ReactQueryProvider";
 import ErrorBoundary from "@/components/errors/ErrorBoundary";
 import CommandPaletteTrigger from "@/components/ui/command-palette-trigger";
@@ -31,7 +31,6 @@ function LayoutContent({ children, currentPageName }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isLoading, hasCoach, coachTierInfo } = useUser();
-  const { isDarkMode, toggleTheme } = useTheme();
   
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [hasValidated, setHasValidated] = useState(false);
@@ -68,6 +67,7 @@ function LayoutContent({ children, currentPageName }) {
   // --- VALIDATION LOGIC ---
   useEffect(() => {
     const validateUserAccess = async () => {
+      // FIX: Added !user to skip validation if no user exists
       if (isLoading || !user || hasValidated || isLoggingOut) return;
 
       if (!user.email) {
@@ -127,14 +127,13 @@ function LayoutContent({ children, currentPageName }) {
     }
   };
 
-  // --- SAFETY CHECK ---
+  // --- SAFETY CHECK (The Anti-White-Screen Logic) ---
   const showSpinner = isLoading || isLoggingOut || (!user && currentPageName !== "Welcome");
 
-  // --- PUBLIC LAYOUT ---
+  // --- PUBLIC LAYOUT / LOADING ---
   if (currentPageName === "Welcome" || showSpinner) {
     return (
       <div className="min-h-screen bg-background">
-        {/* FIX: <style> block is GONE. Now uses globals.css correctly. */}
         {showSpinner ? (
           <div className="min-h-screen flex items-center justify-center">
             <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
@@ -227,21 +226,7 @@ function LayoutContent({ children, currentPageName }) {
           </SidebarContent>
 
           <SidebarFooter className="bg-neutral-900 p-4 flex flex-col gap-2 border-t border-gray-800 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-50 text-sm font-medium">Theme</span>
-              <button
-                onClick={toggleTheme}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 ${
-                  isDarkMode ? 'bg-gray-700' : 'bg-gray-400'
-                }`}
-              >
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
-                  isDarkMode ? 'translate-x-1' : 'translate-x-6'
-                }`} />
-                <Sun className={`absolute left-1 top-1 h-4 w-4 transition-opacity duration-300 ${isDarkMode ? 'opacity-0' : 'opacity-100 text-white'}`} />
-                <Moon className={`absolute right-1 top-1 h-4 w-4 transition-opacity duration-300 ${isDarkMode ? 'opacity-100 text-gray-400' : 'opacity-0'}`} />
-              </button>
-            </div>
+            {/* TOGGLE SWITCH IS GONE. DELETED. */}
 
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-800 border border-gray-600 rounded-full flex items-center justify-center">
@@ -266,9 +251,9 @@ function LayoutContent({ children, currentPageName }) {
         </Sidebar>
 
         <main className="flex-1 flex flex-col">
-          <header className={`${isDarkMode ? 'bg-black/40' : 'bg-white/80'} backdrop-blur-md border-b ${isDarkMode ? 'border-gray-800' : 'border-gray-200'} px-6 py-4`}>
+          <header className={`${'bg-black/40'} backdrop-blur-md border-b ${'border-gray-800'} px-6 py-4`}>
             <div className="flex items-center gap-4">
-              <SidebarTrigger className={`md:hidden ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'} p-2 rounded-lg transition-colors duration-200`} />
+              <SidebarTrigger className={`md:hidden ${'hover:bg-gray-800'} p-2 rounded-lg transition-colors duration-200`} />
               <div className="flex items-center gap-2 flex-1">
                   <h1 className="text-xl font-bold text-foreground">APX PERFORMANCE</h1>
                   <span className="text-xs text-muted-foreground uppercase tracking-wide">
