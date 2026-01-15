@@ -5,58 +5,31 @@
 @layer base {
   :root {
     /* --- APX ONYX THEME (Deep Dark Neutral) --- */
-    
-    /* Background: ONYX (Very dark, desaturated gray) */
     --background: 240 5% 8%;
-    
-    /* Text: Pure White */
     --foreground: 0 0% 98%;
-
-    /* Cards: Slightly lighter Onyx for separation */
     --card: 240 4% 10%;
     --card-foreground: 0 0% 98%;
- 
-    /* Popovers: Matches Card */
     --popover: 240 4% 10%;
     --popover-foreground: 0 0% 98%;
- 
-    /* Primary: White (Monochrome Action) - REPLACES GOLD */
     --primary: 0 0% 98%;
     --primary-foreground: 240 5% 9%; 
- 
-    /* Secondary: Subtle Gray */
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
- 
-    /* Muted: Dark Gray */
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
- 
-    /* Accent: Interactive Gray */
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
- 
-    /* Destructive: Red */
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
- 
-    /* Borders: Subtle Dark Line */
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    
-    /* Ring: White Glow (Subtle) */
     --ring: 240 4.9% 83.9%;
- 
     --radius: 0.5rem;
-    
-    /* Chart Colors (Neutral/Steel) */
     --chart-1: 220 70% 50%;
     --chart-2: 240 5% 64.9%;
     --chart-3: 0 0% 98%;
     --chart-4: 240 3.7% 15.9%;
     --chart-5: 240 4% 10%;
-    
-    /* Sidebar: Matches Onyx Background */
     --sidebar-background: 240 5% 8%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 0 0% 98%;
@@ -97,11 +70,7 @@
   body {
     @apply bg-background text-foreground;
   }
-  
-  /* NUCLEAR OVERRIDE: Force ALL inputs to be White Text and Transparent Background */
-  input, 
-  select, 
-  textarea {
+  input, select, textarea {
     color: hsl(var(--foreground)) !important;
     background-color: transparent !important;
   }
