@@ -24,8 +24,8 @@ const AuthenticatedApp = () => {
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      <div className="fixed inset-0 flex items-center justify-center bg-background">
+        <div className="w-8 h-8 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -35,9 +35,13 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
+      // FIX: If we are on the Home Page ('/'), IGNORE the error and let the app render.
+      // This allows the Welcome.jsx page to handle the "Sign In" UI.
+      // Only block/redirect if we are deep linking to a protected page.
+      if (window.location.pathname !== '/') {
+        navigateToLogin();
+        return null;
+      }
     }
   }
 
