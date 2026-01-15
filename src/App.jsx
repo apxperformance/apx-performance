@@ -1,293 +1,88 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
-import {
-  Dumbbell, Users, Calendar, Utensils, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, UtensilsCrossed, Pill, MessageCircle, CalendarDays
-} from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarProvider,
-  SidebarTrigger 
-} from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/Toaster";
-import { UserProvider, useUser } from "@/components/contexts/UserContext";
-import { ClientsProvider } from "@/components/contexts/ClientsContext";
-import { ThemeProvider } from "@/components/contexts/ThemeContext";
-import { ReactQueryProvider } from "@/components/contexts/ReactQueryProvider";
-import ErrorBoundary from "@/components/errors/ErrorBoundary";
-import CommandPaletteTrigger from "@/components/ui/command-palette-trigger";
+import './App.css'
+import { Toaster } from "@/components/ui/toaster"
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClientInstance } from '@/lib/query-client'
+import VisualEditAgent from '@/lib/VisualEditAgent'
+import NavigationTracker from '@/lib/NavigationTracker'
+import { pagesConfig } from './pages.config'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import PageNotFound from './lib/PageNotFound';
+import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
-function LayoutContent({ children, currentPageName }) {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { user, isLoading, hasCoach, coachTierInfo } = useUser();
-  
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [hasValidated, setHasValidated] = useState(false);
+const { Pages, Layout, mainPage } = pagesConfig;
+const mainPageKey = mainPage ?? Object.keys(Pages)[0];
+const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
-  // --- POOL LOGIC ---
-  const ensureInAvailablePool = useCallback(async (userData) => {
-    try {
-      if (!userData || !userData.id || !userData.email) return;
-      if (userData.user_type === 'coach' || userData.coach_id) return;
+const LayoutWrapper = ({ children, currentPageName }) => Layout ?
+  <Layout currentPageName={currentPageName}>{children}</Layout>
+  : <>{children}</>;
 
-      if (!userData.user_type) {
-        console.log("Fixing missing user_type...");
-        await base44.entities.User.update(userData.id, { user_type: 'client' });
-      }
+const AuthenticatedApp = () => {
+  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
 
-      const existing = await base44.entities.AvailableClient.filter({ user_id: userData.id });
-      if (existing.length === 0) {
-        await base44.entities.AvailableClient.create({
-          user_id: userData.id,
-          full_name: userData.full_name || "Unknown User",
-          email: userData.email,
-          profile_image: userData.profile_image || "",
-          fitness_goals: userData.fitness_goals || [],
-          date_available: new Date().toISOString()
-        });
-      }
-    } catch (error) {
-      if (!error?.message?.includes('auth')) {
-        console.error("Error ensuring user is in available pool:", error);
-      }
-    }
-  }, []);
-
-  // --- VALIDATION LOGIC ---
-  useEffect(() => {
-    const validateUserAccess = async () => {
-      // FIX: Added !user to skip validation if no user exists
-      if (isLoading || !user || hasValidated || isLoggingOut) return;
-
-      if (!user.email) {
-        setHasValidated(true);
-        navigate(createPageUrl("Welcome"), { replace: true });
-        return;
-      }
-
-      let shouldRedirect = false;
-      let redirectUrl = null;
-
-      if (user.user_type === 'coach') {
-        const clientOnlyPages = ["ClientDashboard", "MyWorkouts", "MyNutrition", "MySupplements", "FreeClientDashboard", "FoodTracker", "CheckInJournal", "MyProgress", "ClientSettings", "ClientCalendar"];
-        if (clientOnlyPages.includes(currentPageName)) {
-          shouldRedirect = true;
-          redirectUrl = createPageUrl("CoachDashboard");
-        }
-      } else {
-        if (user.coach_id && (currentPageName === "FreeClientDashboard" || currentPageName === "BrowseCoaches")) {
-          shouldRedirect = true;
-          redirectUrl = createPageUrl("ClientDashboard");
-        }
-        if (!user.coach_id && currentPageName === "ClientDashboard") {
-          shouldRedirect = true;
-          redirectUrl = createPageUrl("FreeClientDashboard");
-        }
-        if (!user.coach_id && !shouldRedirect) {
-          ensureInAvailablePool(user);
-        }
-        const coachOnlyPages = ["CoachDashboard", "ClientManagement", "WorkoutBuilder", "NutritionPlanner", "ProgressReviews", "CoachSettings", "SupplementPlanner", "CoachingCalendar"];
-        if (coachOnlyPages.includes(currentPageName)) {
-          shouldRedirect = true;
-          redirectUrl = user.coach_id ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard");
-        }
-      }
-
-      setHasValidated(true);
-      if (shouldRedirect && redirectUrl) {
-        navigate(redirectUrl, { replace: true });
-      }
-    };
-    validateUserAccess();
-  }, [user, isLoading, hasValidated, currentPageName, ensureInAvailablePool, navigate, isLoggingOut]);
-
-  // --- LOGOUT LOGIC ---
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    if (typeof window !== "undefined") window.localStorage.clear();
-    setHasValidated(false);
-    sessionStorage.clear();
-    try { 
-      await base44.auth.logout(); 
-    } catch (e) { 
-      console.error("Logout error (ignoring):", e); 
-    } finally { 
-      // FORCE RELOAD to root
-      window.location.href = '/';
-    }
-  };
-
-  // --- SAFETY CHECK (The Anti-White-Screen Logic) ---
-  const showSpinner = isLoading || isLoggingOut || (!user && currentPageName !== "Welcome");
-
-  // --- PUBLIC LAYOUT / LOADING ---
-  if (currentPageName === "Welcome" || showSpinner) {
+  // Show loading spinner
+  if (isLoadingPublicSettings || isLoadingAuth) {
     return (
-      <div className="min-h-screen bg-background">
-        {showSpinner ? (
-          <div className="min-h-screen flex items-center justify-center">
-            {/* FIX: Removed Gold Hex #C5B358. Now uses border-primary (White) */}
-            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        ) : (
-          children
-        )}
+      <div className="fixed inset-0 flex items-center justify-center bg-background">
+        {/* FIX: No Gold. Uses Theme Primary (White/Onyx) */}
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
-  // --- MAIN APP LAYOUT (Sidebar) ---
-  
-  const coachNavigation = [
-    { title: "Dashboard", url: createPageUrl("CoachDashboard"), icon: TrendingUp },
-    { title: "Client Management", url: createPageUrl("ClientManagement"), icon: Users },
-    { title: "Client Chat", url: createPageUrl("ClientChat"), icon: MessageCircle },
-    { title: "Coaching Calendar", url: createPageUrl("CoachingCalendar"), icon: CalendarDays },
-    { title: "Workout Builder", url: createPageUrl("WorkoutBuilder"), icon: Dumbbell },
-    { title: "Nutrition Planner", url: createPageUrl("NutritionPlanner"), icon: Utensils },
-    { title: "Supplement Planner", url: createPageUrl("SupplementPlanner"), icon: Pill },
-    { title: "Progress Reviews", url: createPageUrl("ProgressReviews"), icon: BarChart3 },
-    { title: "Settings", url: createPageUrl("CoachSettings"), icon: Settings }
-  ];
+  // Handle authentication errors
+  if (authError) {
+    if (authError.type === 'user_not_registered') {
+      return <UserNotRegisteredError />;
+    } else if (authError.type === 'auth_required') {
+      // Allow Welcome page to load on root path '/'
+      if (window.location.pathname !== '/') {
+        navigateToLogin();
+        return null;
+      }
+    }
+  }
 
-  const clientNavigation = [
-    { title: "My Dashboard", url: hasCoach ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard"), icon: TrendingUp },
-    { title: "My Schedule", url: createPageUrl("ClientCalendar"), icon: CalendarDays, requiresCoach: true },
-    { title: "My Workouts", url: createPageUrl("MyWorkouts"), icon: Dumbbell },
-    { title: "Nutrition Plan", url: createPageUrl("MyNutrition"), icon: Utensils },
-    { title: "My Supplements", url: createPageUrl("MySupplements"), icon: Pill },
-    { title: "Food Tracker", url: createPageUrl("FoodTracker"), icon: UtensilsCrossed },
-    { title: "Check-In Journal", url: createPageUrl("CheckInJournal"), icon: BookOpen },
-    { title: "My Progress", url: createPageUrl("MyProgress"), icon: BarChart3 },
-    { title: "Coach Chat", url: createPageUrl("ClientChat"), icon: MessageCircle, requiresCoach: true }
-  ].filter((item) => {
-    if (item.requiresCoach && !hasCoach) return false;
-    return true;
-  });
-
-  const navigationItems = user?.user_type === "coach" ? coachNavigation : clientNavigation;
-
+  // Render the main app
   return (
-    <SidebarProvider>
-      <Toaster />
-      <div className="min-h-screen flex w-full bg-background text-foreground">
-        
-        <Sidebar className="border-r border-gray-200 bg-gray-100 backdrop-blur-xl">
-          <SidebarHeader className="bg-neutral-900 p-6 flex flex-col gap-2 border-b border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl flex items-center justify-center shadow-lg">
-                {user?.user_type === "coach" ? <Crown className="w-6 h-6 text-white" /> : <Zap className="w-6 h-6 text-white" />}
-              </div>
-              <div>
-                <h2 className="text-gray-50 text-sm font-bold">APX PERFORMANCE</h2>
-                <p className="text-xs text-gray-600 uppercase tracking-wide">
-                  {user?.user_type === "coach" ? "Coach Portal" : "Client Portal"}
-                </p>
-              </div>
-            </div>
-          </SidebarHeader>
-
-          <SidebarContent className="bg-neutral-900 p-4 flex min-h-0 flex-1 flex-col gap-2 overflow-auto">
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-gray-50 px-2 py-3 text-xs font-medium uppercase tracking-wider">
-                {user?.user_type === "coach" ? "Coach Tools" : "My Fitness"}
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {navigationItems.map((item) =>
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        asChild
-                        className={`mb-2 group transition-all duration-300 rounded-xl ${
-                          location.pathname === item.url 
-                            ? 'bg-gray-100 text-gray-900' 
-                            : 'text-gray-400 hover:text-gray-100 hover:bg-gray-800'
-                        }`}
-                      >
-                        <Link to={item.url} className="px-4 py-3 flex w-full items-center gap-3">
-                          <item.icon className={`w-5 h-5 transition-transform duration-300 ${location.pathname === item.url ? 'text-gray-900' : 'text-gray-400 group-hover:text-white group-hover:scale-110'}`} />
-                          <span className="font-medium">{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-
-          <SidebarFooter className="bg-neutral-900 p-4 flex flex-col gap-2 border-t border-gray-800 space-y-4">
-            
-            {/* TOGGLE SWITCH IS GONE. DELETED. */}
-
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-800 border border-gray-600 rounded-full flex items-center justify-center">
-                {user?.user_type === "coach" ? <Crown className="w-5 h-5 text-gray-300" /> : <UserIcon className="w-5 h-5 text-gray-300" />}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-gray-50 text-sm font-medium truncate">{user?.full_name}</p>
-                <p className="text-xs truncate text-gray-500">
-                  {user?.user_type === "coach" && coachTierInfo ? coachTierInfo.name : user?.user_type === "client" ? "Elite Member" : "User"}
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-gray-400 hover:text-red-400 hover:bg-red-500/10"
-            >
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </button>
-          </SidebarFooter>
-        </Sidebar>
-
-        <main className="flex-1 flex flex-col">
-          <header className={`${'bg-black/40'} backdrop-blur-md border-b ${'border-gray-800'} px-6 py-4`}>
-            <div className="flex items-center gap-4">
-              <SidebarTrigger className={`md:hidden ${'hover:bg-gray-800'} p-2 rounded-lg transition-colors duration-200`} />
-              <div className="flex items-center gap-2 flex-1">
-                  <h1 className="text-xl font-bold text-foreground">APX PERFORMANCE</h1>
-                  <span className="text-xs text-muted-foreground uppercase tracking-wide">
-                    {user?.user_type === "coach" ? "Coach" : "Client"}
-                  </span>
-                </div>
-              <CommandPaletteTrigger />
-            </div>
-          </header>
-
-          <div className="flex-1 overflow-auto bg-background">
-            {children}
-          </div>
-        </main>
-      </div>
-    </SidebarProvider>
+    <Routes>
+      <Route path="/" element={
+        <LayoutWrapper currentPageName={mainPageKey}>
+          <MainPage />
+        </LayoutWrapper>
+      } />
+      {Object.entries(Pages).map(([path, Page]) => (
+        <Route
+          key={path}
+          path={`/${path}`}
+          element={
+            <LayoutWrapper currentPageName={path}>
+              <Page />
+            </LayoutWrapper>
+          }
+        />
+      ))}
+      <Route path="*" element={<PageNotFound />} />
+    </Routes>
   );
+};
+
+
+function App() {
+  return (
+    <AuthProvider>
+      <QueryClientProvider client={queryClientInstance}>
+        <Router>
+          {/* FIX: Everything is now INSIDE Router to prevent useLocation errors */}
+          <NavigationTracker />
+          <AuthenticatedApp />
+          <Toaster />
+          <VisualEditAgent />
+        </Router>
+      </QueryClientProvider>
+    </AuthProvider>
+  )
 }
 
-export default function Layout({ children, currentPageName }) {
-  return (
-    <ErrorBoundary>
-      <ReactQueryProvider>
-        <ThemeProvider>
-          <UserProvider>
-            <ClientsProvider>
-              <LayoutContent children={children} currentPageName={currentPageName} />
-            </ClientsProvider>
-          </UserProvider>
-        </ThemeProvider>
-      </ReactQueryProvider>
-    </ErrorBoundary>
-  );
-}
+export default App
