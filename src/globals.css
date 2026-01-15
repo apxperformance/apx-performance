@@ -4,91 +4,91 @@
 
 @layer base {
   :root {
-    /* --- APX MONOCHROME DARK THEME --- */
+    /* --- APX ONYX THEME (Deep Dark Neutral) --- */
     
-    /* Background: Deep Slate (Unchanged - Good base) */
-    --background: 222 47% 11%;
+    /* Background: ONYX (Very dark, desaturated gray) */
+    /* Was: 222 47% 11% (Blue) */
+    /* Now: 240 5% 8% (Onyx/Carbon) */
+    --background: 240 5% 8%;
     
-    /* Text: White-ish (Unchanged) */
-    --foreground: 210 40% 98%;
+    /* Text: Pure White */
+    --foreground: 0 0% 98%;
 
-    /* Cards: Deep Slate */
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
+    /* Cards: Slightly lighter Onyx for separation */
+    --card: 240 4% 10%;
+    --card-foreground: 0 0% 98%;
  
-    /* Popovers: Deep Slate */
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
+    /* Popovers: Matches Card */
+    --popover: 240 4% 10%;
+    --popover-foreground: 0 0% 98%;
  
-    /* Primary: PURE WHITE (Replaces Gold) */
-    /* This makes buttons white with dark text - very premium */
+    /* Primary: White (Monochrome Action) */
     --primary: 0 0% 98%;
-    --primary-foreground: 222 47% 11%; 
+    --primary-foreground: 240 5% 9%; 
  
-    /* Secondary: Darker Slate */
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary: Subtle Gray */
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
  
-    /* Muted: Gray */
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Muted: Dark Gray */
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
  
-    /* Accent: Hover Gray */
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Accent: Interactive Gray */
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
  
-    /* Destructive: Red (Keep for errors) */
+    /* Destructive: Red */
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
  
-    /* Borders: Dark Gray */
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    /* Borders: Subtle Dark Line */
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
     
-    /* Ring: Steel Gray (Replaces Gold Ring) */
-    --ring: 240 5% 64.9%; 
+    /* Ring: White Glow (Subtle) */
+    --ring: 240 4.9% 83.9%;
  
     --radius: 0.5rem;
     
-    /* Chart Colors (Monochromatic Grays/Blues) */
+    /* Chart Colors (Neutral/Steel) */
     --chart-1: 220 70% 50%;
-    --chart-2: 215 20% 65%;
+    --chart-2: 240 5% 64.9%;
     --chart-3: 0 0% 98%;
-    --chart-4: 217 33% 17%;
-    --chart-5: 222 47% 11%;
+    --chart-4: 240 3.7% 15.9%;
+    --chart-5: 240 4% 10%;
     
-    /* Sidebar Specifics */
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 0 0% 98%;         /* White Highlight */
-    --sidebar-primary-foreground: 222 47% 11%;
-    --sidebar-accent: 217.2 32.6% 17.5%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-ring: 240 5% 64.9%;
+    /* Sidebar: Matches Onyx Background */
+    --sidebar-background: 240 5% 8%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 240 5% 8%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 240 4.9% 83.9%;
   }
 
-  /* Redundant Dark Class Mapping (Safety Net) */
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
+    --background: 240 5% 8%;
+    --foreground: 0 0% 98%;
+    --card: 240 4% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 4% 10%;
+    --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --primary-foreground: 240 5% 9%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 240 5% 64.9%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
   }
 }
 
@@ -99,7 +99,6 @@
   body {
     @apply bg-background text-foreground;
   }
-  /* Force inputs to white text */
   input, select, textarea {
     @apply text-foreground bg-transparent;
   }
