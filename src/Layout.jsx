@@ -67,7 +67,6 @@ function LayoutContent({ children, currentPageName }) {
   // --- VALIDATION LOGIC ---
   useEffect(() => {
     const validateUserAccess = async () => {
-      // FIX: Added !user to skip validation if no user exists
       if (isLoading || !user || hasValidated || isLoggingOut) return;
 
       if (!user.email) {
@@ -123,11 +122,12 @@ function LayoutContent({ children, currentPageName }) {
     } catch (e) { 
       console.error("Logout error (ignoring):", e); 
     } finally { 
+      // FORCE RELOAD to root
       window.location.href = '/';
     }
   };
 
-  // --- SAFETY CHECK (The Anti-White-Screen Logic) ---
+  // --- SAFETY CHECK ---
   const showSpinner = isLoading || isLoggingOut || (!user && currentPageName !== "Welcome");
 
   // --- PUBLIC LAYOUT / LOADING ---
@@ -136,7 +136,8 @@ function LayoutContent({ children, currentPageName }) {
       <div className="min-h-screen bg-background">
         {showSpinner ? (
           <div className="min-h-screen flex items-center justify-center">
-            <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
+            {/* FIX: Removed Gold Hex #C5B358. Used theme primary color. */}
+            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
           children
@@ -226,7 +227,8 @@ function LayoutContent({ children, currentPageName }) {
           </SidebarContent>
 
           <SidebarFooter className="bg-neutral-900 p-4 flex flex-col gap-2 border-t border-gray-800 space-y-4">
-            {/* TOGGLE SWITCH IS GONE. DELETED. */}
+            
+            {/* THEME TOGGLE IS GONE */}
 
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-800 border border-gray-600 rounded-full flex items-center justify-center">
