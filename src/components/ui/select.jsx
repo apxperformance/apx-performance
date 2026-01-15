@@ -1,4 +1,6 @@
 import * as React from "react"
+import { Check, ChevronDown } from "lucide-react" 
+import { cn } from "@/lib/utils"
 
 const SelectContext = React.createContext({ open: false, setOpen: () => {} })
 
@@ -22,12 +24,15 @@ const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) 
       ref={ref}
       type="button"
       onClick={() => setOpen(!open)}
-      // UPDATED: bg-gray-50 (light) and text-gray-900 (dark)
-      className={`flex h-10 w-full items-center justify-between rounded-md border border-input bg-gray-50 text-gray-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      // UPDATED: Added '!' to FORCE white background and dark text
+      className={cn(
+        "flex h-10 w-full items-center justify-between rounded-md border border-input !bg-gray-50 !text-gray-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      )}
       {...props}
     >
       {children}
-      <span className="opacity-50">▼</span> 
+      <ChevronDown className="h-4 w-4 opacity-50" />
     </button>
   )
 })
@@ -40,8 +45,11 @@ const SelectContent = React.forwardRef(({ className, children, position = "poppe
   return (
     <div
       ref={ref}
-      // UPDATED: bg-gray-50 (light) and text-gray-900 (dark) for the list itself
-      className={`absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-gray-50 text-gray-900 shadow-md animate-in fade-in-80 ${className}`}
+      // UPDATED: Added '!' to FORCE white background for the dropdown list too
+      className={cn(
+        "absolute z-50 min-w-[8rem] overflow-hidden rounded-md border !bg-gray-50 !text-gray-900 shadow-md animate-in fade-in-80",
+        className
+      )}
       style={{ top: "100%", marginTop: "5px", width: "100%" }}
       {...props}
     >
@@ -52,7 +60,7 @@ const SelectContent = React.forwardRef(({ className, children, position = "poppe
 SelectContent.displayName = "SelectContent"
 
 const SelectLabel = React.forwardRef(({ className, ...props }, ref) => (
-  <div ref={ref} className={`py-1.5 pl-8 pr-2 text-sm font-semibold ${className}`} {...props} />
+  <div ref={ref} className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)} {...props} />
 ))
 SelectLabel.displayName = "SelectLabel"
 
@@ -62,11 +70,15 @@ const SelectItem = React.forwardRef(({ className, children, ...props }, ref) => 
     <div
       ref={ref}
       onClick={() => setOpen(false)} 
-      // UPDATED: hover:bg-gray-200 (darker gray for hover) so it shows on white background
-      className={`relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-gray-200 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 ${className}`}
+      // UPDATED: Changed hover to light gray so you can see it on the white background
+      className={cn(
+        "relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:!bg-gray-200 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className
+      )}
       {...props}
     >
       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+        {/* We can add a checkmark logic here if needed, but keeping it simple for now */}
       </span>
       <span className="truncate">{children}</span>
     </div>
@@ -75,7 +87,7 @@ const SelectItem = React.forwardRef(({ className, children, ...props }, ref) => 
 SelectItem.displayName = "SelectItem"
 
 const SelectSeparator = React.forwardRef(({ className, ...props }, ref) => (
-  <div ref={ref} className={`-mx-1 my-1 h-px bg-muted ${className}`} {...props} />
+  <div ref={ref} className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />
 ))
 SelectSeparator.displayName = "SelectSeparator"
 
