@@ -67,7 +67,6 @@ function LayoutContent({ children, currentPageName }) {
   // --- VALIDATION LOGIC ---
   useEffect(() => {
     const validateUserAccess = async () => {
-      // FIX: Added !user to skip validation if no user exists
       if (isLoading || !user || hasValidated || isLoggingOut) return;
 
       if (!user.email) {
@@ -123,12 +122,11 @@ function LayoutContent({ children, currentPageName }) {
     } catch (e) { 
       console.error("Logout error (ignoring):", e); 
     } finally { 
-      // FORCE RELOAD to root
       window.location.href = '/';
     }
   };
 
-  // --- SAFETY CHECK (The Anti-White-Screen Logic) ---
+  // --- SAFETY CHECK ---
   const showSpinner = isLoading || isLoggingOut || (!user && currentPageName !== "Welcome");
 
   // --- PUBLIC LAYOUT / LOADING ---
@@ -137,7 +135,7 @@ function LayoutContent({ children, currentPageName }) {
       <div className="min-h-screen bg-background">
         {showSpinner ? (
           <div className="min-h-screen flex items-center justify-center">
-            {/* FIX: Removed Gold Hex #C5B358. Now uses border-primary (White) */}
+            {/* FIX: No Gold Hex. Uses border-primary */}
             <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
@@ -229,8 +227,6 @@ function LayoutContent({ children, currentPageName }) {
 
           <SidebarFooter className="bg-neutral-900 p-4 flex flex-col gap-2 border-t border-gray-800 space-y-4">
             
-            {/* TOGGLE SWITCH IS GONE. DELETED. */}
-
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-800 border border-gray-600 rounded-full flex items-center justify-center">
                 {user?.user_type === "coach" ? <Crown className="w-5 h-5 text-gray-300" /> : <UserIcon className="w-5 h-5 text-gray-300" />}
