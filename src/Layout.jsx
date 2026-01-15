@@ -68,6 +68,7 @@ function LayoutContent({ children, currentPageName }) {
   // --- VALIDATION LOGIC ---
   useEffect(() => {
     const validateUserAccess = async () => {
+      // FIX: Added !user to skip validation if no user exists
       if (isLoading || !user || hasValidated || isLoggingOut) return;
 
       if (!user.email) {
