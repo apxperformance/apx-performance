@@ -182,7 +182,6 @@ function LayoutContent({ children, currentPageName }) {
     <SidebarProvider>
       <Toaster />
       <div className="min-h-screen flex w-full bg-background text-foreground">
-        {/* FIX: Removed the <style> block here too */}
         
         <Sidebar className="border-r border-gray-200 bg-gray-100 backdrop-blur-xl">
           <SidebarHeader className="bg-neutral-900 p-6 flex flex-col gap-2 border-b border-gray-200">
