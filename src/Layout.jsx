@@ -68,7 +68,6 @@ function LayoutContent({ children, currentPageName }) {
   // --- VALIDATION LOGIC ---
   useEffect(() => {
     const validateUserAccess = async () => {
-      // FIX: Added !user to skip validation if no user exists
       if (isLoading || !user || hasValidated || isLoggingOut) return;
 
       if (!user.email) {
@@ -128,11 +127,13 @@ function LayoutContent({ children, currentPageName }) {
     }
   };
 
-  // --- PUBLIC LAYOUT / LOADING STATE ---
-  // FIX: Added `|| !user` to this check.
-  // This ensures that if the user is missing (logged out), we ALWAYS render the public layout (Welcome Page),
-  // instead of falling through to the black spinner below.
-  if (currentPageName === "Welcome" || isLoading || isLoggingOut || !user) {
+  // --- SAFETY CHECK ---
+  // If we are loading, logging out, OR if we have no user (and we aren't on the public Welcome page),
+  // we MUST show the spinner. We cannot render 'children' (Dashboard) without a user, or it crashes.
+  const showSpinner = isLoading || isLoggingOut || (!user && currentPageName !== "Welcome");
+
+  // --- PUBLIC LAYOUT ---
+  if (currentPageName === "Welcome" || showSpinner) {
     return (
       <div className="min-h-screen bg-background">
         <style>
@@ -166,8 +167,9 @@ function LayoutContent({ children, currentPageName }) {
           `}
         </style>
         
-        {/* If we are actively loading or logging out, show spinner. Otherwise show the page (Welcome) */}
-        {(isLoading || isLoggingOut) ? (
+        {/* CRITICAL FIX: If we are in the 'showSpinner' state, we force the spinner. 
+            We only render 'children' if it's safe (i.e. we are on the Welcome page). */}
+        {showSpinner ? (
           <div className="min-h-screen flex items-center justify-center">
             <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
           </div>
