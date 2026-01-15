@@ -110,19 +110,26 @@ function LayoutContent({ children, currentPageName }) {
     validateUserAccess();
   }, [user, isLoading, hasValidated, currentPageName, ensureInAvailablePool, navigate]);
 
+  // --- LOGOUT LOGIC (Updated to Redirect to Login) ---
   const handleLogout = async () => {
     if (typeof window !== "undefined") window.localStorage.clear();
     setHasValidated(false);
     sessionStorage.clear();
-    try { await base44.auth.logout(); } catch (e) { console.error(e); }
-    finally { window.location.href = '/'; }
+    try { 
+      await base44.auth.logout(); 
+    } catch (e) { 
+      console.error(e); 
+    } finally { 
+      // FIX: Redirect to hosted login page instead of app root
+      const callbackUrl = `${window.location.origin}${createPageUrl("Welcome")}`;
+      await base44.auth.redirectToLogin(callbackUrl);
+    }
   };
 
   // --- LOADING STATE ---
   if (currentPageName === "Welcome" || isLoading) {
     return (
       <div className="min-h-screen bg-background">
-         {/* THEME STYLES - REMOVED THE INPUT OVERRIDE */}
         <style>
           {`
             :root {
@@ -201,7 +208,7 @@ function LayoutContent({ children, currentPageName }) {
     <SidebarProvider>
       <Toaster />
       <div className="min-h-screen flex w-full bg-background text-foreground">
-        {/* UPDATED STYLES: Removed the rule forcing inputs to be black */}
+        {/* FIX: REMOVED the rule forcing inputs to black. Only placeholders are styled. */}
         <style>
           {`
             :root {
@@ -226,7 +233,6 @@ function LayoutContent({ children, currentPageName }) {
               --ring: 49 39% 56%;
             }
             
-            /* WE ONLY COLOR PLACEHOLDERS, NOT THE INPUT TEXT ITSELF */
             input::placeholder,
             textarea::placeholder {
               color: hsl(var(--muted-foreground));
