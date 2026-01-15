@@ -91,11 +91,15 @@ export default function ClientManagement() {
           join_date: new Date().toISOString()
         });
 
-        // 2. SYNC GUARANTEE: Update the User's coach_id to link back
-        await base44.entities.User.update(availableClient.user_id, { 
-          coach_id: user.id,
-          user_type: 'client' // Ensure user_type is set
+        // 2. SYNC GUARANTEE: Update the User's coach_id to link back (via backend function for permissions)
+        const assignResponse = await base44.functions.invoke('assignCoachToClient', {
+          userId: availableClient.user_id,
+          coachId: user.id
         });
+        
+        if (!assignResponse.data.success) {
+           throw new Error(assignResponse.data.error || "Failed to assign coach via backend");
+        }
 
         // 3. Remove from available pool
         await base44.entities.AvailableClient.delete(availableClient.id);
@@ -128,11 +132,15 @@ export default function ClientManagement() {
         join_date: new Date().toISOString()
       });
 
-      // 2. SYNC GUARANTEE: Update User record to link coach bidirectionally
-      await base44.entities.User.update(request.client_id, {
-        coach_id: user.id,
-        user_type: 'client' // Ensure user_type is set
+      // 2. SYNC GUARANTEE: Update User record to link coach bidirectionally (via backend function for permissions)
+      const assignResponse = await base44.functions.invoke('assignCoachToClient', {
+        userId: request.client_id,
+        coachId: user.id
       });
+
+      if (!assignResponse.data.success) {
+         throw new Error(assignResponse.data.error || "Failed to assign coach via backend");
+      }
 
       // 3. Remove from available pool if exists
       const availableClients = await base44.entities.AvailableClient.filter({
