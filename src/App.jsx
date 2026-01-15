@@ -36,8 +36,8 @@ const AuthenticatedApp = () => {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
       // FIX: If we are on the Home Page ('/'), IGNORE the error and let the app render.
-      // This allows the Welcome.jsx page to handle the "Sign In" UI.
-      // Only block/redirect if we are deep linking to a protected page.
+      // This allows the Welcome.jsx page to load. 
+      // We only return 'null' (White Screen) if we are deep-linking to a protected page.
       if (window.location.pathname !== '/') {
         navigateToLogin();
         return null;
