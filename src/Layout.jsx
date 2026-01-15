@@ -32,6 +32,9 @@ function LayoutContent({ children, currentPageName }) {
   const navigate = useNavigate();
   const { user, isLoading, hasCoach, coachTierInfo } = useUser();
   const { isDarkMode, toggleTheme } = useTheme();
+  
+  // FIX 1: Add a state to LOCK the screen during logout
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [hasValidated, setHasValidated] = useState(false);
 
   // --- POOL LOGIC ---
@@ -66,7 +69,8 @@ function LayoutContent({ children, currentPageName }) {
   // --- VALIDATION LOGIC ---
   useEffect(() => {
     const validateUserAccess = async () => {
-      if (isLoading || !user || hasValidated) return;
+      // Don't validate if we are in the middle of logging out
+      if (isLoading || !user || hasValidated || isLoggingOut) return;
 
       if (!user.email) {
         setHasValidated(true);
@@ -108,26 +112,32 @@ function LayoutContent({ children, currentPageName }) {
       }
     };
     validateUserAccess();
-  }, [user, isLoading, hasValidated, currentPageName, ensureInAvailablePool, navigate]);
+  }, [user, isLoading, hasValidated, currentPageName, ensureInAvailablePool, navigate, isLoggingOut]);
 
-  // --- LOGOUT LOGIC (Updated to Redirect to Login) ---
+  // --- LOGOUT LOGIC (Robust Version) ---
   const handleLogout = async () => {
+    // 1. LOCK THE SCREEN IMMEDIATELY
+    setIsLoggingOut(true);
+    
     if (typeof window !== "undefined") window.localStorage.clear();
     setHasValidated(false);
     sessionStorage.clear();
+    
     try { 
       await base44.auth.logout(); 
     } catch (e) { 
-      console.error(e); 
+      console.error("Logout error (ignoring):", e); 
     } finally { 
-      // FIX: Redirect to hosted login page instead of app root
+      // 2. FORCE REDIRECT - Do not let React re-render the Welcome page
       const callbackUrl = `${window.location.origin}${createPageUrl("Welcome")}`;
       await base44.auth.redirectToLogin(callbackUrl);
     }
   };
 
-  // --- LOADING STATE ---
-  if (currentPageName === "Welcome" || isLoading) {
+  // --- LOADING / LOCKDOWN STATE ---
+  // If we are logging out, SHOW SPINNER no matter what.
+  // This prevents the "Portal Choice" screen from flashing.
+  if (currentPageName === "Welcome" || isLoading || isLoggingOut) {
     return (
       <div className="min-h-screen bg-background">
         <style>
@@ -153,15 +163,16 @@ function LayoutContent({ children, currentPageName }) {
               --input: ${isDarkMode ? '0 0% 25%' : '0 0% 89.8%'};
               --ring: 49 39% 56%;
             }
+            
+            input::placeholder,
+            textarea::placeholder {
+              color: hsl(var(--muted-foreground));
+            }
           `}
         </style>
-        {isLoading ? (
-          <div className="min-h-screen flex items-center justify-center">
-            <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        ) : (
-          children
-        )}
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
+        </div>
       </div>
     );
   }
@@ -208,7 +219,6 @@ function LayoutContent({ children, currentPageName }) {
     <SidebarProvider>
       <Toaster />
       <div className="min-h-screen flex w-full bg-background text-foreground">
-        {/* FIX: REMOVED the rule forcing inputs to black. Only placeholders are styled. */}
         <style>
           {`
             :root {
