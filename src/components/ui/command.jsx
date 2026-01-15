@@ -38,8 +38,8 @@ const CommandInput = React.forwardRef(({ className, ...props }, ref) => (
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        // FIX: text-foreground forces WHITE text. bg-transparent removes any white box.
-        "flex h-10 w-full rounded-md bg-transparent py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        // FIX: !text-foreground forces WHITE text using !important. 
+        "flex h-10 w-full rounded-md bg-transparent py-3 text-sm !text-foreground outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       {...props} />
