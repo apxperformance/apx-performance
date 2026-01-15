@@ -11,7 +11,7 @@ import { toast } from "sonner";
 export default function Welcome() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [showPortalChoice, setShowPortalChoice] = useState(false); // New state to control portal choice visibility
+  const [showPortalChoice, setShowPortalChoice] = useState(false);
 
   const routeUser = useCallback((user) => {
     // If the user object has no user_type, we MUST show the portal choice.
@@ -31,7 +31,6 @@ export default function Welcome() {
         navigate(createPageUrl("FreeClientDashboard"));
       }
     } else {
-      // Fallback for any other case (e.g., unexpected user_type or null/undefined)
       setShowPortalChoice(true);
       setIsLoading(false);
     }
@@ -45,7 +44,6 @@ export default function Welcome() {
       
       if (clientInvitations.length > 0) {
         const invitation = clientInvitations[0];
-        console.log("Found invitation:", invitation);
         
         // 1. Set user_type to 'client' if not already set
         if (!user.user_type) {
@@ -61,7 +59,7 @@ export default function Welcome() {
           }
         }
 
-        // 3. Update Client record: set user_id, status to 'active', clear token
+        // 3. Update Client record
         await base44.entities.Client.update(invitation.id, {
           user_id: user.id,
           status: 'active',
@@ -69,27 +67,22 @@ export default function Welcome() {
           invitation_token: null
         });
 
-        // 4. Clean up localStorage and redirect
         localStorage.removeItem('intended_user_type');
         localStorage.removeItem('invitation_token');
         
         user = await base44.auth.me();
-        console.log("Successfully linked client to coach, redirecting...", user);
         toast.success("Welcome! You've been successfully linked to your coach.");
         routeUser(user);
         return true;
       } else {
-        console.warn("Invitation token not found or already used:", invitationToken);
+        console.warn("Invitation token invalid");
         localStorage.removeItem('invitation_token');
         localStorage.removeItem('intended_user_type');
-        toast.error("This invitation link is invalid or has already been used.");
+        toast.error("This invitation link is invalid.");
         return false;
       }
     } catch (inviteError) {
-      console.error("Error processing invitation token:", inviteError);
-      localStorage.removeItem('invitation_token');
-      localStorage.removeItem('intended_user_type');
-      toast.error("Failed to process invitation. Please try again.");
+      console.error("Error processing invitation:", inviteError);
       return false;
     }
   }, [routeUser]);
@@ -101,36 +94,34 @@ export default function Welcome() {
       const invitationToken = urlParams.get('invitationToken');
 
       if (justLoggedOut) {
-        console.log("🚪 User logged out - showing portal choice");
         window.history.replaceState({}, '', createPageUrl("Welcome"));
         setShowPortalChoice(true);
         setIsLoading(false);
         return;
       }
 
-      // Handle invitation token if present in URL
+      // Handle invitation token (User might be logged out initially)
       if (invitationToken) {
-        try {
-          const user = await base44.auth.me();
-          const processed = await processInvitationToken(invitationToken, user);
-          if (processed) {
+        const isAuthenticated = await base44.auth.isAuthenticated();
+        if (isAuthenticated) {
+            let user = await base44.auth.me();
+            const processed = await processInvitationToken(invitationToken, user);
+            if (processed) {
+               setIsLoading(false);
+               return;
+            }
+        } else {
+            // Not authenticated, store token for post-login
+            localStorage.setItem('invitation_token', invitationToken);
+            localStorage.setItem('intended_user_type', 'client');
+            setShowPortalChoice(true);
             setIsLoading(false);
             return;
-          }
-        } catch (error) {
-          console.log("User not authenticated, storing invitation token for after signup:", error);
-          localStorage.setItem('invitation_token', invitationToken);
-          localStorage.setItem('intended_user_type', 'client');
-          setShowPortalChoice(true);
-          setIsLoading(false);
-          return;
         }
       }
 
-      // Check if user is actually authenticated before proceeding
       const isAuthenticated = await base44.auth.isAuthenticated();
       if (!isAuthenticated) {
-        console.log("User not authenticated, showing portal choice");
         setShowPortalChoice(true);
         setIsLoading(false);
         return;
@@ -138,7 +129,10 @@ export default function Welcome() {
 
       let user = await base44.auth.me();
       
-      // Check for stored invitation token from before login
+      // --- THE FIX: HANDLE THE RACE CONDITION ---
+      const intendedUserType = localStorage.getItem('intended_user_type');
+      
+      // 1. Check for stored invitation
       const storedInvitationToken = localStorage.getItem('invitation_token');
       if (storedInvitationToken) {
         const processed = await processInvitationToken(storedInvitationToken, user);
@@ -147,16 +141,26 @@ export default function Welcome() {
             return;
         }
         localStorage.removeItem('invitation_token');
-        localStorage.removeItem('intended_user_type'); 
       }
 
-      const intendedUserType = localStorage.getItem('intended_user_type');
-      
+      // 2. FORCE FIX: If I intended to be a coach, but Layout.js marked me as 'client', fix it.
+      if (intendedUserType === 'coach' && user.user_type === 'client') {
+          console.log("⚠️ Race condition detected: Correcting User Type to COACH");
+          try {
+            await base44.auth.updateMe({ user_type: 'coach' });
+            user = await base44.auth.me(); // Refresh user data
+            toast.success("Coach account initialized successfully.");
+          } catch (err) {
+            console.error("Failed to correct user type", err);
+          }
+      }
+
+      // 3. Normal Setup (if user_type is still missing)
       if (intendedUserType && !user.user_type) {
         try {
           await base44.auth.updateMe({ user_type: intendedUserType });
-          localStorage.removeItem('intended_user_type');
           
+          // If intended client without invite, handle pending invites
           if (intendedUserType === 'client') {
             const invitations = await base44.entities.Client.filter({ email: user.email, status: 'pending_invitation' });
             if (invitations.length > 0) {
@@ -170,15 +174,15 @@ export default function Welcome() {
               });
             }
           }
-
           user = await base44.auth.me();
-          routeUser(user);
-          return;
         } catch (updateError) {
-          console.error("Error setting user type or linking coach during sign-up:", updateError);
+          console.error("Error setting user type:", updateError);
         }
       }
       
+      // Clear the intent now that we've handled it
+      if (intendedUserType) localStorage.removeItem('intended_user_type');
+
       routeUser(user);
     } catch (error) {
       console.log("Error in checkAuthentication:", error);
@@ -193,9 +197,8 @@ export default function Welcome() {
 
   const handleSignIn = async (userType) => {
     try {
-      // Don't override intended_user_type if we have an invitation token
-      // An invitation implies a specific user type (client)
       const hasInvitationToken = localStorage.getItem('invitation_token');
+      // Always store intent so we can recover from the Layout.js race condition
       if (!hasInvitationToken) {
         localStorage.setItem('intended_user_type', userType);
       }
@@ -203,7 +206,7 @@ export default function Welcome() {
       await base44.auth.redirectToLogin(callbackUrl);
     } catch (error) {
       console.error("Error initiating sign-in:", error);
-      alert("There was an error starting the sign-in process. Please try again.");
+      alert("Error starting sign-in. Please try again.");
     }
   };
 
@@ -215,7 +218,6 @@ export default function Welcome() {
     );
   }
 
-  // Only render the welcome UI with portal choices if showPortalChoice is true
   if (showPortalChoice) {
     return (
       <div className="min-h-screen bg-black relative overflow-hidden">
@@ -283,20 +285,6 @@ export default function Welcome() {
                         Manage your clients, create custom workouts, design nutrition plans, 
                         and track progress with professional-grade tools.
                       </p>
-                      <div className="space-y-3 mb-8">
-                        <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <Users className="w-4 h-4 text-gray-400" />
-                          <span>Client Management</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <Dumbbell className="w-4 h-4 text-gray-400" />
-                          <span>Workout Builder</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <TrendingUp className="w-4 h-4 text-gray-400" />
-                          <span>Progress Analytics</span>
-                        </div>
-                      </div>
                       <Button 
                         onClick={() => handleSignIn("coach")}
                         className="w-full bg-gradient-to-r from-gray-700 to-gray-900 text-white font-semibold py-3 hover:from-gray-600 hover:to-gray-800 transition-all duration-300 transform hover:scale-105"
@@ -318,20 +306,6 @@ export default function Welcome() {
                         Access your personalized workout routines, nutrition plans, 
                         and communicate with your coach through your dedicated portal.
                       </p>
-                      <div className="space-y-3 mb-8">
-                        <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <Dumbbell className="w-4 h-4 text-gray-400" />
-                          <span>Personal Workouts</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <Users className="w-4 h-4 text-gray-400" />
-                          <span>Coach Communication</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-300">
-                          <TrendingUp className="w-4 h-4 text-gray-400" />
-                          <span>Progress Tracking</span>
-                        </div>
-                      </div>
                       <Button 
                         onClick={() => handleSignIn("client")}
                         variant="outline"
@@ -343,28 +317,6 @@ export default function Welcome() {
                   </CardContent>
                 </Card>
               </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="mt-16 text-center"
-              >
-                <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-300 mb-2">100%</div>
-                    <div className="text-gray-400">Personalized Programs</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-300 mb-2">24/7</div>
-                    <div className="text-gray-400">Progress Tracking</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-300 mb-2">Elite</div>
-                    <div className="text-gray-400">Professional Tools</div>
-                  </div>
-                </div>
-              </motion.div>
             </div>
           </div>
         </div>
@@ -372,8 +324,5 @@ export default function Welcome() {
     );
   }
 
-  // If we reach here, isLoading is false and showPortalChoice is false.
-  // This means the user should have been routed by the `routeUser` function.
-  // Therefore, this component doesn't need to render anything further.
   return null;
 }
