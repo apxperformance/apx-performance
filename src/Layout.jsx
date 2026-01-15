@@ -33,7 +33,6 @@ function LayoutContent({ children, currentPageName }) {
   const { user, isLoading, hasCoach, coachTierInfo } = useUser();
   const { isDarkMode, toggleTheme } = useTheme();
   
-  // FIX: Logout state to prevent UI flashes/infinite loading
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [hasValidated, setHasValidated] = useState(false);
 
@@ -69,7 +68,7 @@ function LayoutContent({ children, currentPageName }) {
   // --- VALIDATION LOGIC ---
   useEffect(() => {
     const validateUserAccess = async () => {
-      // Don't validate if we are in the middle of logging out
+      // FIX: Added !user to skip validation if no user exists
       if (isLoading || !user || hasValidated || isLoggingOut) return;
 
       if (!user.email) {
@@ -114,30 +113,26 @@ function LayoutContent({ children, currentPageName }) {
     validateUserAccess();
   }, [user, isLoading, hasValidated, currentPageName, ensureInAvailablePool, navigate, isLoggingOut]);
 
-  // --- LOGOUT LOGIC (Robust Version) ---
+  // --- LOGOUT LOGIC ---
   const handleLogout = async () => {
-    // 1. LOCK THE SCREEN IMMEDIATELY
     setIsLoggingOut(true);
-    
     if (typeof window !== "undefined") window.localStorage.clear();
     setHasValidated(false);
     sessionStorage.clear();
-    
     try { 
       await base44.auth.logout(); 
     } catch (e) { 
       console.error("Logout error (ignoring):", e); 
     } finally { 
-      // 2. FORCE REDIRECT to Home '/' (Welcome Page)
-      // We use window.location.href to force a full browser refresh
-      // This avoids the 'infinite load' and the 404 error.
       window.location.href = '/';
     }
   };
 
-  // --- LOADING / LOCKDOWN STATE ---
-  // If we are logging out, SHOW SPINNER no matter what.
-  if (currentPageName === "Welcome" || isLoading || isLoggingOut) {
+  // --- PUBLIC LAYOUT / LOADING STATE ---
+  // FIX: Added `|| !user` to this check.
+  // This ensures that if the user is missing (logged out), we ALWAYS render the public layout (Welcome Page),
+  // instead of falling through to the black spinner below.
+  if (currentPageName === "Welcome" || isLoading || isLoggingOut || !user) {
     return (
       <div className="min-h-screen bg-background">
         <style>
@@ -170,22 +165,21 @@ function LayoutContent({ children, currentPageName }) {
             }
           `}
         </style>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
-        </div>
+        
+        {/* If we are actively loading or logging out, show spinner. Otherwise show the page (Welcome) */}
+        {(isLoading || isLoggingOut) ? (
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          children
+        )}
       </div>
     );
   }
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  // --- NAVIGATION ITEMS ---
+  // --- MAIN APP LAYOUT (Sidebar) ---
+  
   const coachNavigation = [
     { title: "Dashboard", url: createPageUrl("CoachDashboard"), icon: TrendingUp },
     { title: "Client Management", url: createPageUrl("ClientManagement"), icon: Users },
