@@ -68,7 +68,6 @@ function LayoutContent({ children, currentPageName }) {
   // --- VALIDATION LOGIC ---
   useEffect(() => {
     const validateUserAccess = async () => {
-      // FIX: Added !user to skip validation if no user exists
       if (isLoading || !user || hasValidated || isLoggingOut) return;
 
       if (!user.email) {
@@ -128,14 +127,14 @@ function LayoutContent({ children, currentPageName }) {
     }
   };
 
-  // --- SAFETY CHECK (The Anti-White-Screen Logic) ---
+  // --- SAFETY CHECK ---
   const showSpinner = isLoading || isLoggingOut || (!user && currentPageName !== "Welcome");
 
-  // --- PUBLIC LAYOUT / LOADING ---
+  // --- PUBLIC LAYOUT ---
   if (currentPageName === "Welcome" || showSpinner) {
     return (
       <div className="min-h-screen bg-background">
-        {/* FIX: Removed the <style> block here that was overriding global colors */}
+        {/* FIX: <style> block is GONE. Now uses globals.css correctly. */}
         {showSpinner ? (
           <div className="min-h-screen flex items-center justify-center">
             <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
