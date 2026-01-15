@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    /* APX PREMIUM DARK THEME (The "Good" Colors) */
-    --background: 222 47% 11%;        /* Deep Slate */
-    --foreground: 210 40% 98%;        /* White-ish */
+    /* FORCE DEFAULT TO DARK MODE (White Text / Dark Background) */
+    --background: 222 47% 11%;        /* Dark Slate */
+    --foreground: 210 40% 98%;        /* White Text */
     
     --card: 222 47% 11%;
     --card-foreground: 210 40% 98%;
@@ -14,8 +14,8 @@
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
     
-    --primary: 47 95% 50%;            /* APX GOLD */
-    --primary-foreground: 222 47% 11%; /* Dark Text on Gold */
+    --primary: 47 95% 50%;            /* APX Gold */
+    --primary-foreground: 222 47% 11%;
     
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
@@ -35,7 +35,7 @@
     
     --radius: 0.5rem;
 
-    /* SIDEBAR SPECIFIC OVERRIDES (Matches Dark Theme) */
+    /* Sidebar Defaults */
     --sidebar-background: 222 47% 11%;
     --sidebar-foreground: 210 40% 98%;
     --sidebar-primary: 47 95% 50%;
@@ -46,7 +46,7 @@
     --sidebar-ring: 47 95% 50%;
   }
 
-  /* Force Dark Mode Default */
+  /* We keep this just in case a class is added, but it matches root now */
   .dark {
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
