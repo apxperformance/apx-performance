@@ -24,9 +24,9 @@ const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) 
       ref={ref}
       type="button"
       onClick={() => setOpen(!open)}
-      // REVERTED: Removed inline style. Used Tailwind classes.
+      // UPDATED: Uses bg-background (Dark) and text-foreground (White)
       className={cn(
-        "flex h-10 w-full items-center justify-between rounded-md border border-input bg-gray-50 text-gray-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background text-foreground px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       {...props}
@@ -45,9 +45,9 @@ const SelectContent = React.forwardRef(({ className, children, position = "poppe
   return (
     <div
       ref={ref}
-      // REVERTED: Removed inline style. Used Tailwind classes.
+      // UPDATED: Dropdown list is now Dark (bg-popover) with White text
       className={cn(
-        "absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-gray-50 text-gray-900 shadow-md animate-in fade-in-80",
+        "absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md animate-in fade-in-80",
         className
       )}
       style={{ top: "100%", marginTop: "5px", width: "100%" }}
@@ -70,15 +70,14 @@ const SelectItem = React.forwardRef(({ className, children, ...props }, ref) => 
     <div
       ref={ref}
       onClick={() => setOpen(false)} 
-      // REVERTED: Removed inline style. Used Tailwind hover classes.
+      // UPDATED: Hover state matches theme (focus:bg-accent)
       className={cn(
-        "relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-gray-200 text-gray-900 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
       )}
       {...props}
     >
       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-        {/* Checkmark logic could go here */}
       </span>
       <span className="truncate">{children}</span>
     </div>
