@@ -128,48 +128,14 @@ function LayoutContent({ children, currentPageName }) {
     }
   };
 
-  // --- SAFETY CHECK ---
-  // If we are loading, logging out, OR if we have no user (and we aren't on the public Welcome page),
-  // we MUST show the spinner. We cannot render 'children' (Dashboard) without a user, or it crashes.
+  // --- SAFETY CHECK (The Anti-White-Screen Logic) ---
   const showSpinner = isLoading || isLoggingOut || (!user && currentPageName !== "Welcome");
 
-  // --- PUBLIC LAYOUT ---
+  // --- PUBLIC LAYOUT / LOADING ---
   if (currentPageName === "Welcome" || showSpinner) {
     return (
       <div className="min-h-screen bg-background">
-        <style>
-          {`
-            :root {
-              --background: ${isDarkMode ? '0 0% 3.9%' : '0 0% 98%'};
-              --foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
-              --card: ${isDarkMode ? '0 0% 3.9%' : '0 0% 100%'};
-              --card-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
-              --popover: ${isDarkMode ? '0 0% 3.9%' : '0 0% 100%'};
-              --popover-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
-              --primary: 49 39% 56%;
-              --primary-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
-              --secondary: ${isDarkMode ? '0 0% 14.9%' : '0 0% 96%'};
-              --secondary-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 9%'};
-              --muted: ${isDarkMode ? '0 0% 14.9%' : '0 0% 96%'};
-              --muted-foreground: ${isDarkMode ? '0 0% 63.9%' : '0 0% 45.1%'};
-              --accent: 49 39% 56%;
-              --accent-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
-              --destructive: ${isDarkMode ? '0 62.8% 30.6%' : '0 84.2% 60.2%'};
-              --destructive-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
-              --border: ${isDarkMode ? '0 0% 25%' : '0 0% 89.8%'};
-              --input: ${isDarkMode ? '0 0% 25%' : '0 0% 89.8%'};
-              --ring: 49 39% 56%;
-            }
-            
-            input::placeholder,
-            textarea::placeholder {
-              color: hsl(var(--muted-foreground));
-            }
-          `}
-        </style>
-        
-        {/* CRITICAL FIX: If we are in the 'showSpinner' state, we force the spinner. 
-            We only render 'children' if it's safe (i.e. we are on the Welcome page). */}
+        {/* FIX: Removed the <style> block here that was overriding global colors */}
         {showSpinner ? (
           <div className="min-h-screen flex items-center justify-center">
             <div className="w-12 h-12 border-4 border-[#C5B358] border-t-transparent rounded-full animate-spin"></div>
@@ -216,36 +182,7 @@ function LayoutContent({ children, currentPageName }) {
     <SidebarProvider>
       <Toaster />
       <div className="min-h-screen flex w-full bg-background text-foreground">
-        <style>
-          {`
-            :root {
-              --background: ${isDarkMode ? '0 0% 3.9%' : '0 0% 98%'};
-              --foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
-              --card: ${isDarkMode ? '0 0% 3.9%' : '0 0% 100%'};
-              --card-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
-              --popover: ${isDarkMode ? '0 0% 3.9%' : '0 0% 100%'};
-              --popover-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 3.9%'};
-              --primary: 49 39% 56%;
-              --primary-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
-              --secondary: ${isDarkMode ? '0 0% 14.9%' : '0 0% 96%'};
-              --secondary-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 9%'};
-              --muted: ${isDarkMode ? '0 0% 14.9%' : '0 0% 96%'};
-              --muted-foreground: ${isDarkMode ? '0 0% 63.9%' : '0 0% 45.1%'};
-              --accent: 49 39% 56%;
-              --accent-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
-              --destructive: ${isDarkMode ? '0 62.8% 30.6%' : '0 84.2% 60.2%'};
-              --destructive-foreground: ${isDarkMode ? '0 0% 98%' : '0 0% 98%'};
-              --border: ${isDarkMode ? '0 0% 25%' : '0 0% 89.8%'};
-              --input: ${isDarkMode ? '0 0% 25%' : '0 0% 89.8%'};
-              --ring: 49 39% 56%;
-            }
-            
-            input::placeholder,
-            textarea::placeholder {
-              color: hsl(var(--muted-foreground));
-            }
-          `}
-        </style>
+        {/* FIX: Removed the <style> block here too */}
         
         <Sidebar className="border-r border-gray-200 bg-gray-100 backdrop-blur-xl">
           <SidebarHeader className="bg-neutral-900 p-6 flex flex-col gap-2 border-b border-gray-200">
