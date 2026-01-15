@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import {
-  Dumbbell, Users, Calendar, Utensils, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, UtensilsCrossed, Pill, MessageCircle, CalendarDays, Sun, Moon 
+  Dumbbell, Users, TrendingUp, LogOut, User as UserIcon, Crown, Zap, BookOpen, BarChart3, Settings, Utensils, Pill, MessageCircle, CalendarDays, UtensilsCrossed, Sun, Moon 
 } from "lucide-react";
 import {
   Sidebar,
@@ -33,21 +33,17 @@ function LayoutContent({ children, currentPageName }) {
   const { user, isLoading, hasCoach, coachTierInfo } = useUser();
   const { isDarkMode, toggleTheme } = useTheme();
   
-  // FIX 1: Add a state to LOCK the screen during logout
+  // FIX: Logout state to prevent UI flashes
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [hasValidated, setHasValidated] = useState(false);
 
-  // --- POOL LOGIC ---
   const ensureInAvailablePool = useCallback(async (userData) => {
     try {
       if (!userData || !userData.id || !userData.email) return;
       if (userData.user_type === 'coach' || userData.coach_id) return;
-
       if (!userData.user_type) {
-        console.log("Fixing missing user_type...");
         await base44.entities.User.update(userData.id, { user_type: 'client' });
       }
-
       const existing = await base44.entities.AvailableClient.filter({ user_id: userData.id });
       if (existing.length === 0) {
         await base44.entities.AvailableClient.create({
@@ -60,16 +56,12 @@ function LayoutContent({ children, currentPageName }) {
         });
       }
     } catch (error) {
-      if (!error?.message?.includes('auth')) {
-        console.error("Error ensuring user is in available pool:", error);
-      }
+      if (!error?.message?.includes('auth')) console.error("Pool error:", error);
     }
   }, []);
 
-  // --- VALIDATION LOGIC ---
   useEffect(() => {
     const validateUserAccess = async () => {
-      // Don't validate if we are in the middle of logging out
       if (isLoading || !user || hasValidated || isLoggingOut) return;
 
       if (!user.email) {
@@ -96,47 +88,37 @@ function LayoutContent({ children, currentPageName }) {
           shouldRedirect = true;
           redirectUrl = createPageUrl("FreeClientDashboard");
         }
-        if (!user.coach_id && !shouldRedirect) {
-          ensureInAvailablePool(user);
-        }
+        if (!user.coach_id && !shouldRedirect) ensureInAvailablePool(user);
+        
         const coachOnlyPages = ["CoachDashboard", "ClientManagement", "WorkoutBuilder", "NutritionPlanner", "ProgressReviews", "CoachSettings", "SupplementPlanner", "CoachingCalendar"];
         if (coachOnlyPages.includes(currentPageName)) {
           shouldRedirect = true;
           redirectUrl = user.coach_id ? createPageUrl("ClientDashboard") : createPageUrl("FreeClientDashboard");
         }
       }
-
       setHasValidated(true);
-      if (shouldRedirect && redirectUrl) {
-        navigate(redirectUrl, { replace: true });
-      }
+      if (shouldRedirect && redirectUrl) navigate(redirectUrl, { replace: true });
     };
     validateUserAccess();
   }, [user, isLoading, hasValidated, currentPageName, ensureInAvailablePool, navigate, isLoggingOut]);
 
-  // --- LOGOUT LOGIC (Robust Version) ---
+  // --- FIX: UPDATED LOGOUT LOGIC ---
   const handleLogout = async () => {
-    // 1. LOCK THE SCREEN IMMEDIATELY
     setIsLoggingOut(true);
-    
     if (typeof window !== "undefined") window.localStorage.clear();
     setHasValidated(false);
     sessionStorage.clear();
-    
     try { 
       await base44.auth.logout(); 
     } catch (e) { 
-      console.error("Logout error (ignoring):", e); 
+      console.error(e); 
     } finally { 
-      // 2. FORCE REDIRECT - Do not let React re-render the Welcome page
-      const callbackUrl = `${window.location.origin}${createPageUrl("Welcome")}`;
-      await base44.auth.redirectToLogin(callbackUrl);
+      // FIX: Redirect to ROOT ('/') which is the Welcome Page.
+      // This avoids the 404 error for the non-existent '/login' page.
+      window.location.href = '/';
     }
   };
 
-  // --- LOADING / LOCKDOWN STATE ---
-  // If we are logging out, SHOW SPINNER no matter what.
-  // This prevents the "Portal Choice" screen from flashing.
   if (currentPageName === "Welcome" || isLoading || isLoggingOut) {
     return (
       <div className="min-h-screen bg-background">
@@ -163,11 +145,7 @@ function LayoutContent({ children, currentPageName }) {
               --input: ${isDarkMode ? '0 0% 25%' : '0 0% 89.8%'};
               --ring: 49 39% 56%;
             }
-            
-            input::placeholder,
-            textarea::placeholder {
-              color: hsl(var(--muted-foreground));
-            }
+            input::placeholder, textarea::placeholder { color: hsl(var(--muted-foreground)); }
           `}
         </style>
         <div className="min-h-screen flex items-center justify-center">
@@ -185,7 +163,6 @@ function LayoutContent({ children, currentPageName }) {
     );
   }
 
-  // --- NAVIGATION ITEMS ---
   const coachNavigation = [
     { title: "Dashboard", url: createPageUrl("CoachDashboard"), icon: TrendingUp },
     { title: "Client Management", url: createPageUrl("ClientManagement"), icon: Users },
@@ -242,11 +219,7 @@ function LayoutContent({ children, currentPageName }) {
               --input: ${isDarkMode ? '0 0% 25%' : '0 0% 89.8%'};
               --ring: 49 39% 56%;
             }
-            
-            input::placeholder,
-            textarea::placeholder {
-              color: hsl(var(--muted-foreground));
-            }
+            input::placeholder, textarea::placeholder { color: hsl(var(--muted-foreground)); }
           `}
         </style>
         
