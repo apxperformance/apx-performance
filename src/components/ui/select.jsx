@@ -24,16 +24,15 @@ const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) 
       ref={ref}
       type="button"
       onClick={() => setOpen(!open)}
-      // STYLE OVERRIDE: Forces background to #f9fafb (Gray-50) and text to #111827 (Gray-900)
-      style={{ backgroundColor: '#f9fafb', color: '#111827' }}
+      // REVERTED: Removed inline style. Used Tailwind classes.
       className={cn(
-        "flex h-10 w-full items-center justify-between rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-10 w-full items-center justify-between rounded-md border border-input bg-gray-50 text-gray-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       {...props}
     >
       {children}
-      <ChevronDown className="h-4 w-4 opacity-50" color="#111827" />
+      <ChevronDown className="h-4 w-4 opacity-50" />
     </button>
   )
 })
@@ -46,12 +45,12 @@ const SelectContent = React.forwardRef(({ className, children, position = "poppe
   return (
     <div
       ref={ref}
-      // STYLE OVERRIDE: Forces dropdown list to match
-      style={{ backgroundColor: '#f9fafb', color: '#111827', top: "100%", marginTop: "5px", width: "100%" }}
+      // REVERTED: Removed inline style. Used Tailwind classes.
       className={cn(
-        "absolute z-50 min-w-[8rem] overflow-hidden rounded-md border shadow-md animate-in fade-in-80",
+        "absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-gray-50 text-gray-900 shadow-md animate-in fade-in-80",
         className
       )}
+      style={{ top: "100%", marginTop: "5px", width: "100%" }}
       {...props}
     >
       <div className="p-1">{children}</div>
@@ -67,21 +66,13 @@ SelectLabel.displayName = "SelectLabel"
 
 const SelectItem = React.forwardRef(({ className, children, ...props }, ref) => {
    const { setOpen } = React.useContext(SelectContext)
-   const [isHovered, setIsHovered] = React.useState(false);
-
    return (
     <div
       ref={ref}
       onClick={() => setOpen(false)} 
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      // STYLE OVERRIDE: Handle hover state manually to ensure visibility
-      style={{ 
-        backgroundColor: isHovered ? '#e5e7eb' : 'transparent', // Light gray on hover
-        cursor: 'pointer' 
-      }}
+      // REVERTED: Removed inline style. Used Tailwind hover classes.
       className={cn(
-        "relative flex w-full select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-gray-200 text-gray-900 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
       )}
       {...props}
