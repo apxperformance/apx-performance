@@ -1,0 +1,44 @@
+{
+  "name": "CoachConnectionRequest",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "User ID of the client requesting a coach"
+    },
+    "coach_id": {
+      "type": "string",
+      "description": "User ID of the coach being requested"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Status of the connection request"
+    },
+    "message": {
+      "type": "string",
+      "description": "Optional message from the client to the coach"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Cached client name for quick display"
+    },
+    "client_email": {
+      "type": "string",
+      "description": "Cached client email for quick display"
+    },
+    "coach_name": {
+      "type": "string",
+      "description": "Cached coach name for quick display"
+    }
+  },
+  "required": [
+    "client_id",
+    "coach_id"
+  ]
+}

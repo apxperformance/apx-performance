@@ -1,0 +1,60 @@
+{
+  "name": "SupplementPlan",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the supplement plan (e.g., 'Bulking Phase Stack')"
+    },
+    "description": {
+      "type": "string",
+      "description": "A brief description of the plan's purpose."
+    },
+    "coach_id": {
+      "type": "string",
+      "description": "ID of the coach who created this plan."
+    },
+    "client_id": {
+      "type": "string",
+      "description": "ID of the client this plan is assigned to (if not a template)."
+    },
+    "is_template": {
+      "type": "boolean",
+      "default": true,
+      "description": "True if this is a reusable template, false if it's an assigned plan."
+    },
+    "supplements": {
+      "type": "array",
+      "description": "A list of supplements included in this plan.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the supplement (e.g., 'Creatine Monohydrate')"
+          },
+          "dosage": {
+            "type": "string",
+            "description": "The recommended dosage (e.g., '5g')"
+          },
+          "timing": {
+            "type": "string",
+            "description": "When to take the supplement (e.g., 'Post-Workout')"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Any specific instructions or notes."
+          },
+          "link": {
+            "type": "string",
+            "description": "An optional URL to a recommended product."
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "name",
+    "coach_id"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "name": "Workout",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Workout name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Workout description"
+    },
+    "coach_id": {
+      "type": "string",
+      "description": "ID of the coach who created this workout"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "ID of the client assigned to this workout"
+    },
+    "workout_type": {
+      "type": "string",
+      "enum": [
+        "strength",
+        "cardio",
+        "flexibility",
+        "sports",
+        "recovery"
+      ],
+      "description": "Type of workout"
+    },
+    "difficulty_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ],
+      "description": "Difficulty level"
+    },
+    "estimated_duration": {
+      "type": "number",
+      "description": "Estimated duration in minutes"
+    },
+    "exercises": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "exercise_name": {
+            "type": "string"
+          },
+          "sets": {
+            "type": "number"
+          },
+          "reps": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "string"
+          },
+          "rest_time": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "muscle_groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "is_template": {
+      "type": "boolean",
+      "description": "Whether this is a template workout",
+      "default": false
+    }
+  },
+  "required": [
+    "name",
+    "coach_id"
+  ]
+}

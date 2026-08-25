@@ -1,0 +1,51 @@
+{
+  "name": "FoodItem",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the food"
+    },
+    "category": {
+      "type": "string",
+      "description": "e.g., Fruit, Vegetable, Meat, Dairy, Grain"
+    },
+    "serving_size_unit": {
+      "type": "string",
+      "description": "e.g., g, oz, cup, piece"
+    },
+    "serving_size_qty": {
+      "type": "number",
+      "description": "e.g., 100"
+    },
+    "calories": {
+      "type": "number",
+      "description": "Calories per serving size"
+    },
+    "protein_grams": {
+      "type": "number",
+      "description": "Protein in grams per serving size"
+    },
+    "carbs_grams": {
+      "type": "number",
+      "description": "Carbohydrates in grams per serving size"
+    },
+    "fat_grams": {
+      "type": "number",
+      "description": "Fat in grams per serving size"
+    },
+    "fiber_grams": {
+      "type": "number",
+      "description": "Fiber in grams per serving size"
+    }
+  },
+  "required": [
+    "name",
+    "serving_size_unit",
+    "serving_size_qty",
+    "calories",
+    "protein_grams",
+    "carbs_grams",
+    "fat_grams"
+  ]
+}

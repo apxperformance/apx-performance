@@ -1,0 +1,73 @@
+{
+  "name": "CheckIn",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ID of the client"
+    },
+    "coach_id": {
+      "type": "string",
+      "description": "ID of the coach"
+    },
+    "weight": {
+      "type": "number",
+      "description": "Current weight"
+    },
+    "progress_photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of photo URLs"
+    },
+    "energy_level": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "Energy level from 1-10"
+    },
+    "sleep_hours": {
+      "type": "number",
+      "description": "Hours of sleep"
+    },
+    "stress_level": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "Stress level from 1-10"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Client notes and reflections"
+    },
+    "coach_feedback": {
+      "type": "string",
+      "description": "Coach feedback on the check-in"
+    },
+    "measurements": {
+      "type": "object",
+      "properties": {
+        "chest": {
+          "type": "number"
+        },
+        "waist": {
+          "type": "number"
+        },
+        "hips": {
+          "type": "number"
+        },
+        "arms": {
+          "type": "number"
+        },
+        "thighs": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "required": [
+    "client_id",
+    "coach_id"
+  ]
+}

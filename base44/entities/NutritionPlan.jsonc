@@ -1,0 +1,106 @@
+{
+  "name": "NutritionPlan",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the nutrition plan"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the nutrition plan"
+    },
+    "coach_id": {
+      "type": "string",
+      "description": "ID of the coach who created this plan"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "ID of the client this plan is assigned to (optional for templates)"
+    },
+    "daily_calories": {
+      "type": "number",
+      "description": "Target daily calories"
+    },
+    "macros": {
+      "type": "object",
+      "properties": {
+        "protein_percentage": {
+          "type": "number"
+        },
+        "carbs_percentage": {
+          "type": "number"
+        },
+        "fat_percentage": {
+          "type": "number"
+        },
+        "protein_grams": {
+          "type": "number"
+        },
+        "carbs_grams": {
+          "type": "number"
+        },
+        "fat_grams": {
+          "type": "number"
+        }
+      }
+    },
+    "meals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "meal_name": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "foods": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "food_name": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "string"
+                },
+                "calories": {
+                  "type": "number"
+                },
+                "protein": {
+                  "type": "number"
+                },
+                "carbs": {
+                  "type": "number"
+                },
+                "fat": {
+                  "type": "number"
+                },
+                "fiber": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes or instructions"
+    },
+    "is_template": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a template plan or assigned to a specific client"
+    }
+  },
+  "required": [
+    "name",
+    "coach_id",
+    "daily_calories"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "name": "AvailableClient",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of the User entity record"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Client's full name"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Client's email address"
+    },
+    "profile_image": {
+      "type": "string",
+      "description": "Profile image URL"
+    },
+    "fitness_goals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Client's fitness goals"
+    },
+    "experience_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ],
+      "description": "Client's fitness experience level"
+    },
+    "date_available": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this client became available for assignment"
+    },
+    "last_activity": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time the client was active on the platform"
+    }
+  },
+  "required": [
+    "user_id",
+    "full_name",
+    "email"
+  ]
+}

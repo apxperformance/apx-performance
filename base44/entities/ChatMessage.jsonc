@@ -1,0 +1,52 @@
+{
+  "name": "ChatMessage",
+  "type": "object",
+  "properties": {
+    "coach_id": {
+      "type": "string",
+      "description": "ID of the coach in the conversation"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "ID of the client in the conversation"
+    },
+    "sender_id": {
+      "type": "string",
+      "description": "ID of the user who sent this message"
+    },
+    "sender_type": {
+      "type": "string",
+      "enum": [
+        "coach",
+        "client"
+      ],
+      "description": "Type of user who sent the message"
+    },
+    "message": {
+      "type": "string",
+      "description": "The chat message content"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the message has been read by the recipient"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "image",
+        "system"
+      ],
+      "default": "text",
+      "description": "Type of message"
+    }
+  },
+  "required": [
+    "coach_id",
+    "client_id",
+    "sender_id",
+    "sender_type",
+    "message"
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "name": "WorkoutLog",
+  "type": "object",
+  "properties": {
+    "workout_id": {
+      "type": "string",
+      "description": "ID of the workout that was performed"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "ID of the client who performed the workout"
+    },
+    "coach_id": {
+      "type": "string",
+      "description": "ID of the coach (for easy filtering)"
+    },
+    "workout_name": {
+      "type": "string",
+      "description": "Name of the workout (cached for quick display)"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the workout was completed"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "How long the workout took in minutes"
+    },
+    "exercises": {
+      "type": "array",
+      "description": "Array of exercises performed with actual data",
+      "items": {
+        "type": "object",
+        "properties": {
+          "exercise_name": {
+            "type": "string"
+          },
+          "planned_sets": {
+            "type": "number"
+          },
+          "planned_reps": {
+            "type": "string"
+          },
+          "planned_weight": {
+            "type": "string"
+          },
+          "actual_sets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "reps": {
+                  "type": "number"
+                },
+                "weight": {
+                  "type": "number"
+                },
+                "rpe": {
+                  "type": "number",
+                  "description": "Rate of Perceived Exertion (1-10)"
+                },
+                "notes": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "completed": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "overall_rpe": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "Overall workout difficulty rating"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Client notes about the workout"
+    },
+    "coach_feedback": {
+      "type": "string",
+      "description": "Coach feedback on this workout log"
+    }
+  },
+  "required": [
+    "workout_id",
+    "client_id",
+    "coach_id",
+    "workout_name",
+    "completed_date"
+  ]
+}

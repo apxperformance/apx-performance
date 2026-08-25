@@ -1,0 +1,68 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "user_type": {
+      "type": "string",
+      "enum": [
+        "coach",
+        "client"
+      ],
+      "description": "Type of user account"
+    },
+    "coach_id": {
+      "type": "string",
+      "description": "ID of the coach (for clients only)"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Professional bio"
+    },
+    "profile_image": {
+      "type": "string",
+      "description": "Profile image URL"
+    },
+    "specializations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Coach specializations"
+    },
+    "fitness_goals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Client fitness goals"
+    },
+    "height": {
+      "type": "number",
+      "description": "Height in inches"
+    },
+    "current_weight": {
+      "type": "number",
+      "description": "Current weight in pounds"
+    },
+    "target_weight": {
+      "type": "number",
+      "description": "Target weight in pounds"
+    },
+    "activity_level": {
+      "type": "string",
+      "enum": [
+        "sedentary",
+        "lightly_active",
+        "moderately_active",
+        "very_active",
+        "extremely_active"
+      ],
+      "description": "Activity level"
+    }
+  },
+  "required": []
+}

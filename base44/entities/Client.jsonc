@@ -1,0 +1,65 @@
+{
+  "name": "Client",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Client's full name"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Client's email address, used for invitation and linking."
+    },
+    "user_id": {
+      "type": "string",
+      "description": "The User entity ID, linked after the client signs up."
+    },
+    "coach_id": {
+      "type": "string",
+      "description": "The User entity ID of the coach who owns this client record."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_invitation",
+        "active",
+        "inactive"
+      ],
+      "default": "pending_invitation",
+      "description": "The status of the client's account: pending_invitation (invited but not signed up), active (signed up and linked), inactive (deactivated by coach)."
+    },
+    "join_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the client became active."
+    },
+    "deactivation_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the client was deactivated."
+    },
+    "profile_image": {
+      "type": "string",
+      "description": "URL for the client's profile image"
+    },
+    "last_checkin": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of the last check-in"
+    },
+    "invitation_token": {
+      "type": "string",
+      "description": "Unique token for client invitation"
+    },
+    "supplement_plan_id": {
+      "type": "string",
+      "description": "ID of the currently assigned supplement plan"
+    }
+  },
+  "required": [
+    "full_name",
+    "email",
+    "coach_id"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "name": "CalendarEvent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the event"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description for the event"
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start date and time of the event"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "End date and time of the event"
+    },
+    "coach_id": {
+      "type": "string",
+      "description": "ID of the coach this event belongs to"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "Optional ID of the client associated with this event"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "session",
+        "check-in",
+        "consultation",
+        "personal",
+        "review"
+      ],
+      "default": "session",
+      "description": "The type of event"
+    },
+    "check_in_id": {
+      "type": "string",
+      "description": "Optional ID of the CheckIn record this event is for."
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this event is part of a recurring series"
+    },
+    "recurrence_pattern": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly"
+      ],
+      "description": "The recurrence pattern for recurring events"
+    }
+  },
+  "required": [
+    "title",
+    "start_time",
+    "end_time",
+    "coach_id"
+  ]
+}

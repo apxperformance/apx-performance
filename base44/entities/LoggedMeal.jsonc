@@ -1,0 +1,85 @@
+{
+  "name": "LoggedMeal",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ID of the client who logged the meal"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "The date the meal was eaten"
+    },
+    "meal_type": {
+      "type": "string",
+      "enum": [
+        "Breakfast",
+        "Lunch",
+        "Dinner",
+        "Snacks"
+      ],
+      "description": "The type of meal"
+    },
+    "foods": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "food_item_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "Number of servings"
+          },
+          "serving_size_unit": {
+            "type": "string"
+          },
+          "serving_size_qty": {
+            "type": "number"
+          },
+          "calories": {
+            "type": "number"
+          },
+          "protein_grams": {
+            "type": "number"
+          },
+          "carbs_grams": {
+            "type": "number"
+          },
+          "fat_grams": {
+            "type": "number"
+          },
+          "fiber_grams": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "total_calories": {
+      "type": "number"
+    },
+    "total_protein_grams": {
+      "type": "number"
+    },
+    "total_carbs_grams": {
+      "type": "number"
+    },
+    "total_fat_grams": {
+      "type": "number"
+    },
+    "total_fiber_grams": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "client_id",
+    "date",
+    "meal_type",
+    "foods"
+  ]
+}

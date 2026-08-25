@@ -1,0 +1,36 @@
+{
+  "name": "SupplementCompliance",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ID of the client"
+    },
+    "supplement_plan_id": {
+      "type": "string",
+      "description": "ID of the supplement plan"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of compliance tracking"
+    },
+    "supplements_taken": {
+      "type": "array",
+      "description": "Array of supplement names that were taken",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes about the day"
+    }
+  },
+  "required": [
+    "client_id",
+    "supplement_plan_id",
+    "date",
+    "supplements_taken"
+  ]
+}
